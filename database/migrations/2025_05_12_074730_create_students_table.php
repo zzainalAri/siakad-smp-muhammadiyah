@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->string('student_number')->unique();
-            $table->unsignedInteger('semester')->default(1);
+            $table->string('nisn')->unique();
+            $table->string('address');
+            $table->string('gender');
+            $table->string('status');
             $table->year('batch');
+            $table->foreignId('classroom_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('faculty_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('departement_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('classroom_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('fee_group_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('level_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
