@@ -19,13 +19,9 @@ class ClassroomResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'created_at' => $this->created_at,
-            'faculty' => $this->whenLoaded('faculty', [
-                'id' => $this->faculty?->id,
-                'name' => $this->faculty?->name,
-            ]),
-            'departement' => $this->whenLoaded('departement', [
-                'id' => $this->departement?->id,
-                'name' => $this->departement?->name,
+            'level' => $this->whenLoaded('level', [
+                'id' => $this->level?->id,
+                'name' => $this->level?->name,
             ]),
             'academicYear' => $this->whenLoaded('academicYear', [
                 'id' => $this->academicYear?->id,
