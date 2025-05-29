@@ -56,7 +56,7 @@ export default function Edit(props) {
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
-                                    <Label htmlFor="name">Nama Program Studi</Label>
+                                    <Label htmlFor="name">Tahun Ajaran</Label>
                                     <Input
                                         type="text"
                                         name="name"

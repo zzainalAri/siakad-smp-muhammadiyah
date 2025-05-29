@@ -13,13 +13,12 @@ class AcademicYear extends Model
 
     protected $guarded = [];
 
-    protected function casts()
-    {
-        return [
-            'semester' => AcademicYearSemester::class,
-
-        ];
-    }
+    protected $casts = [
+        'semester' => AcademicYearSemester::class,
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'is_active' => 'boolean',
+    ];
 
     public function scopeFilter(Builder $query, $filters)
     {
@@ -46,4 +45,10 @@ class AcademicYear extends Model
             ]
         ];
     }
+
+    public function classrooms()
+    {
+        return $this->hasMany(Classroom::class);
+    }
+
 }
