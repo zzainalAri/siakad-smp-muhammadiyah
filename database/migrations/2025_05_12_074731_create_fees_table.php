@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\StudyPlanStatus;
+use App\Enums\FeeStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,13 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('study_plans', function (Blueprint $table) {
+        Schema::create('fees', function (Blueprint $table) {
             $table->id();
-            $table->string('status')->default(StudyPlanStatus::PENDING->value);
-            $table->string('notes')->nullable();
-            $table->unsignedInteger('semester')->default(1);
-            $table->foreignId('student_id')->constrained()->cascadeOnDelete();
+            $table->string('fee_code');
+            $table->unsignedInteger('semester');
+            $table->string('status')->default(FeeStatus::PENDING->value);
             $table->foreignId('academic_year_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('student_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('study_plans');
+        Schema::dropIfExists('fees');
     }
 };

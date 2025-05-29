@@ -13,14 +13,10 @@ return new class extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
             $table->string('name');
-            $table->unsignedInteger('credit');
-            $table->unsignedInteger('semester');
-            $table->foreignId('faculty_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('departement_id')->constrained()->cascadeOnDelete();
+            $table->string('code')->unique();
+            $table->foreignId('level_id')->constrained()->cascadeOnDelete();
             $table->foreignId('teacher_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('academic_year_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

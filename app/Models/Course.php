@@ -9,19 +9,15 @@ class Course extends Model
 {
     protected $guarded = [];
 
-    public function faculty()
+    public function leve()
     {
-        return $this->belongsTo(Faculty::class);
+        return $this->belongsTo(Level::class);
     }
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);
     }
 
-    public function departement()
-    {
-        return $this->belongsTo(Departement::class);
-    }
 
     public function academicYear()
     {
@@ -61,10 +57,8 @@ class Course extends Model
     {
         $query->when($sorts['field'] ?? null && $sorts['direction'] ?? null, function ($query) use ($sorts) {
             match ($sorts['field']) {
-                'faculty_id' => $query->join('faculties', 'courses.faculty_id', '=', 'faculties.id')
+                'level_id' => $query->join('faculties', 'courses.level_id', '=', 'faculties.id')
                     ->orderBy('faculties.name', $sorts['direction']),
-                'departement_id' => $query->join('departements', 'courses.departement_id', '=', 'departements.id')
-                    ->orderBy('departements.name', $sorts['direction']),
                 'name' => $query
                     ->leftJoin('teachers', 'teachers.id', '=', 'courses.teacher_id')
                     ->leftJoin('users', 'teachers.user_id', '=', 'users.id')
