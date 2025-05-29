@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Gender;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,8 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        $this->call(FacultySeeder::class);
-        $this->call(FeeGroupSeeder::class);
+        $this->call(LevelSeeder::class);
 
 
         User::factory()->create([
@@ -34,8 +34,7 @@ class DatabaseSeeder extends Seeder
         ]));
 
         $operator->operator()->create([
-            'faculty_id' => 1,
-            'departement_id' => 1,
+            'level_id' => 1,
             'employee_number' => str()->padLeft(mt_rand(0, 999999), 6, '0')
         ]);
 
@@ -48,9 +47,8 @@ class DatabaseSeeder extends Seeder
         ]));
 
         $teacher->teacher()->create([
-            'faculty_id' => 1,
-            'departement_id' => 1,
-            'teacher_number' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
+            'level_id' => 1,
+            'nip' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
             'academic_title' => 'Asisten Ahli'
         ]);
 
@@ -62,11 +60,10 @@ class DatabaseSeeder extends Seeder
         ]));
 
         $student->student()->create([
-            'faculty_id' => 1,
-            'departement_id' => 1,
-            'fee_group_id' => rand(1, 6),
-            'student_number' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
-            'semester' => 1,
+            'level_id' => 1,
+            'address' => '',
+            'gender' => Gender::MALE->value,
+            'nisn' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
             'batch' => 2025,
         ]);
     }
