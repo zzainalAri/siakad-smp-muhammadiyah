@@ -19,10 +19,6 @@ class Teacher extends Model
         return $this->belongsTo(Faculty::class);
     }
 
-    public function departement()
-    {
-        return $this->belongsTo(Departement::class);
-    }
 
     public function scopeFilter(Builder $query, $filters)
     {
@@ -33,7 +29,6 @@ class Teacher extends Model
             ], 'REGEXP', $search)
                 ->orWhereHas('user', fn($query) => $query->whereAny(['name', 'email'], 'REGEXP', $search))
                 ->orWhereHas('faculty', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
-                ->orWhereHas('departement', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
             ;
         });
     }
@@ -44,8 +39,6 @@ class Teacher extends Model
             match ($sorts['field']) {
                 'faculty_id' => $query->join('faculties', 'teachers.faculty_id', '=', 'faculties.id')
                     ->orderBy('faculties.name', $sorts['direction']),
-                'departement_id' => $query->join('departements', 'teachers.departement_id', '=', 'departements.id')
-                    ->orderBy('departements.name', $sorts['direction']),
                 'name' => $query->join('users', 'teachers.user_id', '=', 'users.id')
                     ->orderBy('users.name', $sorts['direction']),
                 'email' => $query->join('users', 'teachers.user_id', '=', 'users.id')

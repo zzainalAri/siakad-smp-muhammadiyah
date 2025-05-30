@@ -17,7 +17,7 @@ class CourseTeacherController extends Controller
             ->where('academic_year_id', activeAcademicYear()->id)
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->with(['faculty', 'departement', 'schedules'])
+            ->with(['faculty','schedules'])
             ->paginate(request()->load ?? 9);
 
         return inertia('Teachers/Courses/Index', [
@@ -47,7 +47,7 @@ class CourseTeacherController extends Controller
                 'title' => "Detail Mata Kuliah {$course->name}",
                 'subtitle' => 'Menampilkan Detail Mata Kuliah yang anda ampu'
             ],
-            'course' => new CourseScheduleResource($course->load(['schedules', 'departement', 'academicYear', 'faculty']))
+            'course' => new CourseScheduleResource($course->load(['schedules','academicYear', 'faculty']))
         ]);
     }
 }

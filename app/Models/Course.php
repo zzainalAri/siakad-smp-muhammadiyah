@@ -48,7 +48,6 @@ class Course extends Model
             ], 'REGEXP', $search)
                 ->orWhereHas('faculty', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
                 ->orWhereHas('teacher.user', fn($query) => $query->whereAny(['name', 'email'], 'REGEXP', $search))
-                ->orWhereHas('departement', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
             ;
         });
     }

@@ -27,7 +27,6 @@ class ScheduleRequest extends FormRequest
     {
         return [
             'faculty_id' => 'required|exists:faculties,id',
-            'departement_id' => 'required|exists:departements,id',
             'course_id' => 'required|exists:courses,id',
             'classroom_id' => 'required|exists:classrooms,id',
             'start_time' => 'required',
@@ -44,7 +43,6 @@ class ScheduleRequest extends FormRequest
     {
         return [
             'faculty_id' => 'Fakultas',
-            'departement_id' => 'Program Studi',
             'course_id' => 'Mata Kuliah',
             'classroom_id' => 'Kelas',
             'start_time' => 'Waktu Mulai',

@@ -37,10 +37,6 @@ class StudentRequest extends FormRequest
                 'required',
                 'exists:faculties,id'
             ],
-            'departement_id' => [
-                'required',
-                'exists:departements,id'
-            ],
             'fee_group_id' => [
                 'required',
                 'exists:fee_groups,id'
@@ -65,7 +61,6 @@ class StudentRequest extends FormRequest
             'email' => 'Email',
             'password' => 'password',
             'faculty_id' => 'Fakultas',
-            'departement_id' => 'Program Studi',
             'fee_group_id' => 'Golongan UKT',
             'student_number' => 'Nomor Induk Mahasiswa',
             'batch' => 'Angkatan',

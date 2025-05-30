@@ -2,7 +2,7 @@ import CardStat from '@/Components/CardStat';
 import HeaderTitle from '@/Components/HeaderTitle';
 import AppLayout from '@/Layouts/AppLayout';
 import { usePage } from '@inertiajs/react';
-import { IconBooks, IconBuildingSkyscraper, IconDoor, IconLayout2, IconSchool } from '@tabler/icons-react';
+import { IconBooks, IconBuildingSkyscraper, IconDoor, IconLayout2 } from '@tabler/icons-react';
 
 export default function Dashboard(props) {
     const auth = usePage().props.auth.user;
@@ -30,16 +30,6 @@ export default function Dashboard(props) {
                         }}
                     >
                         <div className="text-2xl font-bold">{props.count.faculties}</div>
-                    </CardStat>
-                    <CardStat
-                        data={{
-                            title: 'Total Program Studi',
-                            icon: IconSchool,
-                            background: 'text-white bg-gradient-to-r from-blue-400 via-blue-500 to-blue-500',
-                            iconClassName: 'text-white',
-                        }}
-                    >
-                        <div className="text-2xl font-bold">{props.count.departements}</div>
                     </CardStat>
                     <CardStat
                         data={{

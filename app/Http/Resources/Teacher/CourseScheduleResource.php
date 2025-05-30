@@ -26,10 +26,6 @@ class CourseScheduleResource extends JsonResource
                 'id' => $this->faculty?->id,
                 'name' => $this->faculty?->name,
             ]),
-            'departement' => $this->whenLoaded('departement', [
-                'id' => $this->departement?->id,
-                'name' => $this->departement?->name,
-            ]),
             'academicYear' => $this->whenLoaded('academicYear', [
                 'id' => $this->academicYear?->id,
                 'name' => $this->academicYear?->name,

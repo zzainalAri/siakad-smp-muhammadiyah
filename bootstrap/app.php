@@ -30,7 +30,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 'checkFeeStudent' => CheckFeeStudent::class,
                 'validateClassroom' => ValidateClassroom::class,
                 'validateCourse' => ValidateCourse::class,
-                'validateDepartement' => ValidateMiddleware::class,
             ]);
 
         //

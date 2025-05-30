@@ -50,7 +50,6 @@ class Schedule extends Model
                 'day_of_week',
             ], 'REGEXP', $search)
                 ->orWhereHas('level', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
-                ->orWhereHas('departement', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
                 ->orWhereHas('classroom', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
                 ->orWhereHas('course', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
             ;

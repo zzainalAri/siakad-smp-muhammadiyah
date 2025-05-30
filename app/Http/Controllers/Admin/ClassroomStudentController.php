@@ -36,7 +36,6 @@ class ClassroomStudentController extends Controller
                 $query->whereHas('roles', fn($query) => $query->select(['id', 'name'])->where('name', 'Student')->orderBy('name'));
             })
                 ->where('faculty_id', $classroom->faculty_id)
-                ->where('departement_id', $classroom->departement_id)
                 ->whereNull('classroom_id')->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->user->name,

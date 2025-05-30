@@ -8,7 +8,6 @@ use App\Http\Requests\Admin\StudentRequest;
 use App\Http\Requests\Operator\StudentOperatorRequest;
 use App\Http\Resources\Operator\StudentOperatorResource;
 use App\Models\Classroom;
-use App\Models\Departement;
 use App\Models\Faculty;
 use App\Models\FeeGroup;
 use App\Models\Student;
@@ -25,7 +24,7 @@ class StudentOperatorController extends Controller
     public function index()
     {
         $students = Student::query()
-            ->select(['students.id', 'students.student_number', 'students.faculty_id', 'students.departement_id', 'students.fee_group_id', 'students.classroom_id', 'students.user_id', 'students.semester', 'students.batch', 'students.created_at'])
+            ->select(['students.id', 'students.student_number', 'students.faculty_id','students.fee_group_id', 'students.classroom_id', 'students.user_id', 'students.semester', 'students.batch', 'students.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
             ->with(['user',  'feeGroup', 'classroom'])
@@ -33,17 +32,15 @@ class StudentOperatorController extends Controller
                 $query->whereHas('roles', fn($query) =>  $query->where('name', 'Student'));
             })
             ->where('students.faculty_id', auth()->user()->operator->faculty_id)
-            ->where('students.departement_id', auth()->user()->operator->departement_id)
             ->paginate(request()->load ?? 10);
 
         $faculty_name = auth()->user()->operator->faculty->name;
-        $departement_name = auth()->user()->operator->departement->name;
 
 
         return inertia('Operators/Students/Index', [
             'page_setting' => [
                 'title' => 'Mahasiswa',
-                'subtitle' => "Menampilkan Mahasiswa yang ada di {$faculty_name} dan program studi {$departement_name}"
+                'subtitle' => "Menampilkan Mahasiswa yang ada di {$faculty_name}"
             ],
             'students' => StudentOperatorResource::collection($students)->additional([
                 'meta' => [
@@ -74,7 +71,6 @@ class StudentOperatorController extends Controller
             'classrooms' => Classroom::query()
                 ->select(['id', 'name'])
                 ->where('faculty_id', auth()->user()->operator->faculty_id)
-                ->where('departement_id', auth()->user()->operator->departement_id)
                 ->orderBy('name')->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->name,
@@ -95,7 +91,6 @@ class StudentOperatorController extends Controller
 
             $user->student()->create([
                 'faculty_id' => auth()->user()->operator->faculty_id,
-                'departement_id' => auth()->user()->operator->departement_id,
                 'classroom_id' => $request->classroom_id,
                 'fee_group_id' => $request->fee_group_id,
                 'student_number' => $request->student_number,
@@ -132,11 +127,7 @@ class StudentOperatorController extends Controller
                 'label' => 'Golongan ' . $item->group . '-' . number_format($item->amount, 0, ',', '.'),
             ]),
             'classrooms' => Classroom::query()->select(['id', 'name'])
-                ->where('faculty_id', auth()->user()->operator->faculty_id)
-                ->where('departement_id', auth()->user()->operator->departement_id)->orderBy('name')->get()->map(fn($item) => [
-                    'value' => $item->id,
-                    'label' => $item->name,
-                ]),
+                ->where('faculty_id', auth()->user()->operator->faculty_id),
         ]);
     }
 
@@ -147,7 +138,6 @@ class StudentOperatorController extends Controller
 
             $student->update([
                 'faculty_id' => auth()->user()->operator->faculty_id,
-                'departement_id' => auth()->user()->operator->departement_id,
                 'classroom_id' => $request->classroom_id,
                 'fee_group_id' => $request->fee_group_id,
                 'student_number' => $request->student_number,

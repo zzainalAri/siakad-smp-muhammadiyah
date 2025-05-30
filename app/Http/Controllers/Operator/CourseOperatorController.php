@@ -20,18 +20,16 @@ class CourseOperatorController extends Controller
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
             ->where('courses.faculty_id', auth()->user()->operator->faculty_id)
-            ->where('courses.departement_id', auth()->user()->operator->departement_id)
-            ->with(['faculty', 'departement', 'teacher',])
+            ->with(['faculty','teacher',])
             ->paginate(request()->load ?? 10);
 
         $faculty_name = auth()->user()->operator->faculty->name;
-        $departement_name = auth()->user()->operator->departement->name;
 
 
         return inertia('Operators/Courses/Index', [
             'page_setting' => [
                 'title' => 'Mata Kuliah',
-                'subtitle' => "Menampilkan Mata Kuliah yang ada di {$faculty_name} dan program studi {$departement_name}"
+                'subtitle' => "Menampilkan Mata Kuliah yang ada di {$faculty_name} "
             ],
             'courses' => CourseOperatorResource::collection($courses)->additional([
                 'meta' => [
@@ -57,7 +55,6 @@ class CourseOperatorController extends Controller
             ],
             'teachers' => Teacher::query()->select(['id', 'user_id'])
                 ->where('faculty_id', auth()->user()->operator->faculty_id)
-                ->where('departement_id', auth()->user()->operator->departement_id)
                 ->whereHas('user', function ($query) {
                     $query->whereHas('roles', fn($query) => $query->where('name', 'Teacher'))->orderBy('name');
                 })
@@ -73,7 +70,6 @@ class CourseOperatorController extends Controller
         try {
             Course::create([
                 'faculty_id' => auth()->user()->operator->faculty_id,
-                'departement_id' => auth()->user()->operator->departement_id,
                 'teacher_id' => $request->teacher_id,
                 'academic_year_id' => activeAcademicYear()->id,
                 'code' => str()->random(10),
@@ -103,7 +99,6 @@ class CourseOperatorController extends Controller
             'course' => $course,
             'teachers' => Teacher::query()->select(['id', 'user_id'])
                 ->where('faculty_id', auth()->user()->operator->faculty_id)
-                ->where('departement_id', auth()->user()->operator->departement_id)
                 ->whereHas('user', function ($query) {
                     $query->whereHas('roles', fn($query) => $query->where('name', 'Teacher'))->orderBy('name');
                 })
@@ -119,7 +114,6 @@ class CourseOperatorController extends Controller
         try {
             $course->update([
                 'faculty_id' => auth()->user()->operator->faculty_id,
-                'departement_id' => auth()->user()->operator->departement_id,
                 'teacher_id' => $request->teacher_id,
                 'academic_year_id' => activeAcademicYear()->id,
                 'code' => str()->random(10),

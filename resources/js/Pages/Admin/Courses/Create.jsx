@@ -14,7 +14,6 @@ import { toast } from 'sonner';
 export default function Create(props) {
     const { data, setData, post, errors, processing, reset } = useForm({
         faculty_id: null,
-        departement_id: null,
         teacher_id: null,
         name: '',
         credit: 1,

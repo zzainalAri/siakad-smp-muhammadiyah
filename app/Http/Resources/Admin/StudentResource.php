@@ -31,10 +31,6 @@ class StudentResource extends JsonResource
                 'id' => $this->faculty?->id,
                 'name' => $this->faculty?->name,
             ]),
-            'departement' => $this->whenLoaded('departement', [
-                'id' => $this->departement?->id,
-                'name' => $this->departement?->name,
-            ]),
             'classroom' => $this->whenLoaded('classroom', [
                 'id' => $this->classroom?->id,
                 'name' => $this->classroom?->name,

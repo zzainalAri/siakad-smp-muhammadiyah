@@ -39,10 +39,6 @@ class TeacherRequest extends FormRequest
                 'required',
                 'exists:faculties,id'
             ],
-            'departement_id' => [
-                'required',
-                'exists:departements,id'
-            ],
             'teacher_number' => $this->routeIs('admin.teachers.store') ? 'required|string|max:13|unique:teachers' : 'required|string|max:13',
             'academic_title' => 'required|string|min:3|max:255',
             'avatar' => 'nullable|mimes:png,jpg,webp,jpeg',
@@ -57,7 +53,6 @@ class TeacherRequest extends FormRequest
             'email' => 'Email',
             'password' => 'password',
             'faculty_id' => 'Fakultas',
-            'departement_id' => 'Program Studi',
             'teacher_number' => 'Nomor Induk Dosen',
             'academic_title' => 'Jabatan Akademik',
             'avatar' => 'Avatar'

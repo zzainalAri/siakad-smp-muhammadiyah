@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CourseRequest;
 use App\Http\Resources\Admin\CourseResource;
 use App\Models\Course;
-use App\Models\Departement;
 use App\Models\Faculty;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -20,18 +19,16 @@ class CourseController extends Controller implements HasMiddleware
 
     public static function middleware()
     {
-        return [
-            new Middleware('validateDepartement', only: ['store', 'update']),
-        ];
+        return []; 
     }
 
     public function index()
     {
         $courses = Course::query()
-            ->select(['courses.id', 'courses.faculty_id', 'courses.departement_id', 'courses.teacher_id', 'courses.code', 'courses.semester', 'courses.name', 'courses.credit', 'courses.created_at', 'courses.academic_year_id'])
+            ->select(['courses.id', 'courses.faculty_id', 'courses.teacher_id', 'courses.code', 'courses.semester', 'courses.name', 'courses.credit', 'courses.created_at', 'courses.academic_year_id'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->with(['faculty', 'departement', 'teacher',])
+            ->with(['level', 'teacher',])
             ->paginate(request()->load ?? 10);
 
 
@@ -68,10 +65,6 @@ class CourseController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
             'teachers' => Teacher::query()->select(['id', 'user_id'])
                 ->whereHas('user', function ($query) {
                     $query->whereHas('roles', fn($query) => $query->where('name', 'Teacher'))->orderBy('name');
@@ -88,7 +81,6 @@ class CourseController extends Controller implements HasMiddleware
         try {
             Course::create([
                 'faculty_id' => $request->faculty_id,
-                'departement_id' => $request->departement_id,
                 'teacher_id' => $request->teacher_id,
                 'academic_year_id' => activeAcademicYear()->id,
                 'code' => str()->random(10),
@@ -120,10 +112,6 @@ class CourseController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
             'teachers' => Teacher::query()->select(['id', 'user_id'])
                 ->whereHas('user', function ($query) {
                     $query->whereHas('roles', fn($query) => $query->where('name', 'Teacher'))->orderBy('name');
@@ -140,7 +128,6 @@ class CourseController extends Controller implements HasMiddleware
         try {
             $course->update([
                 'faculty_id' => $request->faculty_id,
-                'departement_id' => $request->departement_id,
                 'teacher_id' => $request->teacher_id,
                 'academic_year_id' => activeAcademicYear()->id,
                 'code' => str()->random(10),

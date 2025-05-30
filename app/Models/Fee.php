@@ -39,7 +39,6 @@ class Fee extends Model
                     ->orderBy('faculties.name', $sorts['direction']),
                 'level_id' => $query->join('faculties', 'fees.level_id', '=', 'faculties.id')
                     ->orderBy('faculties.name', $sorts['direction']),
-                'departement_id' => $query->join('departements', 'fees.departement_id', '=', 'departements.id')->orderBy('departements.name', $sorts['direction']),
                 'name' => $query
                     ->leftJoin('students', 'students.id', '=', 'fees.student_id')
                     ->leftJoin('users', 'students.user_id', '=', 'users_id')

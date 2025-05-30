@@ -6,7 +6,6 @@ use App\Enums\MessageType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\OperatorRequest;
 use App\Http\Resources\Admin\OperatorResource;
-use App\Models\Departement;
 use App\Models\Faculty;
 use App\Models\Operator;
 use App\Models\User;
@@ -23,9 +22,7 @@ class OperatorController extends Controller implements HasMiddleware
 
     public static function middleware()
     {
-        return [
-            new Middleware('validateDepartement', only: ['store', 'update']),
-        ];
+        return []; 
     }
 
 
@@ -33,10 +30,10 @@ class OperatorController extends Controller implements HasMiddleware
     public function index()
     {
         $operators = Operator::query()
-            ->select(['operators.id', 'operators.employee_number', 'operators.faculty_id', 'operators.departement_id', 'operators.user_id', 'operators.created_at'])
+            ->select(['operators.id', 'operators.employee_number', 'operators.faculty_id', 'operators.user_id', 'operators.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->with(['user', 'faculty', 'departement'])
+            ->with(['user', 'faculty'])
             ->whereHas('user', function ($query) {
                 $query->whereHas('roles', fn($query) =>  $query->where('name', 'Operator'));
             })
@@ -76,10 +73,6 @@ class OperatorController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
         ]);
     }
 
@@ -96,7 +89,6 @@ class OperatorController extends Controller implements HasMiddleware
 
             $user->operator()->create([
                 'faculty_id' => $request->faculty_id,
-                'departement_id' => $request->departement_id,
                 'employee_number' => $request->employee_number,
 
             ]);
@@ -128,10 +120,6 @@ class OperatorController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
         ]);
     }
 
@@ -142,7 +130,6 @@ class OperatorController extends Controller implements HasMiddleware
 
             $operator->update([
                 'faculty_id' => $request->faculty_id,
-                'departement_id' => $request->departement_id,
                 'employee_number' => $request->employee_number,
 
             ]);

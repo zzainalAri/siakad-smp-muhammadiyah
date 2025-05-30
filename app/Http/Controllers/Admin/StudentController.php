@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StudentRequest;
 use App\Http\Resources\Admin\StudentResource;
 use App\Models\Classroom;
-use App\Models\Departement;
 use App\Models\Faculty;
 use App\Models\FeeGroup;
 use App\Models\Student;
@@ -25,9 +24,7 @@ class StudentController extends Controller implements HasMiddleware
 
     public static function middleware()
     {
-        return [
-            new Middleware('validateDepartement', only: ['store', 'update']),
-        ];
+        return []; 
     }
 
 
@@ -35,10 +32,10 @@ class StudentController extends Controller implements HasMiddleware
     public function index()
     {
         $students = Student::query()
-            ->select(['students.id', 'students.student_number', 'students.faculty_id', 'students.departement_id', 'students.fee_group_id', 'students.classroom_id', 'students.user_id', 'students.semester', 'students.batch', 'students.created_at'])
+            ->select(['students.id', 'students.student_number', 'students.faculty_id','students.fee_group_id', 'students.classroom_id', 'students.user_id', 'students.semester', 'students.batch', 'students.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->with(['user', 'faculty', 'departement', 'feeGroup', 'classroom'])
+            ->with(['user', 'faculty','feeGroup', 'classroom'])
             ->whereHas('user', function ($query) {
                 $query->whereHas('roles', fn($query) =>  $query->where('name', 'Student'));
             })
@@ -78,10 +75,6 @@ class StudentController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
             'feeGroups' => FeeGroup::query()->select(['id', 'group', 'amount'])->orderBy('group')->get()->map(fn($item) => [
                 'value' => $item->id,
                 'label' => 'Golongan ' . $item->group . '-' . number_format($item->amount, 0, ',', '.'),
@@ -106,7 +99,6 @@ class StudentController extends Controller implements HasMiddleware
 
             $user->student()->create([
                 'faculty_id' => $request->faculty_id,
-                'departement_id' => $request->departement_id,
                 'classroom_id' => $request->classroom_id,
                 'fee_group_id' => $request->fee_group_id,
                 'student_number' => $request->student_number,
@@ -142,10 +134,6 @@ class StudentController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
             'feeGroups' => FeeGroup::query()->select(['id', 'group', 'amount'])->orderBy('group')->get()->map(fn($item) => [
                 'value' => $item->id,
                 'label' => 'Golongan ' . $item->group . '-' . number_format($item->amount, 0, ',', '.'),
@@ -164,7 +152,6 @@ class StudentController extends Controller implements HasMiddleware
 
             $student->update([
                 'faculty_id' => $request->faculty_id,
-                'departement_id' => $request->departement_id,
                 'classroom_id' => $request->classroom_id,
                 'fee_group_id' => $request->fee_group_id,
                 'student_number' => $request->student_number,
