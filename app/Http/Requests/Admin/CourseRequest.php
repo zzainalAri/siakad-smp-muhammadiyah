@@ -23,7 +23,6 @@ class CourseRequest extends FormRequest
     {
         return [
             'faculty_id' => 'required|exists:faculties,id',
-            'departement_id' => 'required|exists:departements,id',
             'teacher_id' => 'required|exists:users,id',
             'name' => 'required|string|min:3|max:255',
             'credit' => 'required|integer',
@@ -35,7 +34,6 @@ class CourseRequest extends FormRequest
     {
         return [
             'faculty_id' => 'Fakultas',
-            'departement_id' => 'Program Studi',
             'teacher_id' => 'Dosen',
             'name' => 'Nama',
             'credit' => 'Satuan Kredit Semester (SKS)',

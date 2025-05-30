@@ -20,10 +20,9 @@ class TeacherOperatorController extends Controller
     public function index()
     {
         $teachers = Teacher::query()
-            ->select(['teachers.id', 'teachers.teacher_number', 'teachers.faculty_id', 'teachers.departement_id', 'teachers.user_id', 'teachers.academic_title', 'teachers.created_at'])
+            ->select(['teachers.id', 'teachers.teacher_number', 'teachers.faculty_id', 'teachers.user_id', 'teachers.academic_title', 'teachers.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->where('teachers.departement_id', auth()->user()->operator->departement_id)
             ->where('teachers.faculty_id', auth()->user()->operator->faculty_id)
             ->with(['user'])
             ->whereHas('user', function ($query) {
@@ -33,12 +32,11 @@ class TeacherOperatorController extends Controller
 
 
         $faculty_name = auth()->user()->operator->faculty->name;
-        $departement_name = auth()->user()->operator->departement->name;
 
         return inertia('Operators/Teachers/Index', [
             'page_setting' => [
                 'title' => 'Dosen',
-                'subtitle' => "Menampilkan Dosen yang ada di {$faculty_name} dan program studi {$departement_name}",
+                'subtitle' => "Menampilkan Dosen yang ada di {$faculty_name}",
             ],
             'teachers' => TeacherOperatorResource::collection($teachers)->additional([
                 'meta' => [
@@ -78,7 +76,6 @@ class TeacherOperatorController extends Controller
 
             $user->teacher()->create([
                 'faculty_id' => auth()->user()->operator->faculty_id,
-                'departement_id' => auth()->user()->operator->departement_id,
                 'teacher_number' => $request->teacher_number,
                 'academic_title' => $request->academic_title,
 
@@ -117,7 +114,6 @@ class TeacherOperatorController extends Controller
 
             $teacher->update([
                 'faculty_id' => auth()->user()->operator->faculty_id,
-                'departement_id' => auth()->user()->operator->departement_id,
                 'teacher_number' => $request->teacher_number,
                 'academic_title' => $request->academic_title,
 

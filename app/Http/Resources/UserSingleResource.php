@@ -31,10 +31,6 @@ class UserSingleResource extends JsonResource
                     'id' => $this->student?->faculty?->id,
                     'name' => $this->student?->faculty?->name,
                 ],
-                'departement' => [
-                    'id' => $this->student?->departement?->id,
-                    'name' => $this->student?->departement?->name,
-                ],
                 'classroom' => [
                     'id' => $this->student?->classroom?->id,
                     'name' => $this->student?->classroom?->name,
@@ -50,15 +46,12 @@ class UserSingleResource extends JsonResource
                 'teacher_number' => $this->teacher?->teacher_number,
                 'academic_title' => $this->teacher?->academic_title,
                 'faculty_id' => $this->teacher?->faculty_id,
-                'departement_id' => $this->teacher?->departement_id,
             ]),
             'operator' => $this->when($this->hasRole('Operator'), [
                 'id' => $this->operator?->id,
                 'employee_number' => $this->operator?->employee_number,
                 'faculty_id' => $this->operator?->faculty_id,
                 'faculty' => $this->operator?->faculty?->name,
-                'departement_id' => $this->operator?->departement_id,
-                'departement' => $this->operator?->departement->name,
             ]),
         ];
     }

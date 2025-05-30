@@ -12,7 +12,6 @@ import {
     IconLayout2,
     IconLogout2,
     IconMoneybag,
-    IconSchool,
     IconUser,
     IconUsers,
     IconUsersGroup,
@@ -54,12 +53,6 @@ export default function SidebarResponsive({ url, auth }) {
                             active={url.startsWith('/admin/faculties')}
                             title={'Fakultas'}
                             icon={IconBuildingSkyscraper}
-                        />
-                        <NavLink
-                            url={route('admin.departements.index')}
-                            active={url.startsWith('/admin/departements')}
-                            title={'Program Studi'}
-                            icon={IconSchool}
                         />
                         <NavLink
                             url={route('admin.academic-years.index')}

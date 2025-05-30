@@ -9,7 +9,6 @@ use App\Http\Requests\Admin\ScheduleRequest;
 use App\Http\Resources\Admin\ScheduleResource;
 use App\Models\Classroom;
 use App\Models\Course;
-use App\Models\Departement;
 use App\Models\Faculty;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
@@ -25,17 +24,16 @@ class ScheduleController extends Controller implements HasMiddleware
         return [
             new Middleware('validateClassroom', only: ['store', 'update']),
             new Middleware('validateCourse', only: ['store', 'update']),
-            new Middleware('validateDepartement', only: ['store', 'update']),
 
         ];
     }
     public function index()
     {
         $schedules = Schedule::query()
-            ->select(['schedules.id',  'schedules.faculty_id', 'schedules.departement_id', 'schedules.classroom_id', 'schedules.course_id', 'schedules.start_time', 'schedules.end_time', 'schedules.academic_year_id', 'schedules.day_of_week', 'schedules.quote', 'schedules.created_at'])
+            ->select(['schedules.id',  'schedules.faculty_id','schedules.classroom_id', 'schedules.course_id', 'schedules.start_time', 'schedules.end_time', 'schedules.academic_year_id', 'schedules.day_of_week', 'schedules.quote', 'schedules.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->with(['classroom', 'course', 'faculty', 'departement', 'academicYear'])
+            ->with(['classroom', 'course', 'faculty','academicYear'])
             ->paginate(request()->load ?? 10);
 
 
@@ -72,10 +70,6 @@ class ScheduleController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
             'courses' => Course::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
@@ -94,7 +88,6 @@ class ScheduleController extends Controller implements HasMiddleware
         try {
             Schedule::create([
                 'faculty_id' => $request->faculty_id,
-                'departement_id' => $request->departement_id,
                 'course_id' => $request->course_id,
                 'classroom_id' => $request->classroom_id,
                 'academic_year_id' => activeAcademicYear()->id,
@@ -126,10 +119,6 @@ class ScheduleController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
             'courses' => Course::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
@@ -147,7 +136,6 @@ class ScheduleController extends Controller implements HasMiddleware
         try {
             $schedule->update([
                 'faculty_id' => $request->faculty_id,
-                'departement_id' => $request->departement_id,
                 'course_id' => $request->course_id,
                 'classroom_id' => $request->classroom_id,
                 'academic_year_id' => activeAcademicYear()->id,

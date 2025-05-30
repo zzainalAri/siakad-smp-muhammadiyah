@@ -19,19 +19,17 @@ class ClassroomOperatorController extends Controller
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
             ->where('faculty_id', auth()->user()->operator->faculty_id)
-            ->where('departement_id', auth()->user()->operator->departement_id)
             ->with(['academicYear'])
             ->paginate(request()->load ?? 10);
 
 
         $faculty_name = auth()->user()->operator->faculty->name;
-        $departement_name = auth()->user()->operator->departement->name;
 
 
         return inertia('Operators/Classrooms/Index', [
             'page_setting' => [
                 'title' => 'Kelas',
-                'subtitle' => "Menampilkan Mahasiswa yang ada di {$faculty_name} dan program studi {$departement_name}"
+                'subtitle' => "Menampilkan Mahasiswa yang ada di {$faculty_name} "
             ],
             'classrooms' => ClassroomOperatorResource::collection($classrooms)->additional([
                 'meta' => [
@@ -63,7 +61,6 @@ class ClassroomOperatorController extends Controller
         try {
             Classroom::create([
                 'name' =>  $request->name,
-                'departement_id' => auth()->user()->operator->departement_id,
                 'academic_year_id' => activeAcademicYear()->id,
                 'faculty_id' => auth()->user()->operator->faculty_id,
             ]);
@@ -94,7 +91,6 @@ class ClassroomOperatorController extends Controller
         try {
             $classroom->update([
                 'name' =>  $request->name,
-                'departement_id' => auth()->user()->operator->departement_id,
                 'academic_year_id' => activeAcademicYear()->id,
                 'faculty_id' => auth()->user()->operator->faculty_id,
             ]);

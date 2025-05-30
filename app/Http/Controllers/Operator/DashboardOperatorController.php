@@ -24,19 +24,15 @@ class DashboardOperatorController extends Controller
             'count' => [
                 'students' => Student::query()
                     ->where('faculty_id', auth()->user()->operator->faculty_id)
-                    ->where('departement_id', auth()->user()->operator->departement_id)
                     ->count(),
                 'teachers' => Teacher::query()
                     ->where('faculty_id', auth()->user()->operator->faculty_id)
-                    ->where('departement_id', auth()->user()->operator->departement_id)
                     ->count(),
                 'classrooms' => Classroom::query()
                     ->where('faculty_id', auth()->user()->operator->faculty_id)
-                    ->where('departement_id', auth()->user()->operator->departement_id)
                     ->count(),
                 'courses' => Course::query()
                     ->where('faculty_id', auth()->user()->operator->faculty_id)
-                    ->where('departement_id', auth()->user()->operator->departement_id)
                     ->count(),
             ]
         ]);

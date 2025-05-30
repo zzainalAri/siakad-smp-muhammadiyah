@@ -6,7 +6,6 @@ use App\Enums\MessageType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\TeacherRequest;
 use App\Http\Resources\Admin\TeacherResource;
-use App\Models\Departement;
 use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Teacher;
@@ -23,9 +22,7 @@ class TeacherController extends Controller implements HasMiddleware
 {
     public static function middleware()
     {
-        return [
-            new Middleware('validateDepartement', only: ['store', 'update']),
-        ];
+        return []; 
     }
 
 
@@ -34,10 +31,10 @@ class TeacherController extends Controller implements HasMiddleware
     public function index()
     {
         $teachers = Teacher::query()
-            ->select(['teachers.id', 'teachers.teacher_number', 'teachers.faculty_id', 'teachers.departement_id', 'teachers.user_id', 'teachers.academic_title', 'teachers.created_at'])
+            ->select(['teachers.id', 'teachers.teacher_number', 'teachers.faculty_id','teachers.user_id', 'teachers.academic_title', 'teachers.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->with(['user', 'faculty', 'departement'])
+            ->with(['user', 'faculty'])
             ->whereHas('user', function ($query) {
                 $query->whereHas('roles', fn($query) =>  $query->where('name', 'Teacher'));
             })
@@ -77,10 +74,6 @@ class TeacherController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
         ]);
     }
 
@@ -97,7 +90,6 @@ class TeacherController extends Controller implements HasMiddleware
 
             $user->teacher()->create([
                 'faculty_id' => $request->faculty_id,
-                'departement_id' => $request->departement_id,
                 'teacher_number' => $request->teacher_number,
                 'academic_title' => $request->academic_title,
 
@@ -130,10 +122,6 @@ class TeacherController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
         ]);
     }
 
@@ -144,7 +132,6 @@ class TeacherController extends Controller implements HasMiddleware
 
             $teacher->update([
                 'faculty_id' => $request->faculty_id,
-                'departement_id' => $request->departement_id,
                 'teacher_number' => $request->teacher_number,
                 'academic_title' => $request->academic_title,
 

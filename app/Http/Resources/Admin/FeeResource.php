@@ -24,7 +24,6 @@ class FeeResource extends JsonResource
                 'student_number' => $this->student?->student_number,
                 'name' => $this->student?->user?->name,
                 'faculty' => $this->student?->faculty?->name,
-                'departement' => $this->student?->departement?->name,
                 'classroom' => $this->student?->classroom?->name,
             ]),
             'feeGroup' => $this->whenLoaded('feeGroup', [

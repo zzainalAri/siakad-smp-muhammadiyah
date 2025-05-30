@@ -39,10 +39,6 @@ class OperatorRequest extends FormRequest
                 'required',
                 'exists:faculties,id'
             ],
-            'departement_id' => [
-                'required',
-                'exists:departements,id'
-            ],
             'employee_number' => $this->routeIs('admin.operators.store') ? 'required|string|max:13|unique:operators' : 'required|string|max:13',
             'avatar' => 'nullable|mimes:png,jpg,webp,jpeg',
 
@@ -56,7 +52,6 @@ class OperatorRequest extends FormRequest
             'email' => 'Email',
             'password' => 'password',
             'faculty_id' => 'Fakultas',
-            'departement_id' => 'Program Studi',
             'employee_number' => 'Nomor Induk Karyawan',
             'avatar' => 'Avatar'
         ];

@@ -18,22 +18,20 @@ class ScheduleOperatorController extends Controller
     public function index()
     {
         $schedules = Schedule::query()
-            ->select(['schedules.id',  'schedules.faculty_id', 'schedules.departement_id', 'schedules.classroom_id', 'schedules.course_id', 'schedules.start_time', 'schedules.end_time', 'schedules.academic_year_id', 'schedules.day_of_week', 'schedules.quote', 'schedules.created_at'])
+            ->select(['schedules.id',  'schedules.faculty_id','schedules.classroom_id', 'schedules.course_id', 'schedules.start_time', 'schedules.end_time', 'schedules.academic_year_id', 'schedules.day_of_week', 'schedules.quote', 'schedules.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
             ->where('schedules.faculty_id', auth()->user()->operator->faculty_id)
-            ->where('schedules.departement_id', auth()->user()->operator->departement_id)
-            ->with(['classroom', 'course', 'faculty', 'departement', 'academicYear'])
+            ->with(['classroom', 'course', 'faculty', 'academicYear'])
             ->paginate(request()->load ?? 10);
 
         $faculty_name = auth()->user()->operator->faculty->name;
-        $departement_name = auth()->user()->operator->departement->name;
 
 
         return inertia('Operators/Schedules/Index', [
             'page_setting' => [
                 'title' => 'Jadwal',
-                'subtitle' => "Menampilkan Jadwal yang ada di {$faculty_name} dan program studi {$departement_name}"
+                'subtitle' => "Menampilkan Jadwal yang ada di {$faculty_name} "
             ],
             'schedules' => ScheduleOperatorResource::collection($schedules)->additional([
                 'meta' => [
@@ -59,7 +57,6 @@ class ScheduleOperatorController extends Controller
             ],
             'courses' => Course::query()->select(['id', 'name'])
                 ->where('faculty_id', auth()->user()->operator->faculty_id)
-                ->where('departement_id', auth()->user()->operator->departement_id)
                 ->orderBy('name')->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->name,
@@ -78,7 +75,6 @@ class ScheduleOperatorController extends Controller
         try {
             Schedule::create([
                 'faculty_id' => auth()->user()->operator->faculty_id,
-                'departement_id' => auth()->user()->operator->departement_id,
                 'course_id' => $request->course_id,
                 'classroom_id' => $request->classroom_id,
                 'academic_year_id' => activeAcademicYear()->id,
@@ -108,7 +104,6 @@ class ScheduleOperatorController extends Controller
             'schedule' => $schedule,
             'courses' => Course::query()->select(['id', 'name'])
                 ->where('faculty_id', auth()->user()->operator->faculty_id)
-                ->where('departement_id', auth()->user()->operator->departement_id)
                 ->orderBy('name')->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->name,
@@ -126,7 +121,6 @@ class ScheduleOperatorController extends Controller
         try {
             $schedule->update([
                 'faculty_id' => auth()->user()->operator->faculty_id,
-                'departement_id' => auth()->user()->operator->departement_id,
                 'course_id' => $request->course_id,
                 'classroom_id' => $request->classroom_id,
                 'academic_year_id' => activeAcademicYear()->id,

@@ -20,7 +20,6 @@ class ValidateCourse
         $course = Course::query()
             ->where('id', $request->course_id)
             ->where('faculty_id', $request->faculty_id)
-            ->where('departement_id', $request->departement_id)
             ->exists();
 
         if (!$course) {
