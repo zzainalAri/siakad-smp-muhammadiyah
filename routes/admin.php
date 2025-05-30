@@ -21,25 +21,25 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     //dashboard
     Route::get('dashboard', DashboardAdminController::class)->name('admin.dashboard');
 
-    // faculties
+    // levels
     Route::controller(FacultyController::class)->group(function () {
-        Route::get('faculties', 'index')->name('admin.faculties.index');
-        Route::get('faculties/create', 'create')->name('admin.faculties.create');
-        Route::post('faculties/create', 'store')->name('admin.faculties.store');
-        Route::get('faculties/edit/{faculty:slug}', 'edit')->name('admin.faculties.edit');
-        Route::put('faculties/edit/{faculty:slug}', 'update')->name('admin.faculties.update');
-        Route::delete('faculties/destroy/{faculty:slug}', 'destroy')->name('admin.faculties.destroy');
+        Route::get('levels', 'index')->name('admin.levels.index');
+        Route::get('levels/create', 'create')->name('admin.levels.create');
+        Route::post('levels/create', 'store')->name('admin.levels.store');
+        Route::get('levels/edit/{faculty:slug}', 'edit')->name('admin.levels.edit');
+        Route::put('levels/edit/{faculty:slug}', 'update')->name('admin.levels.update');
+        Route::delete('levels/destroy/{faculty:slug}', 'destroy')->name('admin.levels.destroy');
     });
 
-    // departement
-    Route::controller(DepartementController::class)->group(function () {
-        Route::get('departements', 'index')->name('admin.departements.index');
-        Route::get('departements/create', 'create')->name('admin.departements.create');
-        Route::post('departements/create', 'store')->name('admin.departements.store');
-        Route::get('departements/edit/{departement:slug}', 'edit')->name('admin.departements.edit');
-        Route::put('departements/edit/{departement:slug}', 'update')->name('admin.departements.update');
-        Route::delete('departements/destroy/{departement:slug}', 'destroy')->name('admin.departements.destroy');
-    });
+    // // departement
+    // Route::controller(DepartementController::class)->group(function () {
+    //     Route::get('departements', 'index')->name('admin.departements.index');
+    //     Route::get('departements/create', 'create')->name('admin.departements.create');
+    //     Route::post('departements/create', 'store')->name('admin.departements.store');
+    //     Route::get('departements/edit/{departement:slug}', 'edit')->name('admin.departements.edit');
+    //     Route::put('departements/edit/{departement:slug}', 'update')->name('admin.departements.update');
+    //     Route::delete('departements/destroy/{departement:slug}', 'destroy')->name('admin.departements.destroy');
+    // });
 
     // academic year
     Route::controller(AcademicYearController::class)->group(function () {

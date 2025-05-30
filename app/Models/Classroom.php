@@ -12,14 +12,9 @@ class Classroom extends Model
 
     protected $guarded = [];
 
-    public function faculty()
+    public function level()
     {
-        return $this->belongsTo(faculty::class);
-    }
-
-    public function departement()
-    {
-        return $this->belongsTo(Departement::class);
+        return $this->belongsTo(Level::class);
     }
 
     public function academicYear()

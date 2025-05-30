@@ -27,13 +27,8 @@ class AcademicYearRequest extends FormRequest
             'name' => 'required|string|min:3|max:255',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
-            'semester' => [
-                'required',
-                new Enum(AcademicYearSemester::class)
-            ],
+            'semester' => ['required', new Enum(AcademicYearSemester::class)],
             'is_active' => 'nullable|boolean',
-
-
         ];
     }
 
@@ -43,9 +38,8 @@ class AcademicYearRequest extends FormRequest
             'name' => 'Nama',
             'start_date' => 'Tanggal Dimulai',
             'end_date' => 'Tanggal Selesai',
-            'end_date' => 'Tanggal Selesai',
             'semester' => 'Semester',
-            'is_aktif' => 'Apakah Aktif',
+            'is_active' => 'Apakah Aktif',
         ];
     }
 }

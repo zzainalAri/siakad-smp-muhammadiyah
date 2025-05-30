@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
-class FacultyResource extends JsonResource
+class LevelResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,9 +18,7 @@ class FacultyResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'code' => $this->code,
             'slug' => $this->slug,
-            'logo' => $this->logo ? Storage::url($this->logo) : null,
             'created_at' => $this->created_at,
         ];
     }

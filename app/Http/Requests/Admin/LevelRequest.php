@@ -5,7 +5,7 @@ namespace App\Http\Requests\Admin;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class FacultyRequest extends FormRequest
+class LevelRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,27 +23,14 @@ class FacultyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3|max:255',
-            'logo' => Rule::when($this->routeIs('admin.faculties.store'), [
-                'required',
-                'mimes:png,jpg,jpeg,webp',
-                'max:2048'
-            ]),
-            Rule::when($this->routeIs('admin.faculties.update'), [
-                'nullable',
-                'mimes:png,jpg,jpeg,webp',
-                'max:2048'
-            ])
-
+            'name' => ['required', 'in:Kelas 7,Kelas 8,Kelas 9'],
         ];
     }
 
     public function attributes()
     {
         return [
-            'name' => 'Nama',
-            'logo' => 'Logo'
-
+            'name' => 'Nama Tingkat',
         ];
     }
 }
