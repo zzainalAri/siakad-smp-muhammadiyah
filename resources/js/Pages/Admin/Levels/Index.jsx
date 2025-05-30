@@ -3,7 +3,6 @@ import EmptyState from '@/Components/EmptyState';
 import HeaderTitle from '@/Components/HeaderTitle';
 import PaginationTable from '@/Components/PaginationTable';
 import ShowFilter from '@/Components/ShowFilter';
-import { Avatar, AvatarFallback } from '@/Components/ui/avatar';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
@@ -13,7 +12,6 @@ import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
 import { deleteAction, formatDateIndo } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
-import { AvatarImage } from '@radix-ui/react-avatar';
 import {
     IconArrowsDownUp,
     IconBuildingSkyscraper,
@@ -25,7 +23,7 @@ import {
 import { useState } from 'react';
 
 export default function Index(props) {
-    const { data: faculties, meta, links } = props.faculties;
+    const { data: levels, meta, links } = props.levels;
     const [params, setParams] = useState(props.state);
 
     const onSortable = (field) => {
@@ -35,10 +33,11 @@ export default function Index(props) {
             direction: params.direction === 'asc' ? 'desc' : 'asc',
         });
     };
+
     UseFilter({
-        route: route('admin.faculties.index'),
+        route: route('admin.levels.index'),
         values: params,
-        only: ['faculties'],
+        only: ['levels'],
     });
 
     return (
@@ -51,7 +50,7 @@ export default function Index(props) {
                         icon={IconBuildingSkyscraper}
                     />
                     <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
-                        <Link href={route('admin.faculties.create')}>
+                        <Link href={route('admin.levels.create')}>
                             <IconPlus className="size-4" /> Tambah
                         </Link>
                     </Button>
@@ -59,7 +58,6 @@ export default function Index(props) {
                 <Card>
                     <CardHeader className="mb-4 p-0">
                         {/* Filters */}
-
                         <div className="flex w-full flex-col gap-4 px-6 py-4 lg:flex-row lg:items-center">
                             <Input
                                 className="w-full sm:w-1/4"
@@ -89,11 +87,11 @@ export default function Index(props) {
                     </CardHeader>
 
                     <CardContent className="[&-td]: p-0 [&-td]:whitespace-nowrap [&-th]:px-6">
-                        {faculties.length === 0 ? (
+                        {levels.length === 0 ? (
                             <EmptyState
                                 icon={IconBuildingSkyscraper}
-                                title="Tidak ada fakultas"
-                                subtitle="Mulailah dengan membuat fakultas baru"
+                                title="Tidak ada tingkat"
+                                subtitle="Mulailah dengan membuat tingkat baru"
                             />
                         ) : (
                             <Table className="w-full">
@@ -123,19 +121,7 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('code')}
-                                            >
-                                                Kode
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>Logo</TableHead>
+                                        <TableHead>Slug</TableHead>
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
@@ -152,22 +138,16 @@ export default function Index(props) {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {faculties.map((faculty, index) => (
+                                    {levels.map((level, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                            <TableCell>{faculty.name}</TableCell>
-                                            <TableCell>{faculty.code}</TableCell>
-                                            <TableCell>
-                                                <Avatar>
-                                                    <AvatarImage src={faculty.logo} />
-                                                    <AvatarFallback>{faculty.name.substring(0, 1)}</AvatarFallback>
-                                                </Avatar>
-                                            </TableCell>
-                                            <TableCell>{formatDateIndo(faculty.created_at)}</TableCell>
+                                            <TableCell>{level.name}</TableCell>
+                                            <TableCell>{level.slug}</TableCell>
+                                            <TableCell>{formatDateIndo(level.created_at)}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-x-1">
                                                     <Button variant="blue" size="sm" asChild>
-                                                        <Link href={route('admin.faculties.edit', [faculty])}>
+                                                        <Link href={route('admin.levels.edit', [level])}>
                                                             <IconPencil size="4" />
                                                             Edit
                                                         </Link>
@@ -180,7 +160,7 @@ export default function Index(props) {
                                                             </Button>
                                                         }
                                                         action={() =>
-                                                            deleteAction(route('admin.faculties.destroy', [faculty]))
+                                                            deleteAction(route('admin.levels.destroy', [level]))
                                                         }
                                                     />
                                                 </div>
@@ -194,7 +174,7 @@ export default function Index(props) {
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
                             Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
-                            {meta.total} fakultas
+                            {meta.total} tingkat
                         </p>
                         <div className="overflow-x-auto">
                             {meta.has_pages && <PaginationTable meta={meta} links={links} />}
