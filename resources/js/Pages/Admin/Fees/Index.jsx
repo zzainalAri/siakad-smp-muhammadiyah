@@ -95,8 +95,8 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>Fakultas</TableHead>
-                                        <TableHead>Nama Program Studi</TableHead>
+                                        <TableHead>Tingkat</TableHead>
+                                        <TableHead>Kelas</TableHead>
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
@@ -109,7 +109,7 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>Nama Induk Mahasiswa</TableHead>
+                                        <TableHead>Nama Induk Siswa</TableHead>
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
@@ -140,9 +140,10 @@ export default function Index(props) {
                                     {fees.map((fee, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                            <TableCell>{fee.student.faculty}</TableCell>
-                                            <TableCell>{fee.student.departement}</TableCell>
-                                            <TableCell>{fee.student.student_number}</TableCell>
+                                            <TableCell>{fee.student.name}</TableCell>
+                                            <TableCell>{fee.student.nisn}</TableCell>
+                                            <TableCell>{fee.student.level}</TableCell>
+                                            <TableCell>{fee.student.classroom}</TableCell>
                                             <TableCell>{fee.semester}</TableCell>
                                             <TableCell>{fee.status}</TableCell>
                                             <TableCell>{formatDateIndo(fee.created_at)}</TableCell>
@@ -155,7 +156,7 @@ export default function Index(props) {
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
                             Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
-                            {meta.total} uang kuliah tunggal
+                            {meta.total} uang Biaya Pendidikan
                         </p>
                         <div className="overflow-x-auto">
                             {meta.has_pages && <PaginationTable meta={meta} links={links} />}

@@ -17,9 +17,11 @@ class StudentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'student_number' => $this->student_number,
-            'semester' => $this->semester,
+            'nisn' => $this->nisn,
             'batch' => $this->batch,
+            'gender' => $this->gender,
+            'status' => $this->status,
+            'address' => $this->address,
             'created_at' => $this->created_at,
             'user' => $this->whenLoaded('user', [
                 'id' => $this->user?->id,
@@ -27,18 +29,13 @@ class StudentResource extends JsonResource
                 'email' => $this->user?->email,
                 'avatar' => $this->user?->avatar ? Storage::url($this->user?->avatar) : null,
             ]),
-            'faculty' => $this->whenLoaded('faculty', [
-                'id' => $this->faculty?->id,
-                'name' => $this->faculty?->name,
+            'level' => $this->whenLoaded('level', [
+                'id' => $this->level?->id,
+                'name' => $this->level?->name,
             ]),
             'classroom' => $this->whenLoaded('classroom', [
                 'id' => $this->classroom?->id,
                 'name' => $this->classroom?->name,
-            ]),
-            'feeGroup' => $this->whenLoaded('feeGroup', [
-                'id' => $this->feeGroup?->id,
-                'group' => $this->feeGroup?->group,
-                'amount' => $this->feeGroup?->amount,
             ]),
         ];
     }

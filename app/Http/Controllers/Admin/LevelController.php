@@ -43,10 +43,15 @@ class LevelController extends Controller
         return inertia('Admin/Levels/Create', [
             'page_setting' => [
                 'title' => 'Tambah Tingkat',
-                'subtitle' => 'Buat tingkat baru (contoh: Kelas 7)',
+                'subtitle' => 'Buat tingkat baru ',
                 'method' => 'POST',
                 'action' => route('admin.levels.store'),
             ],
+            'levelOptions' => [
+                ['value' => 'Kelas 7', 'label' => 'Kelas 7'],
+                ['value' => 'Kelas 8', 'label' => 'Kelas 8'],
+                ['value' => 'Kelas 9', 'label' => 'Kelas 9'],
+            ]
         ]);
     }
 
@@ -76,6 +81,11 @@ class LevelController extends Controller
                 'action' => route('admin.levels.update', $level),
             ],
             'level' => $level,
+            'levelOptions' => [
+                ['value' => 'Kelas 7', 'label' => 'Kelas 7'],
+                ['value' => 'Kelas 8', 'label' => 'Kelas 8'],
+                ['value' => 'Kelas 9', 'label' => 'Kelas 9'],
+            ]
         ]);
     }
 

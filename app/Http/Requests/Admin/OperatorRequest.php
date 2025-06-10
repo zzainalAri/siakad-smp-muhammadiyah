@@ -35,13 +35,9 @@ class OperatorRequest extends FormRequest
             'password' => $this->routeIs('admin.operators.store')
                 ? ['required', 'string', 'min:4', 'max:255']
                 : ['nullable', 'string', 'min:4', 'max:255'],
-            'faculty_id' => [
-                'required',
-                'exists:faculties,id'
-            ],
             'employee_number' => $this->routeIs('admin.operators.store') ? 'required|string|max:13|unique:operators' : 'required|string|max:13',
+            'level_id' => ['required', 'exists:levels,id'],
             'avatar' => 'nullable|mimes:png,jpg,webp,jpeg',
-
         ];
     }
 
@@ -51,8 +47,8 @@ class OperatorRequest extends FormRequest
             'name' => 'Nama',
             'email' => 'Email',
             'password' => 'password',
-            'faculty_id' => 'Fakultas',
             'employee_number' => 'Nomor Induk Karyawan',
+            'level_id' => 'Tingkat',
             'avatar' => 'Avatar'
         ];
     }

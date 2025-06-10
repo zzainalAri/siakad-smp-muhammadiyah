@@ -24,7 +24,7 @@ class StudyPlanOperatorResource extends JsonResource
             'created_at' => $this->created_at,
             'student' => $this->whenLoaded('student', [
                 'id' => $this->student?->id,
-                'student_number' => $this->student?->student_number,
+                'nisn' => $this->student?->nisn,
                 'name' => $this->student?->user?->name,
                 'avatar' => $this->student?->user?->avatar ? Storage::url($this->student?->user?->avatar) : null,
                 'classroom' => $this->student?->classroom?->name,

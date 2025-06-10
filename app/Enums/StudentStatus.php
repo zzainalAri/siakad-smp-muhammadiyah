@@ -2,11 +2,11 @@
 
 namespace App\Enums;
 
-enum AcademicYearSemester: string
+enum StudentStatus: string
 {
-    case ODD = 'Ganjil';
-    case EVEN = 'Genap';
-
+    case ACTIVE = 'Aktif';
+    case INACTIVE = 'Tidak Aktif';
+    case TRANSFER = 'Pindahan dari sekolah lain';
 
     public static function options()
     {

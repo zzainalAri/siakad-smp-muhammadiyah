@@ -99,7 +99,7 @@ export default function Index(props) {
                                         <TableHeader>
                                             <TableRow>
                                                 <TableHead>Nama</TableHead>
-                                                <TableHead>Nomor Induk Mahasiswa</TableHead>
+                                                <TableHead>Nomor Induk Siswa</TableHead>
                                                 <TableHead>Semester</TableHead>
                                                 <TableHead>Kelas</TableHead>
                                                 <TableHead>Program Studi</TableHead>
@@ -112,7 +112,7 @@ export default function Index(props) {
                                         <TableBody>
                                             <TableRow>
                                                 <TableCell>{auth.name}</TableCell>
-                                                <TableCell>{auth.student.student_number}</TableCell>
+                                                <TableCell>{auth.student.nisn}</TableCell>
                                                 <TableCell>{auth.student.semester}</TableCell>
                                                 <TableCell>{auth.student.classroom.name}</TableCell>
                                                 <TableCell>{auth.student.departement.name}</TableCell>

@@ -57,7 +57,7 @@ export default function Create(props) {
                                         type="text"
                                         name="name"
                                         id="name"
-                                        placeholder="Masukkan nama fakultas"
+                                        placeholder="Masukkan nama peran"
                                         value={data.name}
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />

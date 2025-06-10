@@ -26,7 +26,7 @@ class ScheduleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'faculty_id' => 'required|exists:faculties,id',
+            'level_id' => 'required|exists:levels,id',
             'course_id' => 'required|exists:courses,id',
             'classroom_id' => 'required|exists:classrooms,id',
             'start_time' => 'required',
@@ -35,20 +35,18 @@ class ScheduleRequest extends FormRequest
                 'required',
                 new Enum(ScheduleDay::class)
             ],
-            'quote' => 'required|integer',
         ];
     }
 
     public function attributes()
     {
         return [
-            'faculty_id' => 'Fakultas',
-            'course_id' => 'Mata Kuliah',
+            'level_id' => 'Tingkat',
+            'course_id' => 'Mata Pelajaran',
             'classroom_id' => 'Kelas',
             'start_time' => 'Waktu Mulai',
             'end_time' => 'Waktu Selesai',
             'day_of_week' => 'Hari',
-            'quote' => 'Kuota'
         ];
     }
 }

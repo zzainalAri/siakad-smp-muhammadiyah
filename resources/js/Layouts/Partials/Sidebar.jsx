@@ -50,9 +50,9 @@ export default function Sidebar({ auth, url }) {
                         {/* master */}
                         <div className="px-3 py-2 text-base font-medium text-white">Master</div>
                         <NavLink
-                            url={route('admin.faculties.index')}
-                            active={url.startsWith('/admin/faculties')}
-                            title={'Fakultas'}
+                            url={route('admin.levels.index')}
+                            active={url.startsWith('/admin/levels')}
+                            title={'Tingkat'}
                             icon={IconBuildingSkyscraper}
                         />
                         <NavLink
@@ -79,7 +79,7 @@ export default function Sidebar({ auth, url }) {
                         <NavLink
                             url={route('admin.students.index')}
                             active={url.startsWith('/admin/students')}
-                            title={'Mahasiswa'}
+                            title={'Siswa'}
                             icon={IconUsers}
                         />
                         <NavLink
@@ -164,7 +164,7 @@ export default function Sidebar({ auth, url }) {
                         <NavLink
                             url={route('operators.students.index')}
                             active={url.startsWith('/operators/students')}
-                            title={'Mahasiswa'}
+                            title={'Siswa'}
                             icon={IconUsers}
                         />
                         <NavLink

@@ -35,14 +35,13 @@ class TeacherRequest extends FormRequest
             'password' => $this->routeIs('admin.teachers.store')
                 ? ['required', 'string', 'min:4', 'max:255']
                 : ['nullable', 'string', 'min:4', 'max:255'],
-            'faculty_id' => [
+            'level_id' => [
                 'required',
-                'exists:faculties,id'
+                'exists:levels,id'
             ],
-            'teacher_number' => $this->routeIs('admin.teachers.store') ? 'required|string|max:13|unique:teachers' : 'required|string|max:13',
+            'nip' => $this->routeIs('admin.teachers.store') ? 'required|string|max:13|unique:teachers,nip' : 'required|string|max:13',
             'academic_title' => 'required|string|min:3|max:255',
             'avatar' => 'nullable|mimes:png,jpg,webp,jpeg',
-
         ];
     }
 
@@ -52,8 +51,8 @@ class TeacherRequest extends FormRequest
             'name' => 'Nama',
             'email' => 'Email',
             'password' => 'password',
-            'faculty_id' => 'Fakultas',
-            'teacher_number' => 'Nomor Induk Dosen',
+            'level_id' => 'Tingkat',
+            'nip' => 'NIP',
             'academic_title' => 'Jabatan Akademik',
             'avatar' => 'Avatar'
         ];

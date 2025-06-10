@@ -40,7 +40,7 @@ export default function SidebarResponsive({ url, auth }) {
                     <>
                         {/* dashboard */}
                         <NavLink
-                            url={route('admin.faculties.index')}
+                            url={route('admin.levels.index')}
                             active={url.startsWith('/admin/dashboard')}
                             title={'Dashboard'}
                             icon={IconLayout2}
@@ -49,9 +49,9 @@ export default function SidebarResponsive({ url, auth }) {
                         {/* master */}
                         <div className="px-3 py-2 text-base font-medium text-white">Master</div>
                         <NavLink
-                            url={route('admin.faculties.index')}
-                            active={url.startsWith('/admin/faculties')}
-                            title={'Fakultas'}
+                            url={route('admin.levels.index')}
+                            active={url.startsWith('/admin/levels')}
+                            title={'Tingkat'}
                             icon={IconBuildingSkyscraper}
                         />
                         <NavLink
@@ -78,7 +78,7 @@ export default function SidebarResponsive({ url, auth }) {
                         <NavLink
                             url={route('admin.students.index')}
                             active={url.startsWith('/admin/students')}
-                            title={'Mahasiswa'}
+                            title={'Siswa'}
                             icon={IconUsers}
                         />
                         <NavLink
@@ -163,7 +163,7 @@ export default function SidebarResponsive({ url, auth }) {
                         <NavLink
                             url={route('operators.teachers.index')}
                             active={url.startsWith('/operators/students')}
-                            title={'Mahasiswa'}
+                            title={'Siswa'}
                             icon={IconUsers}
                         />
                         <NavLink

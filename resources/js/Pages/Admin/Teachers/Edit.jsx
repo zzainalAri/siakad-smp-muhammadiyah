@@ -12,17 +12,16 @@ import { IconArrowLeft, IconCheck, IconUsersGroup } from '@tabler/icons-react';
 import { useRef } from 'react';
 import { toast } from 'sonner';
 
-export default function Create(props) {
+export default function Edit(props) {
     const fileInputAvatar = useRef(null);
 
     const { data, setData, post, errors, processing, reset } = useForm({
-        faculty_id: props.teacher.faculty_id ?? null,
-        departement_id: props.teacher.departement_id ?? null,
+        level_id: props.teacher.level_id ?? null,
         name: props.teacher.user.name ?? '',
         email: props.teacher.user.email ?? '',
         password: '',
         avatar: null,
-        teacher_number: props.teacher.teacher_number ?? '',
+        nip: props.teacher.nip ?? '',
         academic_title: props.teacher.academic_title ?? '',
         _method: props.page_setting.method,
     });
@@ -64,12 +63,12 @@ export default function Create(props) {
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
-                                    <Label htmlFor="name">Nama Dosen</Label>
+                                    <Label htmlFor="name">Nama Guru</Label>
                                     <Input
                                         type="text"
                                         name="name"
                                         id="name"
-                                        placeholder="Masukkan nama dosen"
+                                        placeholder="Masukkan nama Guru"
                                         value={data.name}
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
@@ -100,63 +99,39 @@ export default function Create(props) {
                                     {errors.password && <InputError message={errors.password} />}
                                 </div>
                                 <div className="col-span-full">
-                                    <Label htmlFor="faculty_id">Nama Fakultas</Label>
+                                    <Label htmlFor="level_id">Tingkat</Label>
                                     <Select
-                                        defaultValue={data.faculty_id}
-                                        onValueChange={(value) => setData('faculty_id', value)}
-                                        id="faculty_id"
+                                        defaultValue={data.level_id}
+                                        onValueChange={(value) => setData('level_id', value)}
+                                        id="level_id"
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
-                                                {props.faculties.find((faculty) => faculty.value == data.faculty_id)
-                                                    ?.label ?? 'Pilih fakultas'}
+                                                {props.levels.find((level) => level.value == data.level_id)?.label ??
+                                                    'Pilih Tingkat'}
                                             </SelectValue>
                                             <SelectContent>
-                                                {props.faculties.map((faculty, index) => (
-                                                    <SelectItem key={index} value={faculty.value}>
-                                                        {faculty.label}
+                                                {props.levels.map((level, index) => (
+                                                    <SelectItem key={index} value={level.value}>
+                                                        {level.label}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </SelectTrigger>
                                     </Select>
-                                    {errors.faculty_id && <InputError message={errors.faculty_id} />}
-                                </div>
-                                <div className="col-span-full">
-                                    <Label htmlFor="departement_id">Program Studi</Label>
-                                    <Select
-                                        defaultValue={data.departement_id}
-                                        onValueChange={(value) => setData('departement_id', value)}
-                                        id="departement_id"
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue>
-                                                {props.departements.find(
-                                                    (departement) => departement.value == data.departement_id,
-                                                )?.label ?? 'Pilih program studi'}
-                                            </SelectValue>
-                                            <SelectContent>
-                                                {props.departements.map((departement, index) => (
-                                                    <SelectItem key={index} value={departement.value}>
-                                                        {departement.label}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </SelectTrigger>
-                                    </Select>
-                                    {errors.departement_id && <InputError message={errors.departement_id} />}
+                                    {errors.level_id && <InputError message={errors.level_id} />}
                                 </div>
                                 <div className="col-span-2">
-                                    <Label htmlFor="teacher_number">Nomor Induk Dosen</Label>
+                                    <Label htmlFor="nip">NIP</Label>
                                     <Input
                                         type="text"
-                                        name="teacher_number"
-                                        id="teacher_number"
-                                        placeholder="Masukkan nomor induk Dosen"
-                                        value={data.teacher_number}
+                                        name="nip"
+                                        id="nip"
+                                        placeholder="Masukkan NIP"
+                                        value={data.nip}
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
-                                    {errors.teacher_number && <InputError message={errors.teacher_number} />}
+                                    {errors.nip && <InputError message={errors.nip} />}
                                 </div>
                                 <div className="col-span-2">
                                     <Label htmlFor="academic_title">Jabatan Akademik</Label>
@@ -200,4 +175,4 @@ export default function Create(props) {
     );
 }
 
-Create.layout = (page) => <AppLayout children={page} title={page.props.page_setting.title} />;
+Edit.layout = (page) => <AppLayout children={page} title={page.props.page_setting.title} />;

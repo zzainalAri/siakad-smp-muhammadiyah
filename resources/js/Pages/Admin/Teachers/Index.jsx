@@ -131,9 +131,9 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('faculty_id')}
+                                                onClick={() => onSortable('level_id')}
                                             >
-                                                Fakultas
+                                                Tingkat
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -143,21 +143,9 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('departement_id')}
+                                                onClick={() => onSortable('nip')}
                                             >
-                                                Program Studi
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('teacher_number')}
-                                            >
-                                                Nomor Induk Dosen Nasional
+                                                NIP
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -204,9 +192,8 @@ export default function Index(props) {
                                                 <span>{teacher.user?.name}</span>
                                             </TableCell>
                                             <TableCell>{teacher.user?.email}</TableCell>
-                                            <TableCell>{teacher.faculty.name}</TableCell>
-                                            <TableCell>{teacher.departement.name}</TableCell>
-                                            <TableCell>{teacher.teacher_number}</TableCell>
+                                            <TableCell>{teacher.level.name}</TableCell>
+                                            <TableCell>{teacher.nip}</TableCell>
                                             <TableCell>{teacher.academic_title}</TableCell>
                                             <TableCell>{formatDateIndo(teacher.created_at)}</TableCell>
                                             <TableCell>
@@ -239,7 +226,7 @@ export default function Index(props) {
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
                             Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
-                            {meta.total} Dosen
+                            {meta.total} Guru
                         </p>
                         <div className="overflow-x-auto">
                             {meta.has_pages && <PaginationTable meta={meta} links={links} />}

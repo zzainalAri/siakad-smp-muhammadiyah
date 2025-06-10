@@ -14,15 +14,15 @@ class FeeController extends Controller
      */
     public function __invoke()
     {
-        $fees = Fee::query()->select(['fees.id', 'fees.student_id', 'fees.fee_group_id', 'fees.semester', 'fees.status', 'fees.created_at'])
+        $fees = Fee::query()->select(['fees.id', 'fees.student_id', 'fees.fee_code', 'fees.semester', 'fees.status', 'fees.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
             ->paginate(request()->load ?? 10);
 
         return inertia('Admin/Fees/Index', [
             'page_setting' => [
-                'title' => 'Uang Kuliah Tunggal',
-                'subtitle' => 'Menampilkan semua data Uang Kuliah Tunggal yang tersedia pada universitas ini'
+                'title' => 'Biaya Pendidikan',
+                'subtitle' => 'Menampilkan semua data Biaya Pendidikan yang tersedia di SMP Muhammadiyah ini'
             ],
             'fees' => FeeResource::collection($fees)->additional([
                 'meta' => [

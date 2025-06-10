@@ -104,7 +104,7 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>Nama Mahasiswa</TableHead>
+                                        <TableHead>Nama Siswa</TableHead>
                                         <TableHead>Kelas</TableHead>
                                         <TableHead>
                                             <Button
@@ -112,7 +112,7 @@ export default function Index(props) {
                                                 className="group inline-flex"
                                                 onClick={() => onSortable('studyPlan_number')}
                                             >
-                                                Nomor Induk Mahasiswa
+                                                Nomor Induk Siswa
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -195,7 +195,7 @@ export default function Index(props) {
                                                 <span>{studyPlan.student.name}</span>
                                             </TableCell>
                                             <TableCell>{studyPlan.student.classroom}</TableCell>
-                                            <TableCell>{studyPlan.student.student_number}</TableCell>
+                                            <TableCell>{studyPlan.student.nisn}</TableCell>
                                             <TableCell>{studyPlan.academicYear.name}</TableCell>
                                             <TableCell>{studyPlan.status}</TableCell>
                                             <TableCell>{studyPlan.notes}</TableCell>

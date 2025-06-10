@@ -17,7 +17,7 @@ class TeacherOperatorResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'teacher_number' => $this->teacher_number,
+            'nip' => $this->nip,
             'academic_title' => $this->academic_title,
             'created_at' => $this->created_at,
             'user' => $this->whenLoaded('user', [

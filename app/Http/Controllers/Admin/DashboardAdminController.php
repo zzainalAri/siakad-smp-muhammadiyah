@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Classroom;
 use App\Models\Course;
-use App\Models\Faculty;
+use App\Models\Level;
 use Illuminate\Http\Request;
 
 class DashboardAdminController extends Controller
@@ -19,7 +19,7 @@ class DashboardAdminController extends Controller
                 'subtitle' => 'Menampilkan semua statistik pada platform ini',
             ],
             'count' => [
-                'faculties' => Faculty::count(),
+                'levels' => Level::count(),
                 'classrooms' => Classroom::count(),
                 'courses' => Course::count(),
             ]

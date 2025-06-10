@@ -70,7 +70,7 @@ export default function Index(props) {
                                 <TableHeader>
                                     <TableRow>
                                         <TableCell>#</TableCell>
-                                        <TableCell>Nomor Induk Mahasiswa</TableCell>
+                                        <TableCell>Nomor Induk Siswa</TableCell>
                                         <TableCell>Tahun Ajaran</TableCell>
                                         <TableCell>Semester</TableCell>
                                         <TableCell>Dibuat Pada</TableCell>
@@ -81,7 +81,7 @@ export default function Index(props) {
                                     {studyResults.map((studyResult, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                            <TableCell>{studyResult.student.student_number}</TableCell>
+                                            <TableCell>{studyResult.student.nisn}</TableCell>
                                             <TableCell>{studyResult.academicYear.name}</TableCell>
                                             <TableCell>{studyResult.semester}</TableCell>
                                             <TableCell>{formatDateIndo(studyResult.created_at)}</TableCell>

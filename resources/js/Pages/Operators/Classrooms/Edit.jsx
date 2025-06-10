@@ -12,8 +12,9 @@ import { toast } from 'sonner';
 
 export default function Edit(props) {
     const { data, setData, post, errors, processing, reset } = useForm({
-        academic_year_id: props.academic_year.name,
-        name: props.classroom.name ?? '',
+        academic_year: props.classroom.academic_year.name,
+        level: props.classroom.level.name,
+        name: props.suffix ?? '',
         _method: props.page_setting.method,
     });
 
@@ -51,26 +52,32 @@ export default function Edit(props) {
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
-                                    <Label htmlFor="departement_id">Tahun Ajaran</Label>
+                                    <Label>Tahun Ajaran</Label>
                                     <Input
-                                        id="academic_year_id"
-                                        name="academic_year_id"
                                         type="text"
-                                        value={data.academic_year_id}
+                                        value={data.academic_year}
                                         disabled
                                         className="hover:cursor-not-allowed"
                                     />
-                                    {errors.academic_year_id && <InputError message={errors.academic_year_id} />}
                                 </div>
                                 <div className="col-span-full">
-                                    <Label htmlFor="name">Nama Kelas</Label>
+                                    <Label>Tingkat</Label>
+                                    <Input
+                                        type="text"
+                                        value={data.level}
+                                        disabled
+                                        className="hover:cursor-not-allowed"
+                                    />
+                                </div>
+                                <div className="col-span-full">
+                                    <Label htmlFor="name">Nama Panggilan Kelas (misal: A, B, C)</Label>
                                     <Input
                                         type="text"
                                         name="name"
                                         id="name"
-                                        placeholder="Masukkan nama kelas"
+                                        placeholder="Contoh: A"
                                         value={data.name}
-                                        onChange={(e) => setData(e.target.name, e.target.value)}
+                                        onChange={(e) => setData(e.target.name, e.target.value.toUpperCase())}
                                     />
                                     {errors.name && <InputError message={errors.name} />}
                                 </div>

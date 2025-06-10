@@ -30,12 +30,6 @@ export default function Create(props) {
         });
     };
 
-    const levelOptions = [
-        { value: 'Kelas 7', label: 'Kelas 7' },
-        { value: 'Kelas 8', label: 'Kelas 8' },
-        { value: 'Kelas 9', label: 'Kelas 9' },
-    ];
-
     return (
         <div className="flex w-full flex-col pb-32">
             <div className="mb-8 flex flex-col items-start justify-between gap-y-4 lg:flex-row lg:items-center">
@@ -61,7 +55,7 @@ export default function Create(props) {
                                         <SelectValue placeholder="Pilih tingkat" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {levelOptions.map((level, index) => (
+                                        {props.levelOptions.map((level, index) => (
                                             <SelectItem key={index} value={level.value}>
                                                 {level.label}
                                             </SelectItem>

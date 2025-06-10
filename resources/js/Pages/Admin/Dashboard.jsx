@@ -23,13 +23,13 @@ export default function Dashboard(props) {
                 <div className="mb-8 grid gap-4 lg:grid-cols-4">
                     <CardStat
                         data={{
-                            title: 'Total Fakultas',
+                            title: 'Tingkat',
                             icon: IconBuildingSkyscraper,
                             background: 'text-white bg-gradient-to-r from-red-400 via-red-500 to-red-500',
                             iconClassName: 'text-white',
                         }}
                     >
-                        <div className="text-2xl font-bold">{props.count.faculties}</div>
+                        <div className="text-2xl font-bold">{props.count.levels}</div>
                     </CardStat>
                     <CardStat
                         data={{
@@ -43,7 +43,7 @@ export default function Dashboard(props) {
                     </CardStat>
                     <CardStat
                         data={{
-                            title: 'Total Mata Kuliah',
+                            title: 'Total Mata Pelajaran',
                             icon: IconBooks,
                             background: 'text-white bg-gradient-to-r from-orange-400 via-orange-500 to-orange-500',
                             iconClassName: 'text-white',

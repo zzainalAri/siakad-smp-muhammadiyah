@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers\Operator;
 
+use App\Enums\Gender;
 use App\Enums\MessageType;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StudentRequest;
 use App\Http\Requests\Operator\StudentOperatorRequest;
 use App\Http\Resources\Operator\StudentOperatorResource;
 use App\Models\Classroom;
-use App\Models\Faculty;
-use App\Models\FeeGroup;
 use App\Models\Student;
 use App\Models\User;
 use App\Traits\HasFile;
-use Illuminate\Http\Request;
+use App\Enums\StudentStatus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Throwable;
@@ -21,26 +19,26 @@ use Throwable;
 class StudentOperatorController extends Controller
 {
     use HasFile;
+
     public function index()
     {
         $students = Student::query()
-            ->select(['students.id', 'students.student_number', 'students.faculty_id','students.fee_group_id', 'students.classroom_id', 'students.user_id', 'students.semester', 'students.batch', 'students.created_at'])
+            ->select(['students.id', 'students.nisn', 'students.level_id', 'students.classroom_id', 'students.user_id', 'students.status', 'students.gender', 'students.batch', 'students.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->with(['user',  'feeGroup', 'classroom'])
+            ->with(['user', 'classroom'])
             ->whereHas('user', function ($query) {
-                $query->whereHas('roles', fn($query) =>  $query->where('name', 'Student'));
+                $query->whereHas('roles', fn($query) => $query->where('name', 'Student'));
             })
-            ->where('students.faculty_id', auth()->user()->operator->faculty_id)
+            ->where('students.level_id', auth()->user()->operator->level_id)
             ->paginate(request()->load ?? 10);
 
-        $faculty_name = auth()->user()->operator->faculty->name;
-
+        $level_name = auth()->user()->operator->level->name;
 
         return inertia('Operators/Students/Index', [
             'page_setting' => [
-                'title' => 'Mahasiswa',
-                'subtitle' => "Menampilkan Mahasiswa yang ada di {$faculty_name}"
+                'title' => 'Siswa',
+                'subtitle' => "Menampilkan Siswa yang ada di {$level_name}"
             ],
             'students' => StudentOperatorResource::collection($students)->additional([
                 'meta' => [
@@ -59,22 +57,20 @@ class StudentOperatorController extends Controller
     {
         return inertia('Operators/Students/Create', [
             'page_setting' => [
-                'title' => 'Tambah Mahasiswa',
-                'subtitle' => 'Buat Mahasiswa baru disini. Klik simpan setelah selesai',
+                'title' => 'Tambah Siswa',
+                'subtitle' => 'Buat Siswa baru disini. Klik simpan setelah selesai',
                 'method' => 'POST',
                 'action' => route('operators.students.store')
             ],
-            'feeGroups' => FeeGroup::query()->select(['id', 'group', 'amount'])->orderBy('group')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => 'Golongan ' . $item->group . '-' . number_format($item->amount, 0, ',', '.'),
-            ]),
             'classrooms' => Classroom::query()
                 ->select(['id', 'name'])
-                ->where('faculty_id', auth()->user()->operator->faculty_id)
+                ->where('level_id', auth()->user()->operator->level_id)
                 ->orderBy('name')->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->name,
                 ]),
+            'statuses' => StudentStatus::options(),
+            'genders' => Gender::options(),
         ]);
     }
 
@@ -90,20 +86,18 @@ class StudentOperatorController extends Controller
             ]);
 
             $user->student()->create([
-                'faculty_id' => auth()->user()->operator->faculty_id,
+                'level_id' => auth()->user()->operator->level_id,
                 'classroom_id' => $request->classroom_id,
-                'fee_group_id' => $request->fee_group_id,
-                'student_number' => $request->student_number,
-                'semester' => $request->semester,
+                'nisn' => $request->nisn,
+                'status' => $request->status,
+                'gender' => $request->gender,
                 'batch' => $request->batch,
-
             ]);
-
 
             DB::commit();
             $user->assignRole('Student');
 
-            flashMessage(MessageType::CREATED->message('Mahasiswa'));
+            flashMessage(MessageType::CREATED->message('Siswa'));
             return to_route('operators.students.index');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -116,18 +110,21 @@ class StudentOperatorController extends Controller
     {
         return inertia('Operators/Students/Edit', [
             'page_setting' => [
-                'title' => 'Edut Mahasiswa',
-                'subtitle' => 'Edit Mahasiswa disini. Klik simpan setelah selesai',
+                'title' => 'Edit Siswa',
+                'subtitle' => 'Edit Siswa disini. Klik simpan setelah selesai',
                 'method' => 'PUT',
                 'action' => route('operators.students.update', $student)
             ],
             'student' => $student->load(['user']),
-            'feeGroups' => FeeGroup::query()->select(['id', 'group', 'amount'])->orderBy('group')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => 'Golongan ' . $item->group . '-' . number_format($item->amount, 0, ',', '.'),
-            ]),
-            'classrooms' => Classroom::query()->select(['id', 'name'])
-                ->where('faculty_id', auth()->user()->operator->faculty_id),
+            'classrooms' => Classroom::query()
+                ->select(['id', 'name'])
+                ->where('level_id', auth()->user()->operator->level_id)
+                ->orderBy('name')->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
+            'statuses' => StudentStatus::options(),
+            'genders' => Gender::options(),
         ]);
     }
 
@@ -135,15 +132,13 @@ class StudentOperatorController extends Controller
     {
         DB::beginTransaction();
         try {
-
             $student->update([
-                'faculty_id' => auth()->user()->operator->faculty_id,
+                'level_id' => auth()->user()->operator->level_id,
                 'classroom_id' => $request->classroom_id,
-                'fee_group_id' => $request->fee_group_id,
-                'student_number' => $request->student_number,
-                'semester' => $request->semester,
+                'nisn' => $request->nisn,
+                'status' => $request->status,
+                'gender' => $request->gender,
                 'batch' => $request->batch,
-
             ]);
 
             $student->user()->update([
@@ -153,11 +148,9 @@ class StudentOperatorController extends Controller
                 'avatar' => $this->update_file($request, $student->user, 'avatar', 'students'),
             ]);
 
-
-
             DB::commit();
 
-            flashMessage(MessageType::UPDATED->message('Mahasiswa'));
+            flashMessage(MessageType::UPDATED->message('Siswa'));
             return to_route('operators.students.index');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -166,14 +159,12 @@ class StudentOperatorController extends Controller
         }
     }
 
-
     public function destroy(Student $student)
     {
         try {
             $this->delete_file($student->user, 'avatar');
-
             $student->delete();
-            flashMessage(MessageType::DELETED->message('Mahasiswa'));
+            flashMessage(MessageType::DELETED->message('Siswa'));
             return to_route('operators.students.index');
         } catch (Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');

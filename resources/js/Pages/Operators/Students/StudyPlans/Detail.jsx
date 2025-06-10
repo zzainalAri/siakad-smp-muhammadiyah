@@ -14,8 +14,8 @@ export default function Detail({ schedules, name }) {
                 </SheetTrigger>
                 <SheetContent side="top">
                     <SheetHeader>
-                        <SheetTitle>Detail KRS Mahasiswa {name}</SheetTitle>
-                        <SheetDescription>Detail kartu rencana studi mahasiswa yang diajukan</SheetDescription>
+                        <SheetTitle>Detail KRS Siswa {name}</SheetTitle>
+                        <SheetDescription>Detail kartu rencana studi Siswa yang diajukan</SheetDescription>
                     </SheetHeader>
                     <Table>
                         <TableHeader>
