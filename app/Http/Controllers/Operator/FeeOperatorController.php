@@ -23,7 +23,7 @@ class FeeOperatorController extends Controller
         return inertia('Operators/Students/Fees/Index', [
             'page_setting' => [
                 'title' => 'Pembayaran',
-                'subtitle' => "Menampilkan semua pembayaran mahasiswa {$student->name}"
+                'subtitle' => "Menampilkan semua pembayaran Siswa {$student->name}"
             ],
             'fees' => FeeOperatorResource::collection($fees)->additional([
                 'meta' => [

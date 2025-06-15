@@ -60,11 +60,11 @@ export default function Create(props) {
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
-                                                {props.faculties.find((faculty) => faculty.value == data.faculty_id)
+                                                {props.levels.find((faculty) => faculty.value == data.faculty_id)
                                                     ?.label ?? 'Pilih fakultas'}
                                             </SelectValue>
                                             <SelectContent>
-                                                {props.faculties.map((faculty, index) => (
+                                                {props.levels.map((faculty, index) => (
                                                     <SelectItem key={index} value={faculty.value}>
                                                         {faculty.label}
                                                     </SelectItem>

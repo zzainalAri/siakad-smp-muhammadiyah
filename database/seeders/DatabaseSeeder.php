@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\Gender;
+use App\Enums\StudentStatus;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -17,6 +18,10 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call(LevelSeeder::class);
+        $this->call(AcademicYearSeeder::class);
+        $this->call(ClassroomSeeder::class);
+   
+
 
 
         User::factory()->create([
@@ -65,6 +70,8 @@ class DatabaseSeeder extends Seeder
             'gender' => Gender::MALE->value,
             'nisn' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
             'batch' => 2025,
+            'status' => StudentStatus::ACTIVE->value,
+            'classroom_id' => 1,
         ]);
     }
 }

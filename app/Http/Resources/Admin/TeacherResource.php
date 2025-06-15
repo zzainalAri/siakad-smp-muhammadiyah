@@ -17,7 +17,7 @@ class TeacherResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'teacher_number' => $this->teacher_number,
+            'nip' => $this->nip,
             'academic_title' => $this->academic_title,
             'created_at' => $this->created_at,
             'user' => $this->whenLoaded('user', [
@@ -26,9 +26,9 @@ class TeacherResource extends JsonResource
                 'email' => $this->user?->email,
                 'avatar' => $this->user?->avatar ? Storage::url($this->user?->avatar) : null,
             ]),
-            'faculty' => $this->whenLoaded('faculty', [
-                'id' => $this->faculty?->id,
-                'name' => $this->faculty?->name,
+            'level' => $this->whenLoaded('level', [
+                'id' => $this->level?->id,
+                'name' => $this->level?->name,
             ]),
         ];
     }

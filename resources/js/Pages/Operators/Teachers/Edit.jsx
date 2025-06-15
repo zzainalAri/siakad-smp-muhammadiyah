@@ -19,7 +19,7 @@ export default function Create(props) {
         email: props.teacher.user.email ?? '',
         password: '',
         avatar: null,
-        teacher_number: props.teacher.teacher_number ?? '',
+        nip: props.teacher.nip ?? '',
         academic_title: props.teacher.academic_title ?? '',
         _method: props.page_setting.method,
     });
@@ -61,12 +61,12 @@ export default function Create(props) {
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
-                                    <Label htmlFor="name">Nama Dosen</Label>
+                                    <Label htmlFor="name">Nama Guru</Label>
                                     <Input
                                         type="text"
                                         name="name"
                                         id="name"
-                                        placeholder="Masukkan nama dosen"
+                                        placeholder="Masukkan nama Guru"
                                         value={data.name}
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
@@ -97,16 +97,16 @@ export default function Create(props) {
                                     {errors.password && <InputError message={errors.password} />}
                                 </div>
                                 <div className="col-span-2">
-                                    <Label htmlFor="teacher_number">Nomor Induk Dosen</Label>
+                                    <Label htmlFor="nip">Nomor Induk Pegawai</Label>
                                     <Input
                                         type="text"
-                                        name="teacher_number"
-                                        id="teacher_number"
-                                        placeholder="Masukkan nomor induk Dosen"
-                                        value={data.teacher_number}
+                                        name="nip"
+                                        id="nip"
+                                        placeholder="Masukkan nomor induk Pegawai"
+                                        value={data.nip}
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
-                                    {errors.teacher_number && <InputError message={errors.teacher_number} />}
+                                    {errors.nip && <InputError message={errors.nip} />}
                                 </div>
                                 <div className="col-span-2">
                                     <Label htmlFor="academic_title">Jabatan Akademik</Label>

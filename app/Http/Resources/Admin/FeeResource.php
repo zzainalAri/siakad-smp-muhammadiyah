@@ -18,18 +18,14 @@ class FeeResource extends JsonResource
             'id' => $this->id,
             'semester' => $this->semester,
             'status' => $this->status,
+            'fee_code' => $this->fee_code,
             'created_at' => $this->created_at,
             'student' => $this->whenLoaded('student', [
                 'id' => $this->student?->id,
-                'student_number' => $this->student?->student_number,
+                'nisn' => $this->student?->nisn,
                 'name' => $this->student?->user?->name,
-                'faculty' => $this->student?->faculty?->name,
+                'level' => $this->student?->level?->name,
                 'classroom' => $this->student?->classroom?->name,
-            ]),
-            'feeGroup' => $this->whenLoaded('feeGroup', [
-                'id' => $this->feeGroup?->id,
-                'group' => $this->feeGroup?->group,
-                'amount' => $this->feeGroup?->amount,
             ]),
             'academicYear' => $this->whenLoaded('academicYear', [
                 'id' => $this->academicYear?->id,

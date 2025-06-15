@@ -32,7 +32,7 @@ class ClassroomController extends Controller implements HasMiddleware
         return inertia('Admin/Classrooms/Index', [
             'page_setting' => [
                 'title' => 'Kelas',
-                'subtitle' => 'Menampilkan semua data Kelas yang tersedia pada universitas ini'
+                'subtitle' => 'Menampilkan semua data Kelas yang tersedia di SMP Muhammadiyah ini'
             ],
             'classrooms' => ClassroomResource::collection($classrooms)->additional([
                 'meta' => [

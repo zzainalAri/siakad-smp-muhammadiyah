@@ -22,10 +22,9 @@ class CourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'faculty_id' => 'required|exists:faculties,id',
-            'teacher_id' => 'required|exists:users,id',
+            'level_id' => 'required|exists:levels,id',
+            'teacher_id' => 'required|exists:teachers,id',
             'name' => 'required|string|min:3|max:255',
-            'credit' => 'required|integer',
             'semester' => 'required|integer',
         ];
     }
@@ -33,10 +32,9 @@ class CourseRequest extends FormRequest
     public function attributes()
     {
         return [
-            'faculty_id' => 'Fakultas',
+            'level_id' => 'Tingkat',
             'teacher_id' => 'Dosen',
             'name' => 'Nama',
-            'credit' => 'Satuan Kredit Semester (SKS)',
             'semester' => 'Semester'
         ];
     }

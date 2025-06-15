@@ -23,7 +23,7 @@ export default function Dashboard(props) {
                 <div className="mb-8 grid gap-4 lg:grid-cols-4">
                     <CardStat
                         data={{
-                            title: 'Total Mahasiswa',
+                            title: 'Total Siswa',
                             icon: IconUsers,
                             background: 'text-white bg-gradient-to-r from-red-400 via-red-500 to-red-500',
                             iconClassName: 'text-white',

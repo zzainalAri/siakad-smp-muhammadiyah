@@ -17,9 +17,10 @@ class StudentOperatorResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'student_number' => $this->student_number,
-            'semester' => $this->semester,
+            'nisn' => $this->nisn,
             'batch' => $this->batch,
+            'status' => $this->status,
+            'gender' => $this->gender,
             'created_at' => $this->created_at,
             'user' => $this->whenLoaded('user', [
                 'id' => $this->user?->id,
@@ -30,11 +31,6 @@ class StudentOperatorResource extends JsonResource
             'classroom' => $this->whenLoaded('classroom', [
                 'id' => $this->classroom?->id,
                 'name' => $this->classroom?->name,
-            ]),
-            'feeGroup' => $this->whenLoaded('feeGroup', [
-                'id' => $this->feeGroup?->id,
-                'group' => $this->feeGroup?->group,
-                'amount' => $this->feeGroup?->amount,
             ]),
         ];
     }

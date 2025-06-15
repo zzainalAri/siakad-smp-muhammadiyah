@@ -21,9 +21,9 @@ Route::prefix('operators')->middleware(['auth', 'role:Operator'])->group(functio
         Route::get('students', 'index')->name('operators.students.index');
         Route::get('students/create', 'create')->name('operators.students.create');
         Route::post('students/create', 'store')->name('operators.students.store');
-        Route::get('students/edit/{student:student_number}', 'edit')->name('operators.students.edit');
-        Route::put('students/edit/{student:student_number}', 'update')->name('operators.students.update');
-        Route::delete('students/destroy/{student:student_number}', 'destroy')->name('operators.students.destroy');
+        Route::get('students/edit/{student:nisn}', 'edit')->name('operators.students.edit');
+        Route::put('students/edit/{student:nisn}', 'update')->name('operators.students.update');
+        Route::delete('students/destroy/{student:nisn}', 'destroy')->name('operators.students.destroy');
     });
 
     // Teacher
@@ -31,9 +31,9 @@ Route::prefix('operators')->middleware(['auth', 'role:Operator'])->group(functio
         Route::get('teachers', 'index')->name('operators.teachers.index');
         Route::get('teachers/create', 'create')->name('operators.teachers.create');
         Route::post('teachers/create', 'store')->name('operators.teachers.store');
-        Route::get('teachers/edit/{teacher:teacher_number}', 'edit')->name('operators.teachers.edit');
-        Route::put('teachers/edit/{teacher:teacher_number}', 'update')->name('operators.teachers.update');
-        Route::delete('teachers/destroy/{teacher:teacher_number}', 'destroy')->name('operators.teachers.destroy');
+        Route::get('teachers/edit/{teacher:nip}', 'edit')->name('operators.teachers.edit');
+        Route::put('teachers/edit/{teacher:nip}', 'update')->name('operators.teachers.update');
+        Route::delete('teachers/destroy/{teacher:nip}', 'destroy')->name('operators.teachers.destroy');
     });
 
 
@@ -70,13 +70,13 @@ Route::prefix('operators')->middleware(['auth', 'role:Operator'])->group(functio
 
     // Study Plan
     Route::controller(StudyPlanOperatorController::class)->group(function () {
-        Route::get('students/{student:student_number}/study-plans', 'index')->name('operators.study-plans.index');
-        Route::put('students/{student:student_number}/study-plans/{studyPlan}/approve', 'approve')->name('operators.study-plans.approve');
+        Route::get('students/{student:nisn}/study-plans', 'index')->name('operators.study-plans.index');
+        Route::put('students/{student:nisn}/study-plans/{studyPlan}/approve', 'approve')->name('operators.study-plans.approve');
     });
 
     // fee
-    Route::get('students/{student:student_number}/fees', FeeOperatorController::class)->name('operators.fees.index');
+    Route::get('students/{student:nisn}/fees', FeeOperatorController::class)->name('operators.fees.index');
 
     // study Result
-    Route::get('students/{student:student_number}/study-results', StudyResultOperatorController::class)->name('operators.study-results.index');
+    Route::get('students/{student:nisn}/study-results', StudyResultOperatorController::class)->name('operators.study-results.index');
 });

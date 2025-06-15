@@ -16,20 +16,19 @@ class CourseOperatorController extends Controller
     public function index()
     {
         $courses = Course::query()
-            ->select(['courses.id', 'courses.teacher_id', 'courses.code', 'courses.semester', 'courses.name', 'courses.credit', 'courses.created_at', 'courses.academic_year_id'])
+            ->select(['courses.id', 'courses.teacher_id', 'courses.code', 'courses.semester', 'courses.name', 'courses.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->where('courses.faculty_id', auth()->user()->operator->faculty_id)
-            ->with(['faculty','teacher',])
+            ->where('courses.level_id', auth()->user()->operator->level_id)
+            ->with(['teacher'])
             ->paginate(request()->load ?? 10);
 
-        $faculty_name = auth()->user()->operator->faculty->name;
-
+        $level_name = auth()->user()->operator->level->name;
 
         return inertia('Operators/Courses/Index', [
             'page_setting' => [
-                'title' => 'Mata Kuliah',
-                'subtitle' => "Menampilkan Mata Kuliah yang ada di {$faculty_name} "
+                'title' => 'Mata Pelajaran',
+                'subtitle' => "Menampilkan Mata Pelajaran yang ada di {$level_name} "
             ],
             'courses' => CourseOperatorResource::collection($courses)->additional([
                 'meta' => [
@@ -48,13 +47,13 @@ class CourseOperatorController extends Controller
     {
         return inertia('Operators/Courses/Create', [
             'page_setting' => [
-                'title' => 'Tambah Matakuliah',
-                'subtitle' => 'Buat Matakuliah baru disini. Klik simpan setelah selesai',
+                'title' => 'Tambah Mata Pelajaran',
+                'subtitle' => 'Buat Mata Pelajaran baru disini. Klik simpan setelah selesai',
                 'method' => 'POST',
                 'action' => route('operators.courses.store')
             ],
             'teachers' => Teacher::query()->select(['id', 'user_id'])
-                ->where('faculty_id', auth()->user()->operator->faculty_id)
+                ->where('level_id', auth()->user()->operator->level_id)
                 ->whereHas('user', function ($query) {
                     $query->whereHas('roles', fn($query) => $query->where('name', 'Teacher'))->orderBy('name');
                 })
@@ -69,17 +68,14 @@ class CourseOperatorController extends Controller
     {
         try {
             Course::create([
-                'faculty_id' => auth()->user()->operator->faculty_id,
+                'level_id' => auth()->user()->operator->level_id,
                 'teacher_id' => $request->teacher_id,
-                'academic_year_id' => activeAcademicYear()->id,
                 'code' => str()->random(10),
                 'name' => $request->name,
-                'credit' => $request->credit,
                 'semester' => $request->semester
             ]);
 
-
-            flashMessage(MessageType::CREATED->message('Mata Kuliah'));
+            flashMessage(MessageType::CREATED->message('Mata Pelajaran'));
             return to_route('operators.courses.index');
         } catch (Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
@@ -87,18 +83,18 @@ class CourseOperatorController extends Controller
         }
     }
 
-    public function Edit(Course $course)
+    public function edit(Course $course)
     {
         return inertia('Operators/Courses/Edit', [
             'page_setting' => [
-                'title' => 'Edit Matakuliah',
-                'subtitle' => 'Edit Matakuliah disini. Klik simpan setelah selesai',
+                'title' => 'Edit Mata Pelajaran',
+                'subtitle' => 'Edit Mata Pelajaran disini. Klik simpan setelah selesai',
                 'method' => 'PUT',
                 'action' => route('operators.courses.update', $course)
             ],
             'course' => $course,
             'teachers' => Teacher::query()->select(['id', 'user_id'])
-                ->where('faculty_id', auth()->user()->operator->faculty_id)
+                ->where('level_id', auth()->user()->operator->level_id)
                 ->whereHas('user', function ($query) {
                     $query->whereHas('roles', fn($query) => $query->where('name', 'Teacher'))->orderBy('name');
                 })
@@ -113,17 +109,14 @@ class CourseOperatorController extends Controller
     {
         try {
             $course->update([
-                'faculty_id' => auth()->user()->operator->faculty_id,
+                'level_id' => auth()->user()->operator->level_id,
                 'teacher_id' => $request->teacher_id,
-                'academic_year_id' => activeAcademicYear()->id,
                 'code' => str()->random(10),
                 'name' => $request->name,
-                'credit' => $request->credit,
                 'semester' => $request->semester
             ]);
 
-
-            flashMessage(MessageType::UPDATED->message('Mata Kuliah'));
+            flashMessage(MessageType::UPDATED->message('Mata Pelajaran'));
             return to_route('operators.courses.index');
         } catch (Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
@@ -134,9 +127,8 @@ class CourseOperatorController extends Controller
     public function destroy(Course $course)
     {
         try {
-
             $course->delete();
-            flashMessage(MessageType::DELETED->message('Mata Kuliah'));
+            flashMessage(MessageType::DELETED->message('Mata Pelajaran'));
             return to_route('operators.courses.index');
         } catch (Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');

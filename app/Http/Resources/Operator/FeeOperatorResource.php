@@ -24,7 +24,7 @@ class FeeOperatorResource extends JsonResource
             'student' => $this->whenLoaded('student', [
                 'id' => $this->student?->id,
                 'name' => $this->student?->user?->name,
-                'student_number' => $this->student?->user?->student_number,
+                'nisn' => $this->student?->user?->nisn,
                 'avatar' => $this->student?->user?->avatar ? Storage::url($this->student?->user?->avatar) : null,
             ]),
             'academicYear' => $this->whenLoaded('academicYear', [

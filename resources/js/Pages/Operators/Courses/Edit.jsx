@@ -15,7 +15,6 @@ export default function Edit(props) {
     const { data, setData, post, errors, processing, reset } = useForm({
         teacher_id: props.course.teacher_id ?? null,
         name: props.course.name ?? '',
-        credit: props.course.creadit ?? 1,
         semester: props.course.semester ?? 1,
         _method: props.page_setting.method,
     });
@@ -46,7 +45,7 @@ export default function Edit(props) {
                         icon={IconBooks}
                     />
                     <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
-                        <Link href={route('admin.courses.index')}>
+                        <Link href={route('operators.courses.index')}>
                             <IconArrowLeft className="size-4" /> Kembali
                         </Link>
                     </Button>
@@ -56,19 +55,19 @@ export default function Edit(props) {
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
-                                    <Label htmlFor="name">Nama Mata Kuliah</Label>
+                                    <Label htmlFor="name">Nama Mata Pelajaran</Label>
                                     <Input
                                         type="text"
                                         name="name"
                                         id="name"
-                                        placeholder="Masukkan nama dosen"
+                                        placeholder="Masukkan nama Mata Pelajaran"
                                         value={data.name}
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
                                     {errors.name && <InputError message={errors.name} />}
                                 </div>
                                 <div className="col-span-full">
-                                    <Label htmlFor="teacher_id">Dosen</Label>
+                                    <Label htmlFor="teacher_id">Guru</Label>
                                     <Select
                                         defaultValue={data.teacher_id}
                                         onValueChange={(value) => setData('teacher_id', value)}
@@ -77,7 +76,7 @@ export default function Edit(props) {
                                         <SelectTrigger>
                                             <SelectValue>
                                                 {props.teachers.find((teacher) => teacher.value == data.teacher_id)
-                                                    ?.label ?? 'Pilih dosen'}
+                                                    ?.label ?? 'Pilih Guru'}
                                             </SelectValue>
                                             <SelectContent>
                                                 {props.teachers.map((teacher, index) => (
@@ -91,24 +90,12 @@ export default function Edit(props) {
                                     {errors.teacher_id && <InputError message={errors.teacher_id} />}
                                 </div>
                                 <div className="col-span-full">
-                                    <Label htmlFor="credit">Satuan Kredit Semester (SKS)</Label>
-                                    <Input
-                                        type="number"
-                                        name="credit"
-                                        id="credit"
-                                        placeholder="Masukkan sks"
-                                        value={data.credit}
-                                        onChange={(e) => setData(e.target.name, e.target.value)}
-                                    />
-                                    {errors.credit && <InputError message={errors.credit} />}
-                                </div>
-                                <div className="col-span-full">
                                     <Label htmlFor="semester">Semester</Label>
                                     <Input
                                         type="number"
                                         name="semester"
                                         id="semester"
-                                        placeholder="Masukkan sks"
+                                        placeholder="Masukkan semester"
                                         value={data.semester}
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />

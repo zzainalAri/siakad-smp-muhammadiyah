@@ -28,7 +28,7 @@ class RoleController extends Controller
         return inertia('Admin/Roles/Index', [
             'page_setting' => [
                 'title' => 'Peran',
-                'subtitle' => 'Menampilkan semua data Peran yang tersedia pada universitas ini'
+                'subtitle' => 'Menampilkan semua data Peran yang tersedia di Sekolah ini'
             ],
             'roles' => RoleResource::collection($roles)->additional([
                 'meta' => [

@@ -13,8 +13,8 @@ export default function Grades({ studyResult, grades, name = null }) {
             </SheetTrigger>
             <SheetContent side="top">
                 <SheetHeader>
-                    <SheetTitle>Detail Kartu Hasil Studi Mahasiswa {name}</SheetTitle>
-                    <SheetDescription>Detail kartu hasil studi mahasiswa</SheetDescription>
+                    <SheetTitle>Detail Kartu Hasil Studi Siswa {name}</SheetTitle>
+                    <SheetDescription>Detail kartu hasil studi Siswa</SheetDescription>
                 </SheetHeader>
                 <Table className="w-full border">
                     <TableHeader>

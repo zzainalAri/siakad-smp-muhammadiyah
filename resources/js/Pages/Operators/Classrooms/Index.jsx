@@ -12,7 +12,7 @@ import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
 import { deleteAction, formatDateIndo } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
-import { IconArrowsDownUp, IconDoor, IconPencil, IconPlus, IconRefresh, IconTrash } from '@tabler/icons-react';
+import { IconDoor, IconPencil, IconPlus, IconRefresh, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
 
 export default function Index(props) {
@@ -90,56 +90,11 @@ export default function Index(props) {
                             <Table className="w-full">
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('id')}
-                                            >
-                                                #
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('academic_year_id')}
-                                            >
-                                                Tahun Ajaran
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('name')}
-                                            >
-                                                Nama Kelas
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('created_at')}
-                                            >
-                                                Dibuat Pada
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
+                                        <TableHead>#</TableHead>
+                                        <TableHead>Tahun Ajaran</TableHead>
+                                        <TableHead>Tingkat</TableHead>
+                                        <TableHead>Nama Kelas</TableHead>
+                                        <TableHead>Dibuat Pada</TableHead>
                                         <TableHead>Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -148,10 +103,9 @@ export default function Index(props) {
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
                                             <TableCell>{classroom.academicYear.name}</TableCell>
+                                            <TableCell>{classroom.level.name}</TableCell>
                                             <TableCell>{classroom.name}</TableCell>
-
                                             <TableCell>{formatDateIndo(classroom.created_at)}</TableCell>
-
                                             <TableCell>
                                                 <div className="flex items-center gap-x-1">
                                                     <Button variant="blue" size="sm" asChild>
@@ -160,7 +114,6 @@ export default function Index(props) {
                                                             Edit
                                                         </Link>
                                                     </Button>
-
                                                     <AlertAction
                                                         trigger={
                                                             <Button variant="red" size="sm">

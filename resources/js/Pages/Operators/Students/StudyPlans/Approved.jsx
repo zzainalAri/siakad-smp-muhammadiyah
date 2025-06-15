@@ -36,9 +36,9 @@ export default function Approved({ name, statuses, action }) {
             </SheetTrigger>
             <SheetContent>
                 <SheetHeader>
-                    <SheetTitle>Setujui KRS Mahasiswa {name}</SheetTitle>
+                    <SheetTitle>Setujui KRS Siswa {name}</SheetTitle>
                     <SheetDescription>
-                        Periksa kartu rencana studi mahasiswa yang diajukan oleh mahasiswa tersebut
+                        Periksa kartu rencana studi Siswa yang diajukan oleh Siswa tersebut
                     </SheetDescription>
                 </SheetHeader>
                 <form className="mt-6 space-y-4" onSubmit={onHandleSubmit}>

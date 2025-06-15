@@ -24,7 +24,7 @@ class UserSingleResource extends JsonResource
             'role_name' => $this->getRoleNames()->first(),
             'student' => $this->when($this->hasRole('Student'), [
                 'id' => $this->student?->id,
-                'student_number' => $this->student?->student_number,
+                'nisn' => $this->student?->nisn,
                 'batch' => $this->student?->batch,
                 'semester' => $this->student?->semester,
                 'faculty' => [
@@ -43,7 +43,7 @@ class UserSingleResource extends JsonResource
             ]),
             'teacher' => $this->when($this->hasRole('Teacher'), [
                 'id' => $this->teacher?->id,
-                'teacher_number' => $this->teacher?->teacher_number,
+                'nip' => $this->teacher?->nip,
                 'academic_title' => $this->teacher?->academic_title,
                 'faculty_id' => $this->teacher?->faculty_id,
             ]),

@@ -18,6 +18,7 @@ class OperatorResource extends JsonResource
         return [
             'id' => $this->id,
             'employee_number' => $this->employee_number,
+            'level_id' => $this->level_id,
             'created_at' => $this->created_at,
             'user' => $this->whenLoaded('user', [
                 'id' => $this->user?->id,
@@ -25,9 +26,9 @@ class OperatorResource extends JsonResource
                 'email' => $this->user?->email,
                 'avatar' => $this->user?->avatar ? Storage::url($this->user?->avatar) : null,
             ]),
-            'faculty' => $this->whenLoaded('faculty', [
-                'id' => $this->faculty?->id,
-                'name' => $this->faculty?->name,
+            'level' => $this->whenLoaded('level', [
+                'id' => $this->level?->id,
+                'name' => $this->level?->name,
             ]),
         ];
     }

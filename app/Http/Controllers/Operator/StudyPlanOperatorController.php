@@ -78,8 +78,8 @@ class StudyPlanOperatorController extends Controller
             DB::commit();
 
             match ($studyPlan->status->value) {
-                StudyPlanStatus::REJECT->value => flashMessage('Kartu rencana studi mahasiswa berhasil di tolak', 'error'),
-                StudyPlanStatus::APPROVED->value => flashMessage('Kartu rencana studi mahasiswa berhasil diterima'),
+                StudyPlanStatus::REJECT->value => flashMessage('Kartu rencana studi Siswa berhasil di tolak', 'error'),
+                StudyPlanStatus::APPROVED->value => flashMessage('Kartu rencana studi Siswa berhasil diterima'),
                 default => null,
             };
 

@@ -55,8 +55,8 @@ class Student extends Model
     {
         $query->when($sorts['field'] ?? null && $sorts['direction'] ?? null, function ($query) use ($sorts) {
             match ($sorts['field']) {
-                'level_id' => $query->join('faculties', 'students.level_id', '=', 'faculties.id')
-                    ->orderBy('faculties.name', $sorts['direction']),
+                'level_id' => $query->join('levels', 'students.level_id', '=', 'levels.id')
+                    ->orderBy('levels.name', $sorts['direction']),
 
                 'name' => $query->join('users', 'students.user_id', '=', 'users.id')
                     ->orderBy('users.name', $sorts['direction']),

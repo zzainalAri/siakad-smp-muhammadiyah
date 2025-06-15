@@ -22,8 +22,6 @@ class Schedule extends Model
         return $this->belongsTo(Level::class);
     }
 
-
-
     public function course()
     {
         return $this->belongsTo(Course::class);
@@ -60,8 +58,8 @@ class Schedule extends Model
     {
         $query->when($sorts['field'] ?? null && $sorts['direction'] ?? null, function ($query) use ($sorts) {
             match ($sorts['field']) {
-                'level_id' => $query->join('faculties', 'schedules.level_id', '=', 'faculties.id')
-                    ->orderBy('faculties.name', $sorts['direction']),
+                'level_id' => $query->join('levels', 'schedules.level_id', '=', 'levels.id')
+                    ->orderBy('levels.name', $sorts['direction']),
                 'course_id' => $query->join('courses', 'schedules.course_id', '=', 'courses.id')
                     ->orderBy('courses.name', $sorts['direction']),
                 'classroom_id' => $query->join('classrooms', 'schedules.classroom_id', '=', 'classrooms.id')

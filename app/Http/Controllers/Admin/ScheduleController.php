@@ -9,7 +9,7 @@ use App\Http\Requests\Admin\ScheduleRequest;
 use App\Http\Resources\Admin\ScheduleResource;
 use App\Models\Classroom;
 use App\Models\Course;
-use App\Models\Faculty;
+use App\Models\Level;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -30,10 +30,10 @@ class ScheduleController extends Controller implements HasMiddleware
     public function index()
     {
         $schedules = Schedule::query()
-            ->select(['schedules.id',  'schedules.faculty_id','schedules.classroom_id', 'schedules.course_id', 'schedules.start_time', 'schedules.end_time', 'schedules.academic_year_id', 'schedules.day_of_week', 'schedules.quote', 'schedules.created_at'])
+            ->select(['schedules.id',  'schedules.level_id','schedules.classroom_id', 'schedules.course_id', 'schedules.start_time', 'schedules.end_time', 'schedules.day_of_week', 'schedules.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->with(['classroom', 'course', 'faculty','academicYear'])
+            ->with(['classroom', 'course', 'level'])
             ->paginate(request()->load ?? 10);
 
 
@@ -42,7 +42,7 @@ class ScheduleController extends Controller implements HasMiddleware
         return inertia('Admin/Schedules/Index', [
             'page_setting' => [
                 'title' => 'Jadwal',
-                'subtitle' => 'Menampilkan semua data Jadwal yang tersedia pada universitas ini'
+                'subtitle' => 'Menampilkan semua data Jadwal yang tersedia di Sekolah ini'
             ],
             'schedules' => ScheduleResource::collection($schedules)->additional([
                 'meta' => [
@@ -66,7 +66,7 @@ class ScheduleController extends Controller implements HasMiddleware
                 'method' => 'POST',
                 'action' => route('admin.schedules.store')
             ],
-            'faculties' => Faculty::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'levels' => Level::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
@@ -87,11 +87,9 @@ class ScheduleController extends Controller implements HasMiddleware
 
         try {
             Schedule::create([
-                'faculty_id' => $request->faculty_id,
+                'level_id' => $request->level_id,
                 'course_id' => $request->course_id,
                 'classroom_id' => $request->classroom_id,
-                'academic_year_id' => activeAcademicYear()->id,
-                'quote' => $request->quote,
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
                 'day_of_week' => $request->day_of_week,
@@ -115,7 +113,7 @@ class ScheduleController extends Controller implements HasMiddleware
                 'action' => route('admin.schedules.update', $schedule)
             ],
             'schedule' => $schedule,
-            'faculties' => Faculty::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'levels' => Level::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
@@ -135,11 +133,9 @@ class ScheduleController extends Controller implements HasMiddleware
     {
         try {
             $schedule->update([
-                'faculty_id' => $request->faculty_id,
+                'level_id' => $request->level_id,
                 'course_id' => $request->course_id,
                 'classroom_id' => $request->classroom_id,
-                'academic_year_id' => activeAcademicYear()->id,
-                'quote' => $request->quote,
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
                 'day_of_week' => $request->day_of_week,
@@ -156,7 +152,7 @@ class ScheduleController extends Controller implements HasMiddleware
     public function destroy(Schedule $schedule)
     {
         try {
-            $schedule->studyPlans()->detach($schedule);
+            // $schedule->studyPlans()->detach($schedule);
 
             $schedule->delete();
             flashMessage(MessageType::DELETED->message('Jadwal'));

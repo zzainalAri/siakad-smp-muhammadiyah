@@ -12,7 +12,8 @@ import { toast } from 'sonner';
 
 export default function Create(props) {
     const { data, setData, post, errors, processing, reset } = useForm({
-        academic_year_id: props.academic_year.name,
+        academic_year: props.academic_year.name,
+        level: props.level.name,
         name: '',
         _method: props.page_setting.method,
     });
@@ -51,26 +52,34 @@ export default function Create(props) {
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
-                                    <Label htmlFor="departement_id">Tahun Ajaran</Label>
+                                    <Label htmlFor="academic_year">Tahun Ajaran</Label>
                                     <Input
-                                        id="academic_year_id"
-                                        name="academic_year_id"
+                                        id="academic_year"
                                         type="text"
-                                        value={data.academic_year_id}
+                                        value={data.academic_year}
                                         disabled
                                         className="hover:cursor-not-allowed"
                                     />
-                                    {errors.academic_year_id && <InputError message={errors.academic_year_id} />}
                                 </div>
                                 <div className="col-span-full">
-                                    <Label htmlFor="name">Nama Kelas</Label>
+                                    <Label htmlFor="level">Tingkat</Label>
+                                    <Input
+                                        id="level"
+                                        type="text"
+                                        value={data.level}
+                                        disabled
+                                        className="hover:cursor-not-allowed"
+                                    />
+                                </div>
+                                <div className="col-span-full">
+                                    <Label htmlFor="name">Nama Panggilan Kelas (misal: A, B, C)</Label>
                                     <Input
                                         type="text"
                                         name="name"
                                         id="name"
-                                        placeholder="Masukkan nama kelas"
+                                        placeholder="Contoh: A"
                                         value={data.name}
-                                        onChange={(e) => setData(e.target.name, e.target.value)}
+                                        onChange={(e) => setData(e.target.name, e.target.value.toUpperCase())}
                                     />
                                     {errors.name && <InputError message={errors.name} />}
                                 </div>

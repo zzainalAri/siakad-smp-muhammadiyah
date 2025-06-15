@@ -19,7 +19,7 @@ class LevelFactory extends Factory
 
 
         return [
-            'name' => $name = $this->faker->unique()->randomElement(['7', '8', '9']),
+            'name' => $name = $this->faker->unique()->randomElement(['Kelas 7', 'Kelas 8', 'Kelas 9']),
             'slug' => str()->slug($name),
         ];
     }
