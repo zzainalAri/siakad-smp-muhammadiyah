@@ -2,7 +2,7 @@ import CardStat from '@/Components/CardStat';
 import HeaderTitle from '@/Components/HeaderTitle';
 import AppLayout from '@/Layouts/AppLayout';
 import { usePage } from '@inertiajs/react';
-import { IconBooks, IconBuildingSkyscraper, IconDoor, IconLayout2 } from '@tabler/icons-react';
+import { IconBooks, IconBuildingSkyscraper, IconDoor, IconLayout2, IconUsersGroup } from '@tabler/icons-react';
 
 export default function Dashboard(props) {
     const auth = usePage().props.auth.user;
@@ -20,7 +20,7 @@ export default function Dashboard(props) {
                     <h2 className="text-xl font-medium leading-relaxed text-foreground">Hi, {auth.name}</h2>
                     <p className="text-sm text-muted-foreground"> Selamat datang di Sistem Informasi Akademik</p>
                 </div>
-                <div className="mb-8 grid gap-4 lg:grid-cols-4">
+                <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     <CardStat
                         data={{
                             title: 'Tingkat',
@@ -50,6 +50,36 @@ export default function Dashboard(props) {
                         }}
                     >
                         <div className="text-2xl font-bold">{props.count.courses}</div>
+                    </CardStat>
+                    <CardStat
+                        data={{
+                            title: 'Total Guru',
+                            icon: IconUsersGroup,
+                            background: 'text-white bg-gradient-to-r from-blue-400 via-blue-500 to-blue-500',
+                            iconClassName: 'text-white',
+                        }}
+                    >
+                        <div className="text-2xl font-bold">{props.count.teachers}</div>
+                    </CardStat>
+                    <CardStat
+                        data={{
+                            title: 'Total Siswa',
+                            icon: IconUsersGroup,
+                            background: 'text-white bg-gradient-to-r from-green-400 via-green-500 to-green-500',
+                            iconClassName: 'text-white',
+                        }}
+                    >
+                        <div className="text-2xl font-bold">{props.count.students}</div>
+                    </CardStat>
+                    <CardStat
+                        data={{
+                            title: 'Total Operator',
+                            icon: IconUsersGroup,
+                            background: 'text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-500',
+                            iconClassName: 'text-white',
+                        }}
+                    >
+                        <div className="text-2xl font-bold">{props.count.students}</div>
                     </CardStat>
                 </div>
             </div>
