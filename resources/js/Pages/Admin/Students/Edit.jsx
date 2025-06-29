@@ -10,7 +10,7 @@ import AppLayout from '@/Layouts/AppLayout';
 import { flashMessage } from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
 import { IconArrowLeft, IconCheck, IconUsers } from '@tabler/icons-react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Edit(props) {
@@ -31,6 +31,8 @@ export default function Edit(props) {
         _method: props.page_setting.method,
     });
 
+    const [filteredClassrooms, setFilteredClassrooms] = useState([]);
+
     const onHandleReset = () => {
         reset();
         fileInputAvatar.current.value = null;
@@ -47,7 +49,10 @@ export default function Edit(props) {
             },
         });
     };
-
+    useEffect(() => {
+        const filtered = props.classrooms.filter((classroom) => classroom.level_id == data.level_id);
+        setFilteredClassrooms(filtered);
+    }, [data.level_id]);
     return (
         <>
             <div className="flex w-full flex-col pb-32">
@@ -132,6 +137,7 @@ export default function Edit(props) {
                                         defaultValue={data.classroom_id}
                                         onValueChange={(value) => setData('classroom_id', value)}
                                         id="classroom_id"
+                                        disabled={!data.level_id}
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
@@ -140,7 +146,7 @@ export default function Edit(props) {
                                                 )?.label ?? 'Pilih kelas'}
                                             </SelectValue>
                                             <SelectContent>
-                                                {props.classrooms.map((classroom, index) => (
+                                                {filteredClassrooms.map((classroom, index) => (
                                                     <SelectItem key={index} value={classroom.value}>
                                                         {classroom.label}
                                                     </SelectItem>

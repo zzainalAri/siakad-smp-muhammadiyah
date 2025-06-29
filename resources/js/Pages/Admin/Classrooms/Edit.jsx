@@ -107,6 +107,7 @@ export default function Edit(props) {
                                         defaultValue={data.name}
                                         onValueChange={(value) => setData('name', value)}
                                         id="name"
+                                        disabled={!data.level_id}
                                     >
                                         <SelectTrigger>
                                             <SelectValue>{data.name || 'Pilih Nama Kelas'}</SelectValue>
