@@ -24,7 +24,7 @@ class ClassroomRequest extends FormRequest
         return [
             'level_id' => 'required|exists:levels,id',
             'academic_year_id' => 'required|exists:academic_years,name',
-            'name' => 'required|string|min:3|max:255',
+            'name' => $this->routeIs('admin.classrooms.store') ? 'required|string|max:255|unique:classrooms' : 'required|string|max:255',
         ];
     }
 
