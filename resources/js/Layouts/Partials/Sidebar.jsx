@@ -8,7 +8,6 @@ import {
     IconCalendarTime,
     IconCircleKey,
     IconDoor,
-    IconDroplets,
     IconLayout2,
     IconLogout2,
     IconMoneybag,
@@ -85,7 +84,7 @@ export default function Sidebar({ auth, url }) {
                         <NavLink
                             url={route('admin.teachers.index')}
                             active={url.startsWith('/admin/teachers')}
-                            title={'Dosen'}
+                            title={'Guru'}
                             icon={IconUsersGroup}
                         />
                         <NavLink
@@ -100,7 +99,7 @@ export default function Sidebar({ auth, url }) {
                         <NavLink
                             url={route('admin.courses.index')}
                             active={url.startsWith('/admin/courses')}
-                            title={'Matakuliah'}
+                            title={'Mata Pelajaran'}
                             icon={IconBooks}
                         />
                         <NavLink
@@ -115,14 +114,8 @@ export default function Sidebar({ auth, url }) {
                         <NavLink
                             url={route('admin.fees.index')}
                             active={url.startsWith('/admin/fees')}
-                            title={'Uang Kuliah Tunggal'}
+                            title={'SPP'}
                             icon={IconMoneybag}
-                        />
-                        <NavLink
-                            url={route('admin.fee-groups.index')}
-                            active={url.startsWith('/admin/fee-groups')}
-                            title={'Golongan UKT'}
-                            icon={IconDroplets}
                         />
                     </>
                 )}
@@ -140,7 +133,7 @@ export default function Sidebar({ auth, url }) {
                         <NavLink
                             url={route('teachers.courses.index')}
                             active={url.startsWith('/teachers/courses')}
-                            title={'Mata Kuliah'}
+                            title={'Mata Pelajaran'}
                             icon={IconBooks}
                         />
                         <NavLink
@@ -170,7 +163,7 @@ export default function Sidebar({ auth, url }) {
                         <NavLink
                             url={route('operators.teachers.index')}
                             active={url.startsWith('/operators/teachers')}
-                            title={'Dosen'}
+                            title={'Guru'}
                             icon={IconUsersGroup}
                         />
                         <div className="px-3 py-1 text-base font-medium text-white">Akademik</div>
@@ -183,7 +176,7 @@ export default function Sidebar({ auth, url }) {
                         <NavLink
                             url={route('operators.courses.index')}
                             active={url.startsWith('/operators/courses')}
-                            title={'Mata Kuliah'}
+                            title={'Mata Pelajaran'}
                             icon={IconUsersGroup}
                         />
                         <NavLink
