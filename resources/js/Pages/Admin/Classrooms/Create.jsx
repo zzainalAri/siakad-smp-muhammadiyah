@@ -9,15 +9,18 @@ import AppLayout from '@/Layouts/AppLayout';
 import { flashMessage } from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
 import { IconArrowLeft, IconCheck, IconSchool } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Create(props) {
     const { data, setData, post, errors, processing, reset } = useForm({
         level_id: null,
+        level_name: null,
         academic_year_id: props.academic_year.name,
         name: '',
         _method: props.page_setting.method,
     });
+    const [filteredClassrooms, setFilteredClassrooms] = useState([]);
 
     const onHandleReset = () => reset();
 
@@ -32,6 +35,11 @@ export default function Create(props) {
             },
         });
     };
+
+    useEffect(() => {
+        const classroom = props.classrooms?.[data.level_name] ?? [];
+        setFilteredClassrooms(classroom);
+    }, [data.level_id]);
 
     return (
         <div className="flex w-full flex-col pb-32">
@@ -55,7 +63,13 @@ export default function Create(props) {
                                 <Label htmlFor="level_id">Tingkat</Label>
                                 <Select
                                     defaultValue={data.level_id}
-                                    onValueChange={(value) => setData('level_id', value)}
+                                    onValueChange={(value) => {
+                                        setData('level_id', value);
+                                        const selectedLevel = props.levels.find((level) => level.value == value);
+                                        if (selectedLevel) {
+                                            setData('level_name', selectedLevel.label);
+                                        }
+                                    }}
                                     id="level_id"
                                 >
                                     <SelectTrigger>
@@ -88,14 +102,23 @@ export default function Create(props) {
                             </div>
                             <div className="col-span-full">
                                 <Label htmlFor="name">Nama Kelas</Label>
-                                <Input
-                                    type="text"
-                                    name="name"
+                                <Select
+                                    defaultValue={data.name}
+                                    onValueChange={(value) => setData('name', value)}
                                     id="name"
-                                    placeholder="Masukkan nama kelas"
-                                    value={data.name}
-                                    onChange={(e) => setData(e.target.name, e.target.value)}
-                                />
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue>{data.name || 'Pilih Nama Kelas'}</SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent side="bottom">
+                                        {filteredClassrooms.map((kelas, index) => (
+                                            <SelectItem key={index} value={kelas.value}>
+                                                {kelas.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+
                                 {errors.name && <InputError message={errors.name} />}
                             </div>
                         </div>

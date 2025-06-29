@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ClassroomEnum;
 use App\Enums\MessageType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ClassroomRequest;
@@ -17,7 +18,7 @@ class ClassroomController extends Controller implements HasMiddleware
 {
     public static function middleware()
     {
-        return []; 
+        return [];
     }
 
     public function index()
@@ -49,6 +50,8 @@ class ClassroomController extends Controller implements HasMiddleware
 
     public function create()
     {
+        $levels = Level::query()->select(['id', 'name'])->orderBy('name')->get();
+
         return inertia('Admin/Classrooms/Create', [
             'page_setting' => [
                 'title' => 'Tambah Kelas',
@@ -56,10 +59,19 @@ class ClassroomController extends Controller implements HasMiddleware
                 'method' => 'POST',
                 'action' => route('admin.classrooms.store')
             ],
-            'levels' => Level::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'levels' => $levels->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
+                'name' => $item->name,
             ]),
+            'classrooms' => $levels->mapWithKeys(function ($item) {
+                return [
+                    $item->name => collect(\App\Enums\ClassroomEnum::cases())
+                        ->filter(fn($c) => str_starts_with($c->value, $item->name))
+                        ->values()
+                        ->map(fn($c) => ['value' => $c->value, 'label' => $c->value])
+                ];
+            }),
         ]);
     }
 
@@ -82,6 +94,8 @@ class ClassroomController extends Controller implements HasMiddleware
 
     public function Edit(Classroom $classroom)
     {
+        $levels = Level::query()->select(['id', 'name'])->orderBy('name')->get();
+
         return inertia('Admin/Classrooms/Edit', [
             'page_setting' => [
                 'title' => 'Edit Kelas',
@@ -89,11 +103,20 @@ class ClassroomController extends Controller implements HasMiddleware
                 'method' => 'PUT',
                 'action' => route('admin.classrooms.update', $classroom)
             ],
-            'levels' => Level::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'levels' => $levels->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
+                'name' => $item->name,
             ]),
-            'classroom' => $classroom,
+            'classrooms' => $levels->mapWithKeys(function ($item) {
+                return [
+                    $item->name => collect(\App\Enums\ClassroomEnum::cases())
+                        ->filter(fn($c) => str_starts_with($c->value, $item->name))
+                        ->values()
+                        ->map(fn($c) => ['value' => $c->value, 'label' => $c->value])
+                ];
+            }),
+            'classroom' => $classroom->load('level'),
         ]);
     }
 
