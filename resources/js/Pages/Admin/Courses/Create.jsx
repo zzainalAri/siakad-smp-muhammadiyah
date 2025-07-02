@@ -16,7 +16,6 @@ export default function Create(props) {
         level_id: null,
         teacher_id: null,
         name: '',
-        semester: 1,
         _method: props.page_setting.method,
     });
 
@@ -112,18 +111,6 @@ export default function Create(props) {
                                         </SelectTrigger>
                                     </Select>
                                     {errors.teacher_id && <InputError message={errors.teacher_id} />}
-                                </div>
-                                <div className="col-span-full">
-                                    <Label htmlFor="semester">Semester</Label>
-                                    <Input
-                                        type="number"
-                                        name="semester"
-                                        id="semester"
-                                        placeholder="Masukkan sks"
-                                        value={data.semester}
-                                        onChange={(e) => setData(e.target.name, e.target.value)}
-                                    />
-                                    {errors.semester && <InputError message={errors.semester} />}
                                 </div>
                             </div>
                             <div className="mt-8 flex flex-col gap-2 lg:flex-row lg:justify-end">

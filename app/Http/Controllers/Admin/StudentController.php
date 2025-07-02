@@ -25,7 +25,7 @@ class StudentController extends Controller implements HasMiddleware
 
     public static function middleware()
     {
-        return []; 
+        return [];
     }
 
 
@@ -76,8 +76,9 @@ class StudentController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'classrooms' => Classroom::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'classrooms' => Classroom::query()->select(['id', 'name', 'level_id'])->orderBy('name')->get()->map(fn($item) => [
                 'value' => $item->id,
+                'level_id' => $item->level_id,
                 'label' => $item->name,
             ]),
             'genders' => Gender::options(),
@@ -133,8 +134,9 @@ class StudentController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'classrooms' => Classroom::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'classrooms' => Classroom::query()->select(['id', 'name', 'level_id'])->orderBy('name')->get()->map(fn($item) => [
                 'value' => $item->id,
+                'level_id' => $item->level_id,
                 'label' => $item->name,
             ]),
             'genders' => Gender::options(),
