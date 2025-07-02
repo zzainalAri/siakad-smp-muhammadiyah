@@ -6,6 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Classroom;
 use App\Models\Course;
 use App\Models\Level;
+<<<<<<< HEAD
+=======
+use App\Models\Operator;
+use App\Models\Student;
+use App\Models\Teacher;
+>>>>>>> 722522b (first commit)
 use Illuminate\Http\Request;
 
 class DashboardAdminController extends Controller
@@ -22,6 +28,12 @@ class DashboardAdminController extends Controller
                 'levels' => Level::count(),
                 'classrooms' => Classroom::count(),
                 'courses' => Course::count(),
+<<<<<<< HEAD
+=======
+                'students' => Student::count(),
+                'teachers' => Teacher::count(),
+                'operators' => Operator::count(),
+>>>>>>> 722522b (first commit)
             ]
         ]);
     }
