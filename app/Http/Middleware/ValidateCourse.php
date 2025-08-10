@@ -19,7 +19,7 @@ class ValidateCourse
 
         $course = Course::query()
             ->where('id', $request->course_id)
-            ->where('faculty_id', $request->faculty_id)
+            ->where('level_id', $request->level_id)
             ->exists();
 
         if (!$course) {

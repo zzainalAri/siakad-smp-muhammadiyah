@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\Gender;
 use App\Enums\StudentStatus;
+use App\Models\Course;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -20,7 +21,10 @@ class DatabaseSeeder extends Seeder
         $this->call(LevelSeeder::class);
         $this->call(AcademicYearSeeder::class);
         $this->call(ClassroomSeeder::class);
-   
+        $this->call(TeacherSeeder::class);
+        $this->call(StudentSeeder::class);
+        $this->call(Course::class);
+
 
 
 
@@ -44,34 +48,34 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        $teacher = User::factory()->create([
-            'name' => 'Sanji',
-            'email' => 'sanji@gmail.com',
-        ])->assignRole(Role::create([
-            'name' => 'Teacher',
-        ]));
+        // $teacher = User::factory()->create([
+        //     'name' => 'Sanji',
+        //     'email' => 'sanji@gmail.com',
+        // ])->assignRole(Role::create([
+        //     'name' => 'Teacher',
+        // ]));
 
-        $teacher->teacher()->create([
-            'level_id' => 1,
-            'nip' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
-            'academic_title' => 'Asisten Ahli'
-        ]);
+        // $teacher->teacher()->create([
+        //     'level_id' => 1,
+        //     'nip' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
+        //     'academic_title' => 'Asisten Ahli'
+        // ]);
 
-        $student = User::factory()->create([
-            'name' => 'Usop',
-            'email' => 'usop@gmail.com',
-        ])->assignRole(Role::create([
-            'name' => 'Student',
-        ]));
+        // $student = User::factory()->create([
+        //     'name' => 'Usop',
+        //     'email' => 'usop@gmail.com',
+        // ])->assignRole(Role::create([
+        //     'name' => 'Student',
+        // ]));
 
-        $student->student()->create([
-            'level_id' => 1,
-            'address' => '',
-            'gender' => Gender::MALE->value,
-            'nisn' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
-            'batch' => 2025,
-            'status' => StudentStatus::ACTIVE->value,
-            'classroom_id' => 1,
-        ]);
+        // $student->student()->create([
+        //     'level_id' => 1,
+        //     'address' => '',
+        //     'gender' => Gender::MALE->value,
+        //     'nisn' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
+        //     'batch' => 2025,
+        //     'status' => StudentStatus::ACTIVE->value,
+        //     'classroom_id' => 1,
+        // ]);
     }
 }

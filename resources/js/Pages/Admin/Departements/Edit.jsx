@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 export default function Edit(props) {
     const { data, setData, post, errors, processing, reset } = useForm({
         name: props.departement.name ?? '',
-        faculty_id: props.departement.faculty_id ?? null,
+        level_id: props.departement.level_id ?? null,
         _method: props.page_setting.method,
     });
 
@@ -54,15 +54,15 @@ export default function Edit(props) {
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
-                                    <Label htmlFor="faculty_id">Nama Fakultas</Label>
+                                    <Label htmlFor="level_id">Nama Fakultas</Label>
                                     <Select
-                                        defaultValue={data.faculty_id}
-                                        onValueChange={(value) => setData('faculty_id', value)}
-                                        id="faculty_id"
+                                        defaultValue={data.level_id}
+                                        onValueChange={(value) => setData('level_id', value)}
+                                        id="level_id"
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
-                                                {props.levels.find((faculty) => faculty.value == data.faculty_id)
+                                                {props.levels.find((faculty) => faculty.value == data.level_id)
                                                     ?.label ?? 'Pilih fakultas'}
                                             </SelectValue>
                                             <SelectContent>
@@ -74,7 +74,7 @@ export default function Edit(props) {
                                             </SelectContent>
                                         </SelectTrigger>
                                     </Select>
-                                    {errors.faculty_id && <InputError message={errors.faculty_id} />}
+                                    {errors.level_id && <InputError message={errors.level_id} />}
                                 </div>
                                 <div className="col-span-full">
                                     <Label htmlFor="name">Nama Program Studi</Label>

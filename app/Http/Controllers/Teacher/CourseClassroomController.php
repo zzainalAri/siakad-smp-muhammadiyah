@@ -31,7 +31,7 @@ class CourseClassroomController extends Controller
             ->where('classroom_id', $classroom->id)->first();
 
         $students = Student::query()
-            ->where('faculty_id', $classroom->faculty_id)
+            ->where('level_id', $classroom->level_id)
             ->where('classroom_id', $classroom->id)
             ->filter(request()->only(['search']))
             ->whereHas('user', function ($query) {

@@ -1,4 +1,3 @@
-import AlertAction from '@/Components/AlertAction';
 import EmptyState from '@/Components/EmptyState';
 import HeaderTitle from '@/Components/HeaderTitle';
 import PaginationTable from '@/Components/PaginationTable';
@@ -10,16 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
-import { deleteAction, formatDateIndo } from '@/lib/utils';
-import { Link } from '@inertiajs/react';
-import {
-    IconArrowsDownUp,
-    IconBuildingSkyscraper,
-    IconPencil,
-    IconPlus,
-    IconRefresh,
-    IconTrash,
-} from '@tabler/icons-react';
+import { formatDateIndo } from '@/lib/utils';
+import { IconArrowsDownUp, IconBuildingSkyscraper, IconRefresh } from '@tabler/icons-react';
 import { useState } from 'react';
 
 export default function Index(props) {
@@ -49,11 +40,11 @@ export default function Index(props) {
                         subtitle={props.page_setting.subtitle}
                         icon={IconBuildingSkyscraper}
                     />
-                    <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
+                    {/* <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
                         <Link href={route('admin.levels.create')}>
                             <IconPlus className="size-4" /> Tambah
                         </Link>
-                    </Button>
+                    </Button> */}
                 </div>
                 <Card>
                     <CardHeader className="mb-4 p-0">
@@ -134,7 +125,7 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>Aksi</TableHead>
+                                        {/* <TableHead>Aksi</TableHead> */}
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -144,7 +135,7 @@ export default function Index(props) {
                                             <TableCell>{level.name}</TableCell>
                                             <TableCell>{level.slug}</TableCell>
                                             <TableCell>{formatDateIndo(level.created_at)}</TableCell>
-                                            <TableCell>
+                                            {/* <TableCell>
                                                 <div className="flex items-center gap-x-1">
                                                     <Button variant="blue" size="sm" asChild>
                                                         <Link href={route('admin.levels.edit', [level])}>
@@ -164,7 +155,7 @@ export default function Index(props) {
                                                         }
                                                     />
                                                 </div>
-                                            </TableCell>
+                                            </TableCell> */}
                                         </TableRow>
                                     ))}
                                 </TableBody>

@@ -140,19 +140,19 @@ CREATE TABLE `classrooms` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL,
-  `faculty_id` bigint(20) unsigned NOT NULL,
+  `level_id` bigint(20) unsigned NOT NULL,
   `departement_id` bigint(20) unsigned NOT NULL,
   `academic_year_id` bigint(20) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `classrooms_slug_unique` (`slug`),
-  KEY `classrooms_faculty_id_foreign` (`faculty_id`),
+  KEY `classrooms_level_id_foreign` (`level_id`),
   KEY `classrooms_departement_id_foreign` (`departement_id`),
   KEY `classrooms_academic_year_id_foreign` (`academic_year_id`),
   CONSTRAINT `classrooms_academic_year_id_foreign` FOREIGN KEY (`academic_year_id`) REFERENCES `academic_years` (`id`) ON DELETE CASCADE,
   CONSTRAINT `classrooms_departement_id_foreign` FOREIGN KEY (`departement_id`) REFERENCES `departements` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `classrooms_faculty_id_foreign` FOREIGN KEY (`faculty_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE
+  CONSTRAINT `classrooms_level_id_foreign` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -178,7 +178,7 @@ CREATE TABLE `courses` (
   `name` varchar(255) NOT NULL,
   `credit` int(10) unsigned NOT NULL,
   `semester` int(10) unsigned NOT NULL,
-  `faculty_id` bigint(20) unsigned NOT NULL,
+  `level_id` bigint(20) unsigned NOT NULL,
   `departement_id` bigint(20) unsigned NOT NULL,
   `teacher_id` bigint(20) unsigned NOT NULL,
   `academic_year_id` bigint(20) unsigned DEFAULT NULL,
@@ -186,13 +186,13 @@ CREATE TABLE `courses` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `courses_code_unique` (`code`),
-  KEY `courses_faculty_id_foreign` (`faculty_id`),
+  KEY `courses_level_id_foreign` (`level_id`),
   KEY `courses_departement_id_foreign` (`departement_id`),
   KEY `courses_teacher_id_foreign` (`teacher_id`),
   KEY `courses_academic_year_id_foreign` (`academic_year_id`),
   CONSTRAINT `courses_academic_year_id_foreign` FOREIGN KEY (`academic_year_id`) REFERENCES `academic_years` (`id`) ON DELETE SET NULL,
   CONSTRAINT `courses_departement_id_foreign` FOREIGN KEY (`departement_id`) REFERENCES `departements` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `courses_faculty_id_foreign` FOREIGN KEY (`faculty_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `courses_level_id_foreign` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE,
   CONSTRAINT `courses_teacher_id_foreign` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -218,14 +218,14 @@ CREATE TABLE `departements` (
   `name` varchar(255) NOT NULL,
   `code` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL,
-  `faculty_id` bigint(20) unsigned NOT NULL,
+  `level_id` bigint(20) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `departements_code_unique` (`code`),
   UNIQUE KEY `departements_slug_unique` (`slug`),
-  KEY `departements_faculty_id_foreign` (`faculty_id`),
-  CONSTRAINT `departements_faculty_id_foreign` FOREIGN KEY (`faculty_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE
+  KEY `departements_level_id_foreign` (`level_id`),
+  CONSTRAINT `departements_level_id_foreign` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -547,17 +547,17 @@ CREATE TABLE `operators` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `employee_number` varchar(255) NOT NULL,
   `user_id` bigint(20) unsigned NOT NULL,
-  `faculty_id` bigint(20) unsigned NOT NULL,
+  `level_id` bigint(20) unsigned NOT NULL,
   `departement_id` bigint(20) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `operators_employee_number_unique` (`employee_number`),
   KEY `operators_user_id_foreign` (`user_id`),
-  KEY `operators_faculty_id_foreign` (`faculty_id`),
+  KEY `operators_level_id_foreign` (`level_id`),
   KEY `operators_departement_id_foreign` (`departement_id`),
   CONSTRAINT `operators_departement_id_foreign` FOREIGN KEY (`departement_id`) REFERENCES `departements` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `operators_faculty_id_foreign` FOREIGN KEY (`faculty_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `operators_level_id_foreign` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE,
   CONSTRAINT `operators_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -690,7 +690,7 @@ CREATE TABLE `schedules` (
   `end_time` time NOT NULL,
   `day_of_week` varchar(255) NOT NULL,
   `quote` int(10) unsigned NOT NULL DEFAULT 0,
-  `faculty_id` bigint(20) unsigned NOT NULL,
+  `level_id` bigint(20) unsigned NOT NULL,
   `departement_id` bigint(20) unsigned NOT NULL,
   `course_id` bigint(20) unsigned NOT NULL,
   `classroom_id` bigint(20) unsigned NOT NULL,
@@ -698,7 +698,7 @@ CREATE TABLE `schedules` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `schedules_faculty_id_foreign` (`faculty_id`),
+  KEY `schedules_level_id_foreign` (`level_id`),
   KEY `schedules_departement_id_foreign` (`departement_id`),
   KEY `schedules_course_id_foreign` (`course_id`),
   KEY `schedules_classroom_id_foreign` (`classroom_id`),
@@ -707,7 +707,7 @@ CREATE TABLE `schedules` (
   CONSTRAINT `schedules_classroom_id_foreign` FOREIGN KEY (`classroom_id`) REFERENCES `classrooms` (`id`) ON DELETE CASCADE,
   CONSTRAINT `schedules_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE,
   CONSTRAINT `schedules_departement_id_foreign` FOREIGN KEY (`departement_id`) REFERENCES `departements` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `schedules_faculty_id_foreign` FOREIGN KEY (`faculty_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE
+  CONSTRAINT `schedules_level_id_foreign` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -763,7 +763,7 @@ CREATE TABLE `students` (
   `semester` int(10) unsigned NOT NULL DEFAULT 1,
   `batch` year(4) NOT NULL,
   `user_id` bigint(20) unsigned NOT NULL,
-  `faculty_id` bigint(20) unsigned NOT NULL,
+  `level_id` bigint(20) unsigned NOT NULL,
   `departement_id` bigint(20) unsigned NOT NULL,
   `classroom_id` bigint(20) unsigned DEFAULT NULL,
   `fee_group_id` bigint(20) unsigned DEFAULT NULL,
@@ -772,13 +772,13 @@ CREATE TABLE `students` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `students_nisn_unique` (`nisn`),
   KEY `students_user_id_foreign` (`user_id`),
-  KEY `students_faculty_id_foreign` (`faculty_id`),
+  KEY `students_level_id_foreign` (`level_id`),
   KEY `students_departement_id_foreign` (`departement_id`),
   KEY `students_classroom_id_foreign` (`classroom_id`),
   KEY `students_fee_group_id_foreign` (`fee_group_id`),
   CONSTRAINT `students_classroom_id_foreign` FOREIGN KEY (`classroom_id`) REFERENCES `classrooms` (`id`) ON DELETE SET NULL,
   CONSTRAINT `students_departement_id_foreign` FOREIGN KEY (`departement_id`) REFERENCES `departements` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `students_faculty_id_foreign` FOREIGN KEY (`faculty_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `students_level_id_foreign` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE,
   CONSTRAINT `students_fee_group_id_foreign` FOREIGN KEY (`fee_group_id`) REFERENCES `fee_groups` (`id`) ON DELETE SET NULL,
   CONSTRAINT `students_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -934,17 +934,17 @@ CREATE TABLE `teachers` (
   `nip` varchar(255) NOT NULL,
   `academic_title` varchar(255) DEFAULT NULL,
   `user_id` bigint(20) unsigned NOT NULL,
-  `faculty_id` bigint(20) unsigned NOT NULL,
+  `level_id` bigint(20) unsigned NOT NULL,
   `departement_id` bigint(20) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `teachers_nip_unique` (`nip`),
   KEY `teachers_user_id_foreign` (`user_id`),
-  KEY `teachers_faculty_id_foreign` (`faculty_id`),
+  KEY `teachers_level_id_foreign` (`level_id`),
   KEY `teachers_departement_id_foreign` (`departement_id`),
   CONSTRAINT `teachers_departement_id_foreign` FOREIGN KEY (`departement_id`) REFERENCES `departements` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `teachers_faculty_id_foreign` FOREIGN KEY (`faculty_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `teachers_level_id_foreign` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE,
   CONSTRAINT `teachers_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

@@ -45,12 +45,12 @@ class UserSingleResource extends JsonResource
                 'id' => $this->teacher?->id,
                 'nip' => $this->teacher?->nip,
                 'academic_title' => $this->teacher?->academic_title,
-                'faculty_id' => $this->teacher?->faculty_id,
+                'level_id' => $this->teacher?->level_id,
             ]),
             'operator' => $this->when($this->hasRole('Operator'), [
                 'id' => $this->operator?->id,
                 'employee_number' => $this->operator?->employee_number,
-                'faculty_id' => $this->operator?->faculty_id,
+                'level_id' => $this->operator?->level_id,
                 'faculty' => $this->operator?->faculty?->name,
             ]),
         ];
