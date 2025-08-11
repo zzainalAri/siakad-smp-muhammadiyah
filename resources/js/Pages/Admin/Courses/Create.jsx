@@ -9,6 +9,7 @@ import AppLayout from '@/Layouts/AppLayout';
 import { flashMessage } from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
 import { IconArrowLeft, IconBooks, IconCheck } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Create(props) {
@@ -18,6 +19,8 @@ export default function Create(props) {
         name: '',
         _method: props.page_setting.method,
     });
+
+    const [filteredTeacher, setFilteredTeacher] = useState([]);
 
     const onHandleReset = () => {
         reset();
@@ -34,6 +37,11 @@ export default function Create(props) {
             },
         });
     };
+
+    useEffect(() => {
+        const filtered = props.teachers.filter((teacher) => teacher.level_id == data.level_id);
+        setFilteredTeacher(filtered);
+    }, [data.level_id]);
 
     return (
         <>
@@ -90,19 +98,20 @@ export default function Create(props) {
                                     {errors.level_id && <InputError message={errors.level_id} />}
                                 </div>
                                 <div className="col-span-full">
-                                    <Label htmlFor="teacher_id">Dosen</Label>
+                                    <Label htmlFor="teacher_id">Guru</Label>
                                     <Select
                                         defaultValue={data.teacher_id}
                                         onValueChange={(value) => setData('teacher_id', value)}
                                         id="teacher_id"
+                                        disabled={!data.level_id}
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
-                                                {props.teachers.find((teacher) => teacher.value == data.teacher_id)
-                                                    ?.label ?? 'Pilih dosen'}
+                                                {filteredTeacher.find((teacher) => teacher.value == data.teacher_id)
+                                                    ?.label ?? 'Pilih Tingkat Dahulu'}
                                             </SelectValue>
                                             <SelectContent>
-                                                {props.teachers.map((teacher, index) => (
+                                                {filteredTeacher.map((teacher, index) => (
                                                     <SelectItem key={index} value={teacher.value}>
                                                         {teacher.label}
                                                     </SelectItem>

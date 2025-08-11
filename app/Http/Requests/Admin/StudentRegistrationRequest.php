@@ -3,16 +3,15 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class FeeGroupRequest extends FormRequest
+class StudentRegistrationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -23,20 +22,7 @@ class FeeGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'level_id' => [
-                'required',
-                'integer',
-                Rule::unique('fee_groups')->ignore($this->feeGroup),
-            ],
-            'amount' => 'required|numeric'
-        ];
-    }
-
-    public function attributes()
-    {
-        return [
-            'group' => 'Golongan UKT',
-            'amount' => 'Jumlah'
+            //
         ];
     }
 }

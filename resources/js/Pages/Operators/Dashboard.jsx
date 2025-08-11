@@ -33,7 +33,7 @@ export default function Dashboard(props) {
                     </CardStat>
                     <CardStat
                         data={{
-                            title: 'Total Dosen',
+                            title: 'Total Guru',
                             icon: IconUsersGroup,
                             background: 'text-white bg-gradient-to-r from-blue-400 via-blue-500 to-blue-500',
                             iconClassName: 'text-white',
@@ -53,7 +53,7 @@ export default function Dashboard(props) {
                     </CardStat>
                     <CardStat
                         data={{
-                            title: 'Total Mata Kuliah',
+                            title: 'Total Mata Pelajaran',
                             icon: IconBooks,
                             background: 'text-white bg-gradient-to-r from-orange-400 via-orange-500 to-orange-500',
                             iconClassName: 'text-white',

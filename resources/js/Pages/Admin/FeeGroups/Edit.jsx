@@ -4,6 +4,7 @@ import { Button } from '@/Components/ui/button';
 import { Card, CardContent } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import AppLayout from '@/Layouts/AppLayout';
 import { flashMessage } from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
@@ -12,7 +13,7 @@ import { toast } from 'sonner';
 
 export default function Edit(props) {
     const { data, setData, post, errors, processing, reset } = useForm({
-        group: props.feeGroup.group ?? 1,
+        level_id: props.feeGroup.level_id ?? null,
         amount: props.feeGroup.amount ?? 0,
         _method: props.page_setting.method,
     });
@@ -53,16 +54,27 @@ export default function Edit(props) {
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
-                                    <Label htmlFor="group">Golongan UKT</Label>
-                                    <Input
-                                        type="number"
-                                        name="group"
-                                        id="group"
-                                        placeholder="Masukkan golongan ukt"
-                                        value={data.group}
-                                        onChange={(e) => setData(e.target.name, e.target.value)}
-                                    />
-                                    {errors.group && <InputError message={errors.group} />}
+                                    <Label htmlFor="level_id">Nama Tingkat</Label>
+                                    <Select
+                                        defaultValue={data.level_id}
+                                        onValueChange={(value) => setData('level_id', value)}
+                                        id="level_id"
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue>
+                                                {props.levels.find((level) => level.value == data.level_id)?.label ??
+                                                    'Pilih tingkat'}
+                                            </SelectValue>
+                                            <SelectContent>
+                                                {props.levels.map((level, index) => (
+                                                    <SelectItem key={index} value={level.value}>
+                                                        {level.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </SelectTrigger>
+                                    </Select>
+                                    {errors.level_id && <InputError message={errors.level_id} />}
                                 </div>
                                 <div className="col-span-full">
                                     <Label htmlFor="amount">Jumlah</Label>

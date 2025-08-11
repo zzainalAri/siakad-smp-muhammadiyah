@@ -21,7 +21,7 @@ export default function Detail({ schedules, name }) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>#</TableHead>
-                                <TableHead>Mata Kuliah</TableHead>
+                                <TableHead>Mata Pelajaran</TableHead>
                                 <TableHead>SKS</TableHead>
                                 <TableHead>Kelas</TableHead>
                                 <TableHead>Tahun Ajaran</TableHead>

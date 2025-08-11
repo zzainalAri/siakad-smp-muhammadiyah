@@ -77,7 +77,7 @@ class CourseClassroomController extends Controller
 
         return inertia('Teachers/Classrooms/Index', [
             'page_setting' => [
-                'title' => "Kelas {$classroom->name} - Mata Kuliah {$course->name}",
+                'title' => "Kelas {$classroom->name} - Mata Pelajaran {$course->name}",
                 'subtitle' => 'Menampilkan data Siswa',
                 'method' => 'PUT',
                 'action' => route('teachers.classrooms.sync', [$course, $classroom]),

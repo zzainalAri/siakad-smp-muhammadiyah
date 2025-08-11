@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\FeeGroupRequest;
 use App\Http\Resources\Admin\FeeGroupResource;
 use App\Models\FeeGroup;
+use App\Models\Level;
 use Illuminate\Http\Request;
 use Throwable;
 
@@ -15,15 +16,16 @@ class FeeGroupController extends Controller
     public function index()
     {
         $feeGroups = FeeGroup::query()
-            ->select(['id', 'group', 'amount', 'created_at'])
+            ->select(['fee_groups.id', 'fee_groups.level_id', 'fee_groups.amount', 'fee_groups.created_at'])
             ->filter(request()->only(['search']))
+            ->with(['level'])
             ->sorting(request()->only(['field', 'direction']))
             ->paginate(request()->load ?? 10);
 
         return inertia('Admin/FeeGroups/Index', [
             'page_setting' => [
-                'title' => 'Golongan UKT',
-                'subtitle' => 'Menampilkan semua data Golongan UKT yang tersedia pada universitas ini'
+                'title' => 'Pengaturan',
+                'subtitle' => 'Menampilkan semua data pengaturan spp yang tersedia pada Sekolah ini'
             ],
             'feeGroups' => FeeGroupResource::collection($feeGroups)->additional([
                 'meta' => [
@@ -42,11 +44,15 @@ class FeeGroupController extends Controller
     {
         return inertia('Admin/FeeGroups/Create', [
             'page_setting' => [
-                'title' => 'Tambah Golongan UKT',
-                'subtitle' => 'Buat Golongan UKT baru disini. Klik simpan setelah selesai',
+                'title' => 'Tambah pengaturan spp',
+                'subtitle' => 'Buat pengaturan spp baru disini. Klik simpan setelah selesai',
                 'method' => 'POST',
                 'action' => route('admin.fee-groups.store')
-            ]
+            ],
+            'levels' => Level::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+                'value' => $item->id,
+                'label' => $item->name,
+            ]),
         ]);
     }
 
@@ -54,11 +60,11 @@ class FeeGroupController extends Controller
     {
         try {
             FeeGroup::create([
-                'group' =>  $request->group,
+                'level_id' =>  $request->level_id,
                 'amount' => $request->amount,
             ]);
 
-            flashMessage(MessageType::CREATED->message('Golongan UKT'));
+            flashMessage(MessageType::CREATED->message('Pengaturan SPP'));
             return to_route('admin.fee-groups.index');
         } catch (Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
@@ -70,11 +76,15 @@ class FeeGroupController extends Controller
     {
         return inertia('Admin/FeeGroups/Edit', [
             'page_setting' => [
-                'title' => 'Edit Golongan UKT',
-                'subtitle' => 'Edit Golongan UKT disini. Klik simpan setelah selesai',
+                'title' => 'Edit Pengaturan SPP',
+                'subtitle' => 'Edit Pengaturan SPP disini. Klik simpan setelah selesai',
                 'method' => 'PUT',
                 'action' => route('admin.fee-groups.update', $feeGroup)
             ],
+            'levels' => Level::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+                'value' => $item->id,
+                'label' => $item->name,
+            ]),
             'feeGroup' => $feeGroup,
         ]);
     }
@@ -83,11 +93,11 @@ class FeeGroupController extends Controller
     {
         try {
             $feeGroup->update([
-                'group' =>  $request->group,
+                'level_id' =>  $request->level_id,
                 'amount' => $request->amount,
             ]);
 
-            flashMessage(MessageType::UPDATED->message('Golongan UKT'));
+            flashMessage(MessageType::UPDATED->message('Pengaturan SPP'));
             return to_route('admin.fee-groups.index');
         } catch (Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
@@ -101,7 +111,7 @@ class FeeGroupController extends Controller
         try {
 
             $feeGroup->delete();
-            flashMessage(MessageType::DELETED->message('Golongan UKT'));
+            flashMessage(MessageType::DELETED->message('Pengaturan SPP'));
             return to_route('admin.fee-groups.index');
         } catch (Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');

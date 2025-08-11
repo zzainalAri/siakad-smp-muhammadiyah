@@ -25,11 +25,18 @@ class ClassroomFactory extends Factory
             throw new \Exception('No active academic year found. Please seed academic years first.');
         }
 
-        $grade = $this->faker->randomElement(['Kelas 7', 'Kelas 8', 'Kelas 9']);
+        $grades = ['Kelas 7', 'Kelas 8', 'Kelas 9'];
+        $letters = ['A', 'B', 'C', 'D', 'E'];
 
-        $letter = $this->faker->randomElement(['A', 'B', 'C', 'D', 'E']);
+        static $usedCombinations = [];
 
-        $className = $grade . $letter;
+        do {
+            $grade = $this->faker->randomElement($grades);
+            $letter = $this->faker->randomElement($letters);
+            $combination = $grade . $letter;
+        } while (in_array($combination, $usedCombinations));
+
+        $usedCombinations[] = $combination;
 
         $level = Level::where('name', $grade)->first();
 
@@ -38,8 +45,8 @@ class ClassroomFactory extends Factory
         }
 
         return [
-            'name' => $className,
-            'slug' => Str::slug($className),
+            'name' => $combination,
+            'slug' => Str::slug($combination),
             'academic_year_id' => $activeAcademicYear->id,
             'level_id' => $level->id,
         ];

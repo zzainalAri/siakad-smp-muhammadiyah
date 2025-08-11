@@ -15,7 +15,7 @@ class AcademicYearSeeder extends Seeder
     public function run(): void
     {
 
-        $academicYears = AcademicYear::factory()->count(5)->create();
+        $academicYears = AcademicYear::factory()->count(4)->create();
         $academicYears->random()->update(['is_active' => true]);
 
         // AcademicYear::create([

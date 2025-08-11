@@ -16,21 +16,17 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Throwable;
 
-class ScheduleController extends Controller implements HasMiddleware
+class ScheduleController extends Controller
 {
 
     public static function middleware()
     {
-        return [
-            new Middleware('validateClassroom', only: ['store', 'update']),
-            new Middleware('validateCourse', only: ['store', 'update']),
-
-        ];
+        return [];
     }
     public function index()
     {
         $schedules = Schedule::query()
-            ->select(['schedules.id',  'schedules.level_id','schedules.classroom_id', 'schedules.course_id', 'schedules.start_time', 'schedules.end_time', 'schedules.day_of_week', 'schedules.created_at'])
+            ->select(['schedules.id',  'schedules.level_id', 'schedules.classroom_id', 'schedules.course_id', 'schedules.start_time', 'schedules.end_time', 'schedules.day_of_week', 'schedules.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
             ->with(['classroom', 'course', 'level'])
@@ -70,13 +66,15 @@ class ScheduleController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'courses' => Course::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'courses' => Course::query()->select(['id', 'name', 'level_id'])->orderBy('name')->get()->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
+                'level_id' => $item->level_id,
             ]),
-            'classrooms' => Classroom::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'classrooms' => Classroom::query()->select(['id', 'name', 'level_id'])->orderBy('name')->get()->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
+                'level_id' => $item->level_id,
             ]),
             'days' => ScheduleDay::options(),
         ]);
@@ -117,13 +115,15 @@ class ScheduleController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'courses' => Course::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'courses' => Course::query()->select(['id', 'name', 'level_id'])->orderBy('name')->get()->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
+                'level_id' => $item->level_id,
             ]),
-            'classrooms' => Classroom::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'classrooms' => Classroom::query()->select(['id', 'name', 'level_id'])->orderBy('name')->get()->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
+                'level_id' => $item->level_id,
             ]),
             'days' => ScheduleDay::options(),
         ]);

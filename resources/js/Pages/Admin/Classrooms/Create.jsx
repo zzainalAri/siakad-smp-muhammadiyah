@@ -36,6 +36,9 @@ export default function Create(props) {
         });
     };
 
+    console.log(data);
+    console.log(props.classrooms);
+
     useEffect(() => {
         const classroom = props.classrooms?.[data.level_name] ?? [];
         setFilteredClassrooms(classroom);

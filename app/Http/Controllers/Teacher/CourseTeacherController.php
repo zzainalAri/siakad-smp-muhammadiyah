@@ -17,12 +17,12 @@ class CourseTeacherController extends Controller
             ->where('academic_year_id', activeAcademicYear()->id)
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->with(['faculty','schedules'])
+            ->with(['faculty', 'schedules'])
             ->paginate(request()->load ?? 9);
 
         return inertia('Teachers/Courses/Index', [
             'page_setting' => [
-                'title' => 'Mata Kuliah',
+                'title' => 'Mata Pelajaran',
                 'subtitle' => 'Menampilkan semua data matakuliah yang anda ampu'
             ],
             'courses' => CourseTeacherResource::collection($courses)->additional([
@@ -44,10 +44,10 @@ class CourseTeacherController extends Controller
     {
         return inertia('Teachers/Courses/Show', [
             'page_setting' => [
-                'title' => "Detail Mata Kuliah {$course->name}",
-                'subtitle' => 'Menampilkan Detail Mata Kuliah yang anda ampu'
+                'title' => "Detail Mata Pelajaran {$course->name}",
+                'subtitle' => 'Menampilkan Detail Mata Pelajaran yang anda ampu'
             ],
-            'course' => new CourseScheduleResource($course->load(['schedules','academicYear', 'faculty']))
+            'course' => new CourseScheduleResource($course->load(['schedules', 'academicYear', 'faculty']))
         ]);
     }
 }

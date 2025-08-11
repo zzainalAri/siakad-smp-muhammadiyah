@@ -43,11 +43,12 @@ class Student extends Model
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->whereAny([
-                'nip',
+                'nisn',
                 'batch',
             ], 'REGEXP', $search)
                 ->orWhereHas('user', fn($query) => $query->whereAny(['name', 'email'], 'REGEXP', $search))
                 ->orWhereHas('level', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
+                ->orWhereHas('classroom', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
 
             ;
         });

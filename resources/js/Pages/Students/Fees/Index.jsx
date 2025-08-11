@@ -277,7 +277,7 @@ export default function Index(props) {
                     )}
                     <div className="flex w-full flex-col items-center justify-between gap-y-2 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
                             {meta.total} Pembayaran
                         </p>
                         <div className="overflow-x-auto">

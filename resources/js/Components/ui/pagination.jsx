@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Link } from '@inertiajs/react';
 
 const Pagination = ({ className, ...props }) => (
     <nav
@@ -25,7 +26,7 @@ const PaginationItem = React.forwardRef(({ className, ...props }, ref) => (
 PaginationItem.displayName = 'PaginationItem';
 
 const PaginationLink = ({ className, isActive, size = 'icon', ...props }) => (
-    <a
+    <Link
         aria-current={isActive ? 'page' : undefined}
         className={cn(
             buttonVariants({

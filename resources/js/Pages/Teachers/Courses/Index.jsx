@@ -82,8 +82,8 @@ export default function Index(props) {
                         {courses.length === 0 ? (
                             <EmptyState
                                 icon={IconBooks}
-                                title="Tidak ada Mata Kuliah"
-                                subtitle="Mulailah dengan membuat Mata Kuliah baru"
+                                title="Tidak ada Mata Pelajaran"
+                                subtitle="Mulailah dengan membuat Mata Pelajaran baru"
                             />
                         ) : (
                             <ul role="list" className="grid grid-cols-1 gap-5 px-2 pb-2 lg:grid-cols-3">
@@ -143,8 +143,8 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
-                            {meta.total} Mata Kuliah
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
+                            {meta.total} Mata Pelajaran
                         </p>
                         <div className="overflow-x-auto">
                             {meta.has_pages && <PaginationTable meta={meta} links={links} />}

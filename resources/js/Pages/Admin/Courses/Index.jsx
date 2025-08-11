@@ -102,6 +102,43 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
+
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                className="group inline-flex"
+                                                onClick={() => onSortable('name')}
+                                            >
+                                                Nama Mata Pelajaran
+                                                <span className="ml-2 flex-none rounded text-muted-foreground">
+                                                    <IconArrowsDownUp className="size-4" />
+                                                </span>
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                className="group inline-flex"
+                                                onClick={() => onSortable('code')}
+                                            >
+                                                Kode Mata Pelajaran
+                                                <span className="ml-2 flex-none rounded text-muted-foreground">
+                                                    <IconArrowsDownUp className="size-4" />
+                                                </span>
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                className="group inline-flex"
+                                                onClick={() => onSortable('name')}
+                                            >
+                                                Nama Guru
+                                                <span className="ml-2 flex-none rounded text-muted-foreground">
+                                                    <IconArrowsDownUp className="size-4" />
+                                                </span>
+                                            </Button>
+                                        </TableHead>
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
@@ -114,54 +151,7 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('name')}
-                                            >
-                                                Nama Dosen
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('code')}
-                                            >
-                                                Kode Mata Kuliah
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('name')}
-                                            >
-                                                Nama Mata Kuliah
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('semester')}
-                                            >
-                                                Semester
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
+
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
@@ -181,11 +171,10 @@ export default function Index(props) {
                                     {courses.map((course, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                            <TableCell>{course.level.name}</TableCell>
-                                            <TableCell>{course.teacher.name}</TableCell>
-                                            <TableCell>{course.code}</TableCell>
                                             <TableCell>{course.name}</TableCell>
-                                            <TableCell>{course.semester}</TableCell>
+                                            <TableCell>{course.code}</TableCell>
+                                            <TableCell>{course.teacher.name}</TableCell>
+                                            <TableCell>{course.level.name}</TableCell>
                                             <TableCell>{formatDateIndo(course.created_at)}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-x-1">
@@ -216,7 +205,7 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
                             {meta.total} Mata Pelajaran
                         </p>
                         <div className="overflow-x-auto">

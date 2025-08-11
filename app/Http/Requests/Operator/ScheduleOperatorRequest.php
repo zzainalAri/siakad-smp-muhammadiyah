@@ -42,7 +42,7 @@ class ScheduleOperatorRequest extends FormRequest
     public function attributes()
     {
         return [
-            'course_id' => 'Mata Kuliah',
+            'course_id' => 'Mata Pelajaran',
             'classroom_id' => 'Kelas',
             'start_time' => 'Waktu Mulai',
             'end_time' => 'Waktu Selesai',

@@ -23,7 +23,7 @@ class ValidateCourse
             ->exists();
 
         if (!$course) {
-            flashMessage('Mata kuliah tersebut tidak ada di program studi atau fakultas yang anda pilih', 'error');
+            flashMessage('Mata Pelajaran tersebut tidak ada di program studi atau fakultas yang anda pilih', 'error');
 
             return back();
         }

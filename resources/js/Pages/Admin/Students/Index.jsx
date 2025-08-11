@@ -33,6 +33,7 @@ export default function Index(props) {
         only: ['students'],
     });
 
+    console.log(meta);
     return (
         <>
             <div className="flex w-full flex-col pb-32">
@@ -266,7 +267,7 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
                             {meta.total} Siswa
                         </p>
                         <div className="overflow-x-auto">

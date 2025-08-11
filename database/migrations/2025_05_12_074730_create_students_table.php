@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('gender');
             $table->string('status');
             $table->year('batch');
-            $table->foreignId('classroom_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('classroom_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('level_id')->constrained()->cascadeOnDelete();
             $table->timestamps();

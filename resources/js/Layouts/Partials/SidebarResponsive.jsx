@@ -7,10 +7,12 @@ import {
     IconCalendar,
     IconCalendarTime,
     IconCircleKey,
+    IconClipboardPlus,
     IconDoor,
     IconLayout2,
     IconLogout2,
     IconMoneybag,
+    IconReportMoney,
     IconUser,
     IconUsers,
     IconUsersGroup,
@@ -114,6 +116,12 @@ export default function SidebarResponsive({ url, auth }) {
                             url={route('admin.fees.index')}
                             active={url.startsWith('/admin/fees')}
                             title={'SPP'}
+                            icon={IconReportMoney}
+                        />
+                        <NavLink
+                            url={route('admin.fee-groups.index')}
+                            active={url.startsWith('/admin/fee-groups')}
+                            title={'Pengaturan SPP'}
                             icon={IconMoneybag}
                         />
                     </>
@@ -132,7 +140,7 @@ export default function SidebarResponsive({ url, auth }) {
                         <NavLink
                             url={route('teachers.courses.index')}
                             active={url.startsWith('/teachers/courses')}
-                            title={'Mata Kuliah'}
+                            title={'Mata Pelajaran'}
                             icon={IconBooks}
                         />
                         <NavLink
@@ -189,6 +197,16 @@ export default function SidebarResponsive({ url, auth }) {
 
                 {/* Lainnya */}
                 <div className="px-3 py-2 text-base font-medium text-white">Lainnya</div>
+                {auth.user.roles.some((role) => ['Admin'].includes(role)) && (
+                    <>
+                        <NavLink
+                            url={route('admin.student-registrations.index')}
+                            active={url.startsWith('/admin/student-registrations')}
+                            title={'PPDB'}
+                            icon={IconClipboardPlus}
+                        />
+                    </>
+                )}
                 <NavLink
                     url={route('logout')}
                     method="post"

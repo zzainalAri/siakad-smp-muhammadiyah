@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
+use App\Models\StudentRegistration;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
@@ -128,6 +129,16 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
         Route::get('courses/edit/{course:code}', 'edit')->name('admin.courses.edit');
         Route::put('courses/edit/{course:code}', 'update')->name('admin.courses.update');
         Route::delete('courses/destroy/{course:code}', 'destroy')->name('admin.courses.destroy');
+    });
+
+    // student-registrations
+    Route::controller(StudentRegistration::class)->group(function () {
+        Route::get('student-registrations', 'index')->name('admin.student-registrations.index');
+        Route::get('student-registrations/create', 'create')->name('admin.student-registrations.create');
+        Route::post('student-registrations/create', 'store')->name('admin.student-registrations.store');
+        Route::get('student-registrations/edit/{studentRegistration:nisn}', 'edit')->name('admin.student-registrations.edit');
+        Route::put('student-registrations/edit/{studentRegistration:nisn}', 'update')->name('admin.student-registrations.update');
+        Route::delete('student-registrations/destroy/{studentRegistration:nisn}', 'destroy')->name('admin.student-registrations.destroy');
     });
 
     // Schedules
