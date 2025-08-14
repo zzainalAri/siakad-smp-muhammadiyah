@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\OperatorController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\StudentRegistrationController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Models\StudentRegistration;
 use Illuminate\Support\Facades\Route;
@@ -132,7 +133,7 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     });
 
     // student-registrations
-    Route::controller(StudentRegistration::class)->group(function () {
+    Route::controller(StudentRegistrationController::class)->group(function () {
         Route::get('student-registrations', 'index')->name('admin.student-registrations.index');
         Route::get('student-registrations/create', 'create')->name('admin.student-registrations.create');
         Route::post('student-registrations/create', 'store')->name('admin.student-registrations.store');

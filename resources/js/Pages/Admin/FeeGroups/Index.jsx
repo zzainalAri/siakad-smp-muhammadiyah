@@ -83,8 +83,8 @@ export default function Index(props) {
                         {feeGroups.length === 0 ? (
                             <EmptyState
                                 icon={IconDroplets}
-                                title="Tidak ada golongan ukt"
-                                subtitle="Mulailah dengan membuat golongan ukt baru"
+                                title="Tidak ada golongan spp"
+                                subtitle="Mulailah dengan membuat golongan spp baru"
                             />
                         ) : (
                             <Table className="w-full">
@@ -178,7 +178,7 @@ export default function Index(props) {
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
                             Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
-                            {meta.total} golongan ukt
+                            {meta.total} golongan spp
                         </p>
                         <div className="overflow-x-auto">
                             {meta.has_pages && <PaginationTable meta={meta} links={links} />}

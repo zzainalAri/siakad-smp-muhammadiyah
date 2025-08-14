@@ -18,7 +18,6 @@ return new class extends Migration
             $table->date('birth_date');
             $table->string('address');
             $table->string('gender');
-            $table->string('email')->unique();
             $table->string('phone');
             $table->string('doc_kk');
             $table->string('doc_akta');

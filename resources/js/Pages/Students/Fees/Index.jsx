@@ -53,7 +53,6 @@ export default function Index(props) {
             });
         } catch (error) {
             toast['error'](`Kesalahan pembayaran ${error}`);
-            console.log(error);
         }
     };
 
@@ -84,7 +83,7 @@ export default function Index(props) {
                     {!props.checkFee && (
                         <div>
                             <Alert variant="orange">
-                                <AlertTitle>Periode Pembayarann UKT Tahun Ajaran {props.academic_year.name}</AlertTitle>
+                                <AlertTitle>Periode Pembayarann SPP Tahun Ajaran {props.academic_year.name}</AlertTitle>
                                 <AlertDescription>
                                     Silakan melakukan pembayaran dulu agar anda bisa mengajukan Kartu Rencana Studi
                                 </AlertDescription>
@@ -104,7 +103,6 @@ export default function Index(props) {
                                                 <TableHead>Kelas</TableHead>
                                                 <TableHead>Program Studi</TableHead>
                                                 <TableHead>Program Fakultas</TableHead>
-                                                <TableHead>Golongan UKT</TableHead>
                                                 <TableHead>Total Tagihan</TableHead>
                                                 <TableHead>Aksi</TableHead>
                                             </TableRow>
@@ -117,7 +115,6 @@ export default function Index(props) {
                                                 <TableCell>{auth.student.classroom.name}</TableCell>
                                                 <TableCell>{auth.student.departement.name}</TableCell>
                                                 <TableCell>{auth.student.faculty.name}</TableCell>
-                                                <TableCell>{auth.student.feeGroup.group}</TableCell>
                                                 <TableCell>{formatToRupiah(auth.student.feeGroup.amount)}</TableCell>
                                                 <TableCell>
                                                     <Button onClick={handlePayment} variant="blue">

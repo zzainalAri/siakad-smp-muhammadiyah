@@ -54,9 +54,9 @@ class DatabaseSeeder extends Seeder
         $level_2 = Level::where('name', 'Kelas 8')->first();
         $level_3 = Level::where('name', 'Kelas 9')->first();
 
-        FeeGroup::create(['level_id' => $level_1->id, 'amount' => 50000]);
-        FeeGroup::create(['level_id' => $level_2->id, 'amount' => 100000]);
-        FeeGroup::create(['level_id' => $level_3->id, 'amount' => 150000]);
+        FeeGroup::create(['level_id' => $level_1->id, 'amount' => 200000]);
+        FeeGroup::create(['level_id' => $level_2->id, 'amount' => 200000]);
+        FeeGroup::create(['level_id' => $level_3->id, 'amount' => 200000]);
 
 
         // $teacher = User::factory()->create([

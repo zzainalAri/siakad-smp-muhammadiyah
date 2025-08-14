@@ -35,7 +35,7 @@ class FeeGroupRequest extends FormRequest
     public function attributes()
     {
         return [
-            'group' => 'Golongan UKT',
+            'group' => 'Golongan SPP',
             'amount' => 'Jumlah'
         ];
     }

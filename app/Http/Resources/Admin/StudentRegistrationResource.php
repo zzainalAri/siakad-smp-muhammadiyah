@@ -22,7 +22,6 @@ class StudentRegistrationResource extends JsonResource
             'birth_date' => $this->birth_date,
             'address' => $this->address,
             'gender' => $this->gender,
-            'email' => $this->email,
             'phone' => $this->phone,
             'doc_kk' => $this->doc_kk ? Storage::url($this->doc_kk) : null,
             'doc_akta' => $this->doc_akta ? Storage::url($this->doc_akta) : null,
@@ -30,6 +29,7 @@ class StudentRegistrationResource extends JsonResource
             'nik' => $this->nik,
             'previous_school' => $this->previous_school,
             'status' => $this->status,
+            'created_at' => $this->created_at,
         ];
     }
 }

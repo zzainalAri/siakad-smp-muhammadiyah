@@ -12,6 +12,7 @@ const badgeVariants = cva(
                 destructive:
                     'border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80',
                 success: 'text-white bg-gradient-to-r from-green-500 via-green-600 to-green-700',
+                red: 'text-white bg-gradient-to-r from-red-500 via-red-600 to-red-700',
                 outline: 'text-foreground',
             },
         },
