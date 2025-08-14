@@ -15,6 +15,7 @@ import { deleteAction, formatDateIndo } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
 import { IconArrowsDownUp, IconPencil, IconPlus, IconRefresh, IconTrash, IconUsers } from '@tabler/icons-react';
 import { useState } from 'react';
+import Approved from './Approved';
 
 export default function Index(props) {
     const { data: students, meta, links } = props.students;
@@ -119,6 +120,18 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
+                                                onClick={() => onSortable('email')}
+                                            >
+                                                Email
+                                                <span className="ml-2 flex-none rounded text-muted-foreground">
+                                                    <IconArrowsDownUp className="size-4" />
+                                                </span>
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                className="group inline-flex"
                                                 onClick={() => onSortable('nisn')}
                                             >
                                                 NISN
@@ -167,6 +180,30 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
+                                                onClick={() => onSortable('nik')}
+                                            >
+                                                NIK Siswa
+                                                <span className="ml-2 flex-none rounded text-muted-foreground">
+                                                    <IconArrowsDownUp className="size-4" />
+                                                </span>
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                className="group inline-flex"
+                                                onClick={() => onSortable('no_kk')}
+                                            >
+                                                No KK
+                                                <span className="ml-2 flex-none rounded text-muted-foreground">
+                                                    <IconArrowsDownUp className="size-4" />
+                                                </span>
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                className="group inline-flex"
                                                 onClick={() => onSortable('address')}
                                             >
                                                 Alamat
@@ -203,16 +240,62 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('nik')}
+                                                onClick={() => onSortable('religion')}
                                             >
-                                                Nomor Induk Kependudukan
+                                                Agama
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>Kartu Keluarga</TableHead>
-                                        <TableHead>Akta Kelahiran</TableHead>
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                className="group inline-flex"
+                                                onClick={() => onSortable('mother_name')}
+                                            >
+                                                Nama Ibu
+                                                <span className="ml-2 flex-none rounded text-muted-foreground">
+                                                    <IconArrowsDownUp className="size-4" />
+                                                </span>
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                className="group inline-flex"
+                                                onClick={() => onSortable('moter_nik')}
+                                            >
+                                                NIK Ibu
+                                                <span className="ml-2 flex-none rounded text-muted-foreground">
+                                                    <IconArrowsDownUp className="size-4" />
+                                                </span>
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                className="group inline-flex"
+                                                onClick={() => onSortable('father_name')}
+                                            >
+                                                Nama Ayah
+                                                <span className="ml-2 flex-none rounded text-muted-foreground">
+                                                    <IconArrowsDownUp className="size-4" />
+                                                </span>
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                className="group inline-flex"
+                                                onClick={() => onSortable('motefather_nik')}
+                                            >
+                                                NIK Ayah
+                                                <span className="ml-2 flex-none rounded text-muted-foreground">
+                                                    <IconArrowsDownUp className="size-4" />
+                                                </span>
+                                            </Button>
+                                        </TableHead>
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
@@ -220,6 +303,18 @@ export default function Index(props) {
                                                 onClick={() => onSortable('status')}
                                             >
                                                 Status
+                                                <span className="ml-2 flex-none rounded text-muted-foreground">
+                                                    <IconArrowsDownUp className="size-4" />
+                                                </span>
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                className="group inline-flex"
+                                                onClick={() => onSortable('accepted_date')}
+                                            >
+                                                Tanggal Diterima
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -245,42 +340,57 @@ export default function Index(props) {
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
                                             <TableCell>{student.name}</TableCell>
+                                            <TableCell>{student.email}</TableCell>
                                             <TableCell>{student.nisn}</TableCell>
                                             <TableCell>{student.previous_school}</TableCell>
                                             <TableCell>{student.birth_place}</TableCell>
                                             <TableCell>{student.birth_date}</TableCell>
+                                            <TableCell>{student.nik}</TableCell>
+                                            <TableCell>{student.no_kk}</TableCell>
                                             <TableCell>{student.address}</TableCell>
                                             <TableCell>{student.phone}</TableCell>
                                             <TableCell>{student.gender}</TableCell>
-                                            <TableCell>{student.nik}</TableCell>
-                                            <TableCell>
-                                                {student.doc_kk ? (
-                                                    <img src={student.doc_kk} alt={student.name} className="w-14" />
-                                                ) : (
-                                                    'Tidak ada foto kartu keluarga'
-                                                )}
-                                            </TableCell>
-                                            <TableCell>
-                                                {student.doc_akta ? (
-                                                    <img src={student.doc_akta} alt={student.name} className="w-14" />
-                                                ) : (
-                                                    'Tidak ada foto akta kelahiran'
-                                                )}
-                                            </TableCell>
+                                            <TableCell>{student.religion}</TableCell>
+                                            <TableCell>{student.mother_name}</TableCell>
+                                            <TableCell>{student.mother_nik}</TableCell>
+                                            <TableCell>{student.father_name}</TableCell>
+                                            <TableCell>{student.father_nik}</TableCell>
                                             <TableCell>
                                                 {student.status == 'Disetujui' && (
                                                     <Badge variant="success">{student.status}</Badge>
                                                 )}
                                                 {student.status == 'Ditolak' && (
-                                                    <Badge variant="red">{student.status}</Badge>
+                                                    <>
+                                                        <Badge variant="red">{student.status}</Badge>
+                                                        <p>Keterangan : {student.rejected_description}</p>
+                                                    </>
                                                 )}
                                                 {student.status == 'Menunggu Konfirmasi' && (
-                                                    <Badge variant="default">{student.status}</Badge>
+                                                    <>
+                                                        <Badge variant="default">{student.status}</Badge>
+                                                    </>
                                                 )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {student.accepted_date
+                                                    ? formatDateIndo(student.created_at)
+                                                    : 'Belum Diterima'}
                                             </TableCell>
                                             <TableCell>{formatDateIndo(student.created_at)}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-x-1">
+                                                    {(student.status == 'Menunggu Konfirmasi' ||
+                                                        student.status == 'Ditolak') && (
+                                                        <Approved
+                                                            name={student.name}
+                                                            classrooms={props.classrooms}
+                                                            status={student.status}
+                                                            statuses={props.statuses}
+                                                            action={route('admin.student-registrations.approve', [
+                                                                student,
+                                                            ])}
+                                                        />
+                                                    )}
                                                     <Button variant="blue" size="sm" asChild>
                                                         <Link
                                                             href={route('admin.student-registrations.edit', [student])}

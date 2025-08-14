@@ -17,6 +17,13 @@ class StudentRegistration extends Model
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->whereAny([
                 'name',
+                'email',
+                'mother_name',
+                'father_name',
+                'father_nik',
+                'mother_nik',
+                'no_kk',
+                'religion',
                 'birth_place',
                 'address',
                 'phone',

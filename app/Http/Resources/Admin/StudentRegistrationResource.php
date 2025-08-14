@@ -18,18 +18,24 @@ class StudentRegistrationResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'email' => $this->email,
             'birth_place' => $this->birth_place,
             'birth_date' => $this->birth_date,
             'address' => $this->address,
             'gender' => $this->gender,
             'phone' => $this->phone,
-            'doc_kk' => $this->doc_kk ? Storage::url($this->doc_kk) : null,
-            'doc_akta' => $this->doc_akta ? Storage::url($this->doc_akta) : null,
             'nisn' => $this->nisn,
             'nik' => $this->nik,
+            'religion' => $this->religion,
+            'no_kk' => $this->no_kk,
+            'mother_name' => $this->mother_name,
+            'father_name' => $this->father_name,
+            'mother_nik' => $this->mother_nik,
+            'father_nik' => $this->father_nik,
             'previous_school' => $this->previous_school,
             'status' => $this->status,
             'created_at' => $this->created_at,
+            'accepted_date' => $this->accepted_date,
         ];
     }
 }

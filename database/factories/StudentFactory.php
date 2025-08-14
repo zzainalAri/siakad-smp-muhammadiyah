@@ -39,7 +39,7 @@ class StudentFactory extends Factory
 
         return [
             'user_id' => $user->id,
-            'nisn' => str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT),
+            'nisn' => $this->faker->unique()->numerify('##########'),
             'address' => $this->faker->address,
             'gender' => $this->faker->randomElement([Gender::MALE->value, Gender::FEMALE->value]),
             'status' => StudentStatus::ACTIVE->value,
