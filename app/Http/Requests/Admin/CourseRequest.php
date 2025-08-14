@@ -11,7 +11,7 @@ class CourseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasRole('Admin');
+        return true;
     }
 
     /**
@@ -22,24 +22,18 @@ class CourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'faculty_id' => 'required|exists:faculties,id',
-            'departement_id' => 'required|exists:departements,id',
-            'teacher_id' => 'required|exists:users,id',
+            'level_id' => 'required|exists:levels,id',
+            'teacher_id' => 'required|exists:teachers,id',
             'name' => 'required|string|min:3|max:255',
-            'credit' => 'required|integer',
-            'semester' => 'required|integer',
         ];
     }
 
     public function attributes()
     {
         return [
-            'faculty_id' => 'Fakultas',
-            'departement_id' => 'Program Studi',
-            'teacher_id' => 'Dosen',
+            'level_id' => 'Tingkat',
+            'teacher_id' => 'Guru',
             'name' => 'Nama',
-            'credit' => 'Satuan Kredit Semester (SKS)',
-            'semester' => 'Semester'
         ];
     }
 }

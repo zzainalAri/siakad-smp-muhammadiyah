@@ -1,66 +1,103 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SIAKAD SMP Muhammadiyah - Academic Information System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Project Overview
 
-## About Laravel
+SIAKAD SMP Muhammadiyah is a web-based Academic Information System designed to digitize and streamline academic and administrative processes at Muhammadiyah Junior High School. This system covers a wide range of functionalities, from new student enrollment (PPDB), student and teacher management, class scheduling, attendance tracking, and grade processing, to online school fee (SPP) payments.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The primary goal is to create an efficient, accessible, and integrated platform for students, teachers, administrative staff, and school management.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Key Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1.  📝 **PPDB (New Student Admission / *Penerimaan Peserta Didik Baru*)**
+    * Online registration form for prospective students.
+    * Document upload: passport-sized photo, Family Card (Kartu Keluarga), and Birth Certificate (Akta Kelahiran).
+    * Data verification by admin/operator.
+    * Registration status tracking: Pending → Verified → Accepted/Rejected.
+    * Printable registration proof.
+    * (Optional) Dedicated login for applicants to check their admission status.
 
-## Learning Laravel
+2.  👨‍🎓 **Student Management**
+    * Add, edit, and delete student records.
+    * Assign students to classes.
+    * Manage student status: Active / Graduated / Transferred.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+3.  👨‍🏫 **Teacher Management**
+    * Add, edit, and delete teacher records.
+    * Assign teachers to subjects and classes.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+4.  📅 **Lesson Scheduling / Timetable Management**
+    * Input and manage lesson schedules for each class.
+    * Organized by day and time slots.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+5.  ✅ **Attendance Tracking**
+    * Teachers can record daily student attendance.
+    * Attendance categories: Present / Permit (Izin) / Sick (Sakit) / Absent without leave (Alfa).
 
-## Laravel Sponsors
+6.  📊 **Grading & Report Cards**
+    * Input scores for daily assignments, mid-term exams (UTS), and final exams (UAS).
+    * Automatic calculation of final grades and predicates.
+    * Generate and print semesterly report cards.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+7.  💳 **Financial Management (SPP Payments)**
+    * Online payment fasilitas for SPP (School Fees) via Midtrans Payment Gateway.
+    * Securely stored and accessible payment history for each student.
 
-### Premium Partners
+## 👥 User Roles & Access Levels
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+The system defines several user roles with specific access permissions:
 
-## Contributing
+1.  **Admin:**
+    * Full access to all system modules and data management.
+    * Responsible for core system configuration and security.
+2.  **Operator:**
+    * Manages student data, schedules, and validates new student registrations.
+3.  **Teacher (Guru):**
+    * Inputs student grades and attendance.
+    * Views their teaching schedule and assigned classes.
+4.  **Student (Siswa):**
+    * Views their personal schedule and grades.
+    * Prints their academic results/report cards.
+    * Makes online SPP payments.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🧩 Detailed Features by Role
 
-## Code of Conduct
+#### 🔹 Admin
+* **Academic Year Management:** Define and manage academic years and semesters.
+* **Class Management & Student Placement:** Create classes, assign homeroom teachers, and place students into classes.
+* **User & Role Management (CRUD):** Manage accounts for Teachers, Students, and Operators, including their roles and permissions.
+* **Subject Management:** Add, edit, or delete subjects offered by the school.
+* **Schedule Management:** Oversee and finalize class schedules.
+* **SPP (School Fee) Configuration:** Set up SPP amounts, payment deadlines, and payment gateway settings.
+* System-wide settings and backups.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### 🔹 Operator
+* **PPDB Data Validation:** Verify documents and data submitted by new student applicants.
+* **Student Data Management (CRUD):** Manage the database of active students.
+* **Schedule & Subject Data Input:** Assist in inputting and updating lesson schedules and subject details.
+* **SPP Payment Monitoring:** Track and verify SPP payments.
+* Generate operational reports.
 
-## Security Vulnerabilities
+#### 🔹 Teacher
+* **View Teaching Schedule:** Access personal timetable and list of classes/subjects taught.
+* **Grade Input:** Enter student scores for assignments, quizzes, UTS, and UAS for assigned subjects/classes.
+* **Attendance Input:** Record daily student attendance for their classes.
+* Access student lists for their classes.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+#### 🔹 Student
+* **View Personal Dashboard:** Access own grades, attendance records, and lesson schedule.
+* **Print Academic Records:** Download or print personal report cards/transcripts.
+* **Online SPP Payment:** Make SPP payments securely through the Midtrans payment gateway integration.
+* View payment history.
 
-## License
+## 🛠️ Technology Stack (Example - Please Fill In Your Actual Stack)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+* **Backend:** [e.g., Laravel (PHP)]
+* **Frontend:** [e.g., React.js, Vue.js, Blade with Livewire/Alpine.js]
+* **Database:** [e.g., MySQL, PostgreSQL]
+* **Payment Gateway Integration:** Midtrans
+* **Web Server:** [e.g., Nginx, Apache]
+* **Other Tools:** [e.g., Composer, NPM/Yarn, Git]
+
+---
+
+*This README provides a general outline. Feel free to add more specific details about your project's architecture, setup instructions, contribution guidelines, etc.*

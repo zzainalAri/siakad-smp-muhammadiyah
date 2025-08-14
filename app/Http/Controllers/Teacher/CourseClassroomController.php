@@ -31,8 +31,7 @@ class CourseClassroomController extends Controller
             ->where('classroom_id', $classroom->id)->first();
 
         $students = Student::query()
-            ->where('faculty_id', $classroom->faculty_id)
-            ->where('departement_id', $classroom->departement_id)
+            ->where('level_id', $classroom->level_id)
             ->where('classroom_id', $classroom->id)
             ->filter(request()->only(['search']))
             ->whereHas('user', function ($query) {
@@ -78,8 +77,8 @@ class CourseClassroomController extends Controller
 
         return inertia('Teachers/Classrooms/Index', [
             'page_setting' => [
-                'title' => "Kelas {$classroom->name} - Mata Kuliah {$course->name}",
-                'subtitle' => 'Menampilkan data mahasiswa',
+                'title' => "Kelas {$classroom->name} - Mata Pelajaran {$course->name}",
+                'subtitle' => 'Menampilkan data Siswa',
                 'method' => 'PUT',
                 'action' => route('teachers.classrooms.sync', [$course, $classroom]),
             ],

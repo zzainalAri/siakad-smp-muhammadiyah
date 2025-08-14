@@ -6,14 +6,16 @@ use App\Http\Controllers\Admin\ClassroomStudentController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DashboardAdminController;
 use App\Http\Controllers\Admin\DepartementController;
-use App\Http\Controllers\Admin\FacultyController;
+use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\FeeController;
 use App\Http\Controllers\Admin\FeeGroupController;
 use App\Http\Controllers\Admin\OperatorController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\StudentRegistrationController;
 use App\Http\Controllers\Admin\TeacherController;
+use App\Models\StudentRegistration;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
@@ -21,25 +23,25 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     //dashboard
     Route::get('dashboard', DashboardAdminController::class)->name('admin.dashboard');
 
-    // faculties
-    Route::controller(FacultyController::class)->group(function () {
-        Route::get('faculties', 'index')->name('admin.faculties.index');
-        Route::get('faculties/create', 'create')->name('admin.faculties.create');
-        Route::post('faculties/create', 'store')->name('admin.faculties.store');
-        Route::get('faculties/edit/{faculty:slug}', 'edit')->name('admin.faculties.edit');
-        Route::put('faculties/edit/{faculty:slug}', 'update')->name('admin.faculties.update');
-        Route::delete('faculties/destroy/{faculty:slug}', 'destroy')->name('admin.faculties.destroy');
+    // levels
+    Route::controller(LevelController::class)->group(function () {
+        Route::get('levels', 'index')->name('admin.levels.index');
+        Route::get('levels/create', 'create')->name('admin.levels.create');
+        Route::post('levels/create', 'store')->name('admin.levels.store');
+        Route::get('levels/edit/{level:slug}', 'edit')->name('admin.levels.edit');
+        Route::put('levels/edit/{level:slug}', 'update')->name('admin.levels.update');
+        Route::delete('levels/destroy/{level:slug}', 'destroy')->name('admin.levels.destroy');
     });
 
-    // departement
-    Route::controller(DepartementController::class)->group(function () {
-        Route::get('departements', 'index')->name('admin.departements.index');
-        Route::get('departements/create', 'create')->name('admin.departements.create');
-        Route::post('departements/create', 'store')->name('admin.departements.store');
-        Route::get('departements/edit/{departement:slug}', 'edit')->name('admin.departements.edit');
-        Route::put('departements/edit/{departement:slug}', 'update')->name('admin.departements.update');
-        Route::delete('departements/destroy/{departement:slug}', 'destroy')->name('admin.departements.destroy');
-    });
+    // // departement
+    // Route::controller(DepartementController::class)->group(function () {
+    //     Route::get('departements', 'index')->name('admin.departements.index');
+    //     Route::get('departements/create', 'create')->name('admin.departements.create');
+    //     Route::post('departements/create', 'store')->name('admin.departements.store');
+    //     Route::get('departements/edit/{departement:slug}', 'edit')->name('admin.departements.edit');
+    //     Route::put('departements/edit/{departement:slug}', 'update')->name('admin.departements.update');
+    //     Route::delete('departements/destroy/{departement:slug}', 'destroy')->name('admin.departements.destroy');
+    // });
 
     // academic year
     Route::controller(AcademicYearController::class)->group(function () {
@@ -87,16 +89,16 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
         Route::get('students', 'index')->name('admin.students.index');
         Route::get('students/create', 'create')->name('admin.students.create');
         Route::post('students/create', 'store')->name('admin.students.store');
-        Route::get('students/edit/{student:student_number}', 'edit')->name('admin.students.edit');
-        Route::put('students/edit/{student:student_number}', 'update')->name('admin.students.update');
-        Route::delete('students/destroy/{student:student_number}', 'destroy')->name('admin.students.destroy');
+        Route::get('students/edit/{student:nisn}', 'edit')->name('admin.students.edit');
+        Route::put('students/edit/{student:nisn}', 'update')->name('admin.students.update');
+        Route::delete('students/destroy/{student:nisn}', 'destroy')->name('admin.students.destroy');
     });
 
     // assign student to classroom
     Route::controller(ClassroomStudentController::class)->group(function () {
         Route::get('classrooms/students/{classroom:slug}', 'index')->name('admin.classroom-students.index');
         Route::put('classrooms/students/{classroom:slug}/sync', 'sync')->name('admin.classroom-students.sync');
-        Route::delete('classrooms/students/{classroom:slug}/destroy/{student:student_number}', 'destroy')->name('admin.classroom-students.destroy');
+        Route::delete('classrooms/students/{classroom:slug}/destroy/{student:nisn}', 'destroy')->name('admin.classroom-students.destroy');
     });
 
     // Teacher
@@ -104,9 +106,9 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
         Route::get('teachers', 'index')->name('admin.teachers.index');
         Route::get('teachers/create', 'create')->name('admin.teachers.create');
         Route::post('teachers/create', 'store')->name('admin.teachers.store');
-        Route::get('teachers/edit/{teacher:teacher_number}', 'edit')->name('admin.teachers.edit');
-        Route::put('teachers/edit/{teacher:teacher_number}', 'update')->name('admin.teachers.update');
-        Route::delete('teachers/destroy/{teacher:teacher_number}', 'destroy')->name('admin.teachers.destroy');
+        Route::get('teachers/edit/{teacher:nip}', 'edit')->name('admin.teachers.edit');
+        Route::put('teachers/edit/{teacher:nip}', 'update')->name('admin.teachers.update');
+        Route::delete('teachers/destroy/{teacher:nip}', 'destroy')->name('admin.teachers.destroy');
     });
 
 
@@ -128,6 +130,16 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
         Route::get('courses/edit/{course:code}', 'edit')->name('admin.courses.edit');
         Route::put('courses/edit/{course:code}', 'update')->name('admin.courses.update');
         Route::delete('courses/destroy/{course:code}', 'destroy')->name('admin.courses.destroy');
+    });
+
+    // student-registrations
+    Route::controller(StudentRegistrationController::class)->group(function () {
+        Route::get('student-registrations', 'index')->name('admin.student-registrations.index');
+        Route::get('student-registrations/create', 'create')->name('admin.student-registrations.create');
+        Route::post('student-registrations/create', 'store')->name('admin.student-registrations.store');
+        Route::get('student-registrations/edit/{studentRegistration:nisn}', 'edit')->name('admin.student-registrations.edit');
+        Route::put('student-registrations/edit/{studentRegistration:nisn}', 'update')->name('admin.student-registrations.update');
+        Route::delete('student-registrations/destroy/{studentRegistration:nisn}', 'destroy')->name('admin.student-registrations.destroy');
     });
 
     // Schedules

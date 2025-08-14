@@ -23,6 +23,10 @@ class ClassroomOperatorResource extends JsonResource
                 'id' => $this->academicYear?->id,
                 'name' => $this->academicYear?->name,
             ]),
+            'level' => $this->whenLoaded('level', [
+                'id' => $this->level?->id,
+                'name' => $this->level?->name,
+            ]),
         ];
     }
 }

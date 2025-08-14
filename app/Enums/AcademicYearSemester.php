@@ -5,7 +5,7 @@ namespace App\Enums;
 enum AcademicYearSemester: string
 {
     case ODD = 'Ganjil';
-    case EVEN = 'GENAP';
+    case EVEN = 'Genap';
 
 
     public static function options()

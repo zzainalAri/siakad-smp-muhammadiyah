@@ -9,21 +9,22 @@ import AppLayout from '@/Layouts/AppLayout';
 import { flashMessage } from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
 import { IconArrowLeft, IconCalendar, IconCheck } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Edit(props) {
     const { data, setData, post, errors, processing, reset } = useForm({
-        faculty_id: props.schedule.faculty_id ?? null,
-        departement_id: props.schedule.departement_id ?? null,
+        level_id: props.schedule.level_id ?? null,
         course_id: props.schedule.course_id ?? null,
         classroom_id: props.schedule.classroom_id ?? null,
         start_time: props.schedule.start_time ?? '',
         end_time: props.schedule.end_time ?? '',
-        day_of_week: props.schedule.day_of_week ?? null,
-        quote: props.schedule.quote ?? 0,
+        day_of_week: props.schedule.day_of_week ?? '',
         _method: props.page_setting.method,
     });
 
+    const [filteredCourse, setFilteredCourse] = useState([]);
+    const [filteredClassroom, setFilteredClassroom] = useState([]);
     const onHandleReset = () => {
         reset();
     };
@@ -39,6 +40,13 @@ export default function Edit(props) {
             },
         });
     };
+
+    useEffect(() => {
+        const filteredCourse = props.courses.filter((course) => course.level_id == data.level_id);
+        const filteredClassroom = props.classrooms.filter((classroom) => classroom.level_id == data.level_id);
+        setFilteredCourse(filteredCourse);
+        setFilteredClassroom(filteredClassroom);
+    }, [data.level_id]);
 
     return (
         <>
@@ -60,66 +68,43 @@ export default function Edit(props) {
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
-                                    <Label htmlFor="faculty_id">Nama Fakultas</Label>
+                                    <Label htmlFor="level_id">Tingkat</Label>
                                     <Select
-                                        defaultValue={data.faculty_id}
-                                        onValueChange={(value) => setData('faculty_id', value)}
-                                        id="faculty_id"
+                                        defaultValue={data.level_id}
+                                        onValueChange={(value) => setData('level_id', value)}
+                                        id="level_id"
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
-                                                {props.faculties.find((faculty) => faculty.value == data.faculty_id)
-                                                    ?.label ?? 'Pilih fakultas'}
+                                                {props.levels.find((level) => level.value == data.level_id)?.label ??
+                                                    'Pilih Tingkat'}
                                             </SelectValue>
                                             <SelectContent>
-                                                {props.faculties.map((faculty, index) => (
-                                                    <SelectItem key={index} value={faculty.value}>
-                                                        {faculty.label}
+                                                {props.levels.map((level, index) => (
+                                                    <SelectItem key={index} value={level.value}>
+                                                        {level.label}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </SelectTrigger>
                                     </Select>
-                                    {errors.faculty_id && <InputError message={errors.faculty_id} />}
+                                    {errors.level_id && <InputError message={errors.level_id} />}
                                 </div>
                                 <div className="col-span-full">
-                                    <Label htmlFor="departement_id">Program Studi</Label>
-                                    <Select
-                                        defaultValue={data.departement_id}
-                                        onValueChange={(value) => setData('departement_id', value)}
-                                        id="departement_id"
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue>
-                                                {props.departements.find(
-                                                    (departement) => departement.value == data.departement_id,
-                                                )?.label ?? 'Pilih program studi'}
-                                            </SelectValue>
-                                            <SelectContent>
-                                                {props.departements.map((departement, index) => (
-                                                    <SelectItem key={index} value={departement.value}>
-                                                        {departement.label}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </SelectTrigger>
-                                    </Select>
-                                    {errors.departement_id && <InputError message={errors.departement_id} />}
-                                </div>
-                                <div className="col-span-full">
-                                    <Label htmlFor="course_id">Mata Kuliah</Label>
+                                    <Label htmlFor="course_id">Mata Pelajaran</Label>
                                     <Select
                                         defaultValue={data.course_id}
                                         onValueChange={(value) => setData('course_id', value)}
                                         id="course_id"
+                                        disabled={!data.level_id}
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
-                                                {props.courses.find((course) => course.value == data.course_id)
-                                                    ?.label ?? 'Pilih Mata Kuliah'}
+                                                {filteredCourse.find((course) => course.value == data.course_id)
+                                                    ?.label ?? 'Pilih Tingkat Dahulu'}
                                             </SelectValue>
                                             <SelectContent>
-                                                {props.courses.map((course, index) => (
+                                                {filteredCourse.map((course, index) => (
                                                     <SelectItem key={index} value={course.value}>
                                                         {course.label}
                                                     </SelectItem>
@@ -135,15 +120,16 @@ export default function Edit(props) {
                                         defaultValue={data.classroom_id}
                                         onValueChange={(value) => setData('classroom_id', value)}
                                         id="classroom_id"
+                                        disabled={!data.level_id}
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
-                                                {props.classrooms.find(
+                                                {filteredClassroom.find(
                                                     (classroom) => classroom.value == data.classroom_id,
-                                                )?.label ?? 'Pilih Kelas'}
+                                                )?.label ?? 'Pilih Tingkat Dahulu'}
                                             </SelectValue>
                                             <SelectContent>
-                                                {props.classrooms.map((classroom, index) => (
+                                                {filteredClassroom.map((classroom, index) => (
                                                     <SelectItem key={index} value={classroom.value}>
                                                         {classroom.label}
                                                     </SelectItem>
@@ -176,18 +162,6 @@ export default function Edit(props) {
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
                                     {errors.end_time && <InputError message={errors.end_time} />}
-                                </div>
-                                <div className="col-span-full">
-                                    <Label htmlFor="quote">Kuota</Label>
-                                    <Input
-                                        type="number"
-                                        name="quote"
-                                        id="quote"
-                                        placeholder="Masukkan kuota"
-                                        value={data.quote}
-                                        onChange={(e) => setData(e.target.name, e.target.value)}
-                                    />
-                                    {errors.quote && <InputError message={errors.quote} />}
                                 </div>
                                 <div className="col-span-full">
                                     <Label htmlFor="day_of_week">Hari</Label>

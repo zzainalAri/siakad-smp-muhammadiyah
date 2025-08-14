@@ -5,21 +5,21 @@ namespace App\Models;
 use App\Enums\AcademicYearSemester;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AcademicYear extends Model
 {
-    use Sluggable;
+    use Sluggable, HasFactory;
 
     protected $guarded = [];
 
-    protected function casts()
-    {
-        return [
-            'semester' => AcademicYearSemester::class,
-
-        ];
-    }
+    protected $casts = [
+        'semester' => AcademicYearSemester::class,
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'is_active' => 'boolean',
+    ];
 
     public function scopeFilter(Builder $query, $filters)
     {
@@ -45,5 +45,10 @@ class AcademicYear extends Model
                 'source' => 'name'
             ]
         ];
+    }
+
+    public function classrooms()
+    {
+        return $this->hasMany(Classroom::class);
     }
 }

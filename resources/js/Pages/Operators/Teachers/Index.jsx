@@ -84,8 +84,8 @@ export default function Index(props) {
                         {teachers.length === 0 ? (
                             <EmptyState
                                 icon={IconUsersGroup}
-                                title="Tidak ada Dosen"
-                                subtitle="Mulailah dengan membuat Dosen baru"
+                                title="Tidak ada Guru"
+                                subtitle="Mulailah dengan membuat Guru baru"
                             />
                         ) : (
                             <Table className="w-full">
@@ -131,9 +131,9 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('teacher_number')}
+                                                onClick={() => onSortable('nip')}
                                             >
-                                                Nomor Induk Dosen Nasional
+                                                Nomor Induk Pegawai
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -180,7 +180,7 @@ export default function Index(props) {
                                                 <span>{teacher.user?.name}</span>
                                             </TableCell>
                                             <TableCell>{teacher.user?.email}</TableCell>
-                                            <TableCell>{teacher.teacher_number}</TableCell>
+                                            <TableCell>{teacher.nip}</TableCell>
                                             <TableCell>{teacher.academic_title}</TableCell>
                                             <TableCell>{formatDateIndo(teacher.created_at)}</TableCell>
                                             <TableCell>
@@ -212,8 +212,8 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
-                            {meta.total} Dosen
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
+                            {meta.total} Guru
                         </p>
                         <div className="overflow-x-auto">
                             {meta.has_pages && <PaginationTable meta={meta} links={links} />}

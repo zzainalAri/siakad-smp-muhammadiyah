@@ -23,8 +23,8 @@ class StudyResultOperatorController extends Controller
 
         return inertia('Operators/Students/StudyResults/Index', [
             'page_setting' => [
-                'title' => "Kartu Hasil Studi Mahasiswa {$student->name}",
-                'subtitle' => "Menampilkan semua data kartu hasil studi mahasiswa {$student->name}"
+                'title' => "Kartu Hasil Studi Siswa {$student->name}",
+                'subtitle' => "Menampilkan semua data kartu hasil studi Siswa {$student->name}"
             ],
             'studyResults' => StudyResultOperatorResource::collection($studyResults)->additional([
                 'meta' => [

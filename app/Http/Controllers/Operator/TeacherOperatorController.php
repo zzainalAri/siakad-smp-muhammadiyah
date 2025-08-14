@@ -20,11 +20,10 @@ class TeacherOperatorController extends Controller
     public function index()
     {
         $teachers = Teacher::query()
-            ->select(['teachers.id', 'teachers.teacher_number', 'teachers.faculty_id', 'teachers.departement_id', 'teachers.user_id', 'teachers.academic_title', 'teachers.created_at'])
+            ->select(['teachers.id', 'teachers.nip', 'teachers.level_id', 'teachers.user_id', 'teachers.academic_title', 'teachers.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->where('teachers.departement_id', auth()->user()->operator->departement_id)
-            ->where('teachers.faculty_id', auth()->user()->operator->faculty_id)
+            ->where('teachers.level_id', auth()->user()->operator->level_id)
             ->with(['user'])
             ->whereHas('user', function ($query) {
                 $query->whereHas('roles', fn($query) =>  $query->where('name', 'Teacher'));
@@ -32,13 +31,12 @@ class TeacherOperatorController extends Controller
             ->paginate(request()->load ?? 10);
 
 
-        $faculty_name = auth()->user()->operator->faculty->name;
-        $departement_name = auth()->user()->operator->departement->name;
+        $level_name = auth()->user()->operator->level->name;
 
         return inertia('Operators/Teachers/Index', [
             'page_setting' => [
-                'title' => 'Dosen',
-                'subtitle' => "Menampilkan Dosen yang ada di {$faculty_name} dan program studi {$departement_name}",
+                'title' => 'Guru',
+                'subtitle' => "Menampilkan Guru yang ada di {$level_name}",
             ],
             'teachers' => TeacherOperatorResource::collection($teachers)->additional([
                 'meta' => [
@@ -57,8 +55,8 @@ class TeacherOperatorController extends Controller
     {
         return inertia('Operators/Teachers/Create', [
             'page_setting' => [
-                'title' => 'Tambah Dosen',
-                'subtitle' => 'Buat Dosen baru disini. Klik simpan setelah selesai',
+                'title' => 'Tambah Guru',
+                'subtitle' => 'Buat Guru baru disini. Klik simpan setelah selesai',
                 'method' => 'POST',
                 'action' => route('operators.teachers.store')
             ]
@@ -77,9 +75,8 @@ class TeacherOperatorController extends Controller
             ]);
 
             $user->teacher()->create([
-                'faculty_id' => auth()->user()->operator->faculty_id,
-                'departement_id' => auth()->user()->operator->departement_id,
-                'teacher_number' => $request->teacher_number,
+                'level_id' => auth()->user()->operator->level_id,
+                'nip' => $request->nip,
                 'academic_title' => $request->academic_title,
 
             ]);
@@ -88,7 +85,7 @@ class TeacherOperatorController extends Controller
             DB::commit();
             $user->assignRole('Teacher');
 
-            flashMessage(MessageType::CREATED->message('Dosen'));
+            flashMessage(MessageType::CREATED->message('Guru'));
             return to_route('operators.teachers.index');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -101,8 +98,8 @@ class TeacherOperatorController extends Controller
     {
         return inertia('Operators/Teachers/Edit', [
             'page_setting' => [
-                'title' => 'Edit Dosen',
-                'subtitle' => 'Edit Dosen disini. Klik simpan setelah selesai',
+                'title' => 'Edit Guru',
+                'subtitle' => 'Edit Guru disini. Klik simpan setelah selesai',
                 'method' => 'PUT',
                 'action' => route('operators.teachers.update', $teacher)
             ],
@@ -116,9 +113,8 @@ class TeacherOperatorController extends Controller
         try {
 
             $teacher->update([
-                'faculty_id' => auth()->user()->operator->faculty_id,
-                'departement_id' => auth()->user()->operator->departement_id,
-                'teacher_number' => $request->teacher_number,
+                'level_id' => auth()->user()->operator->level_id,
+                'nip' => $request->nip,
                 'academic_title' => $request->academic_title,
 
             ]);
@@ -134,7 +130,7 @@ class TeacherOperatorController extends Controller
 
             DB::commit();
 
-            flashMessage(MessageType::UPDATED->message('Dosen'));
+            flashMessage(MessageType::UPDATED->message('Guru'));
             return to_route('operators.teachers.index');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -150,7 +146,7 @@ class TeacherOperatorController extends Controller
             $this->delete_file($teacher->user, 'avatar');
 
             $teacher->delete();
-            flashMessage(MessageType::DELETED->message('Dosen'));
+            flashMessage(MessageType::DELETED->message('Guru'));
             return to_route('operators.teachers.index');
         } catch (Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');

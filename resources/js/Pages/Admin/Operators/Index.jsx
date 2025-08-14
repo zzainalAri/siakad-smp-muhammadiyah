@@ -131,21 +131,9 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('faculty_id')}
+                                                onClick={() => onSortable('level_id')}
                                             >
-                                                Fakultas
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('departement_id')}
-                                            >
-                                                Program Studi
+                                                Tingkat
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -192,8 +180,7 @@ export default function Index(props) {
                                                 <span>{operator.user?.name}</span>
                                             </TableCell>
                                             <TableCell>{operator.user?.email}</TableCell>
-                                            <TableCell>{operator.faculty.name}</TableCell>
-                                            <TableCell>{operator.departement.name}</TableCell>
+                                            <TableCell>{operator.level?.name}</TableCell>
                                             <TableCell>{operator.employee_number}</TableCell>
                                             <TableCell>{formatDateIndo(operator.created_at)}</TableCell>
                                             <TableCell>
@@ -225,7 +212,7 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
                             {meta.total} Operator
                         </p>
                         <div className="overflow-x-auto">

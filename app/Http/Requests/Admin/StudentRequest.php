@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\Gender;
+use App\Enums\StudentStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class StudentRequest extends FormRequest
 {
@@ -12,7 +15,7 @@ class StudentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return  auth()->check() && auth()->user()->hasRole('Admin');
+        return  true;
     }
 
     /**
@@ -33,27 +36,20 @@ class StudentRequest extends FormRequest
             'password' => $this->routeIs('admin.students.store')
                 ? ['required', 'string', 'min:4', 'max:255']
                 : ['nullable', 'string', 'min:4', 'max:255'],
-            'faculty_id' => [
+            'level_id' => [
                 'required',
-                'exists:faculties,id'
-            ],
-            'departement_id' => [
-                'required',
-                'exists:departements,id'
-            ],
-            'fee_group_id' => [
-                'required',
-                'exists:fee_groups,id'
+                'exists:levels,id'
             ],
             'classroom_id' => [
                 'required',
                 'exists:classrooms,id'
             ],
-            'student_number' => $this->routeIs('admin.students.store') ? 'required|string|max:13|unique:students' : 'required|string|max:13',
-            'semester' => 'required|integer|',
+            'nisn' => $this->routeIs('admin.students.store') ? 'required|string|max:13|unique:students' : 'required|string|max:13',
             'batch' => 'required|integer|',
             'avatar' => 'nullable|mimes:png,jpg,webp',
-
+            'gender' => ['required', new Enum(Gender::class)],
+            'status' => ['required', new Enum(StudentStatus::class)],
+            'address' => 'required|string|max:500',
         ];
     }
 
@@ -64,12 +60,13 @@ class StudentRequest extends FormRequest
             'name' => 'Nama',
             'email' => 'Email',
             'password' => 'password',
-            'faculty_id' => 'Fakultas',
-            'departement_id' => 'Program Studi',
-            'fee_group_id' => 'Golongan UKT',
-            'student_number' => 'Nomor Induk Mahasiswa',
+            'level_id' => 'Tingkat',
+            'nisn' => 'NISN',
             'batch' => 'Angkatan',
             'classroom_id' => 'Kelas',
+            'gender' => 'Jenis Kelamin',
+            'status' => 'Status',
+            'address' => 'Alamat',
         ];
     }
 }

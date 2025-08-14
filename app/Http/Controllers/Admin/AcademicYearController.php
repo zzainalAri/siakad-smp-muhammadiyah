@@ -24,7 +24,7 @@ class AcademicYearController extends Controller
         return inertia('Admin/AcademicYears/Index', [
             'page_setting' => [
                 'title' => 'Tahun Ajaran',
-                'subtitle' => 'Menampilkan semua data Tahun Ajaran yang tersedia pada universitas ini'
+                'subtitle' => 'Menampilkan semua data tahun ajaran yang tersedia di sekolah ini',
             ],
             'academicYears' => AcademicYearResource::collection($academicYears)->additional([
                 'meta' => [
@@ -34,7 +34,7 @@ class AcademicYearController extends Controller
             'state' => [
                 'page' => request()->page ?? 1,
                 'search' => request()->search ?? '',
-                'load' => 10
+                'load' => 10,
             ]
         ]);
     }
@@ -46,7 +46,7 @@ class AcademicYearController extends Controller
                 'title' => 'Tambah Tahun Ajaran',
                 'subtitle' => 'Buat Tahun Ajaran baru disini. Klik simpan setelah selesai',
                 'method' => 'POST',
-                'action' => route('admin.academic-years.store')
+                'action' => route('admin.academic-years.store'),
             ],
             'academicYearSemesters' => AcademicYearSemester::options(),
         ]);
@@ -56,7 +56,7 @@ class AcademicYearController extends Controller
     {
         try {
             AcademicYear::create([
-                'name' =>  $request->name,
+                'name' => $request->name,
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
                 'semester' => $request->semester,
@@ -71,18 +71,17 @@ class AcademicYearController extends Controller
         }
     }
 
-    public function Edit(AcademicYear $academicYear)
+    public function edit(AcademicYear $academicYear)
     {
         return inertia('Admin/AcademicYears/Edit', [
             'page_setting' => [
                 'title' => 'Edit Tahun Ajaran',
                 'subtitle' => 'Edit Tahun Ajaran di sini. Klik simpan setelah selesai',
                 'method' => 'PUT',
-                'action' => route('admin.academic-years.update', $academicYear)
+                'action' => route('admin.academic-years.update', $academicYear),
             ],
             'academicYear' => $academicYear,
             'academicYearSemesters' => AcademicYearSemester::options(),
-
         ]);
     }
 
@@ -90,7 +89,7 @@ class AcademicYearController extends Controller
     {
         try {
             $academicYear->update([
-                'name' =>  $request->name,
+                'name' => $request->name,
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
                 'semester' => $request->semester,
@@ -108,7 +107,6 @@ class AcademicYearController extends Controller
     public function destroy(AcademicYear $academicYear)
     {
         try {
-
             $academicYear->delete();
             flashMessage(MessageType::DELETED->message('Tahun Ajaran'));
             return to_route('admin.academic-years.index');

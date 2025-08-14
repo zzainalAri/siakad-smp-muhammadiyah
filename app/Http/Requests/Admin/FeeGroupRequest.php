@@ -12,7 +12,7 @@ class FeeGroupRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasRole('Admin');
+        return true;
     }
 
     /**
@@ -23,7 +23,7 @@ class FeeGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'group' => [
+            'level_id' => [
                 'required',
                 'integer',
                 Rule::unique('fee_groups')->ignore($this->feeGroup),
@@ -35,7 +35,7 @@ class FeeGroupRequest extends FormRequest
     public function attributes()
     {
         return [
-            'group' => 'Golongan UKT',
+            'group' => 'Golongan SPP',
             'amount' => 'Jumlah'
         ];
     }

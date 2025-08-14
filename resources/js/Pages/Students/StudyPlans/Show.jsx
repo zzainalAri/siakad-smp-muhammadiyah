@@ -34,7 +34,7 @@ export default function Show(props) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>#</TableHead>
-                                <TableHead>Mata Kuliah</TableHead>
+                                <TableHead>Mata Pelajaran</TableHead>
                                 <TableHead>Kelas</TableHead>
                                 <TableHead>SKS</TableHead>
                                 <TableHead>Tahun Ajaran</TableHead>

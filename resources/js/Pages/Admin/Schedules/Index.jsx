@@ -106,21 +106,9 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('faculty_id')}
+                                                onClick={() => onSortable('level_id')}
                                             >
-                                                Fakultas
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('departement_id')}
-                                            >
-                                                Program Studi
+                                                Tingkat
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -132,7 +120,7 @@ export default function Index(props) {
                                                 className="group inline-flex"
                                                 onClick={() => onSortable('course_id')}
                                             >
-                                                Mata Kuliah
+                                                Mata Pelajaran
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -145,18 +133,6 @@ export default function Index(props) {
                                                 onClick={() => onSortable('classroom_id')}
                                             >
                                                 Kelas
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('academic_year_id')}
-                                            >
-                                                Tahun Ajaran
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -202,18 +178,6 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('quote')}
-                                            >
-                                                Kuota
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
                                                 onClick={() => onSortable('created_at')}
                                             >
                                                 Dibuat Pada
@@ -229,15 +193,12 @@ export default function Index(props) {
                                     {schedules.map((schedule, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                            <TableCell>{schedule.faculty.name}</TableCell>
-                                            <TableCell>{schedule.departement.name}</TableCell>
+                                            <TableCell>{schedule.level.name}</TableCell>
                                             <TableCell>{schedule.course.name}</TableCell>
                                             <TableCell>{schedule.classroom.name}</TableCell>
-                                            <TableCell>{schedule.academicYear.name}</TableCell>
                                             <TableCell>{schedule.start_time}</TableCell>
                                             <TableCell>{schedule.end_time}</TableCell>
                                             <TableCell>{schedule.day_of_week}</TableCell>
-                                            <TableCell>{schedule.quote}</TableCell>
                                             <TableCell>{formatDateIndo(schedule.created_at)}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-x-1">
@@ -268,7 +229,7 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
                             {meta.total} Jadwal
                         </p>
                         <div className="overflow-x-auto">

@@ -8,24 +8,34 @@ use Illuminate\Database\Eloquent\Model;
 
 class FeeGroup extends Model
 {
+    protected $guarded = [];
+
     use HasFactory;
+
+    public function level()
+    {
+        return $this->belongsTo(Level::class);
+    }
 
     public function scopeFilter(Builder $query, $filters)
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->whereAny([
-                'group',
                 'amount',
-            ], 'REGEXP', $search);
+            ], 'REGEXP', $search)
+                ->orWhereHas('level', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
+            ;
         });
     }
 
     public function scopeSorting(Builder $query, $sorts)
     {
         $query->when($sorts['field'] ?? null && $sorts['direction'] ?? null, function ($query) use ($sorts) {
-            $query->orderBy($sorts['field'], $sorts['direction']);
+            match ($sorts['field']) {
+                'level_id' => $query->join('levels', 'fee_groups.level_id', '=', 'levels.id')
+                    ->orderBy('levels.name', $sorts['direction']),
+                default => $query->orderBy($sorts['field'], $sorts['direction'])
+            };
         });
     }
-
-    protected $guarded = [];
 }

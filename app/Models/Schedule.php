@@ -17,14 +17,9 @@ class Schedule extends Model
         ];
     }
 
-    public function faculty()
+    public function level()
     {
-        return $this->belongsTo(Faculty::class);
-    }
-
-    public function departement()
-    {
-        return $this->belongsTo(Departement::class);
+        return $this->belongsTo(Level::class);
     }
 
     public function course()
@@ -42,10 +37,7 @@ class Schedule extends Model
         return $this->belongsTo(AcademicYear::class);
     }
 
-    public function studyPlans()
-    {
-        return $this->belongsToMany(StudyPlan::class, 'study_plan_schedule')->withTimestamps();
-    }
+
 
     public function scopeFilter(Builder $query, $filters)
     {
@@ -55,8 +47,7 @@ class Schedule extends Model
                 'end_time',
                 'day_of_week',
             ], 'REGEXP', $search)
-                ->orWhereHas('faculty', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
-                ->orWhereHas('departement', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
+                ->orWhereHas('level', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
                 ->orWhereHas('classroom', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
                 ->orWhereHas('course', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
             ;
@@ -67,10 +58,8 @@ class Schedule extends Model
     {
         $query->when($sorts['field'] ?? null && $sorts['direction'] ?? null, function ($query) use ($sorts) {
             match ($sorts['field']) {
-                'faculty_id' => $query->join('faculties', 'schedules.faculty_id', '=', 'faculties.id')
-                    ->orderBy('faculties.name', $sorts['direction']),
-                'departement_id' => $query->join('departements', 'schedules.departement_id', '=', 'departements.id')
-                    ->orderBy('departements.name', $sorts['direction']),
+                'level_id' => $query->join('levels', 'schedules.level_id', '=', 'levels.id')
+                    ->orderBy('levels.name', $sorts['direction']),
                 'course_id' => $query->join('courses', 'schedules.course_id', '=', 'courses.id')
                     ->orderBy('courses.name', $sorts['direction']),
                 'classroom_id' => $query->join('classrooms', 'schedules.classroom_id', '=', 'classrooms.id')

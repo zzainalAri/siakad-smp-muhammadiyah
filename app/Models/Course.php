@@ -3,25 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
+    use HasFactory;
     protected $guarded = [];
 
-    public function faculty()
+    public function level()
     {
-        return $this->belongsTo(Faculty::class);
+        return $this->belongsTo(Level::class);
     }
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);
     }
 
-    public function departement()
-    {
-        return $this->belongsTo(Departement::class);
-    }
 
     public function academicYear()
     {
@@ -40,7 +38,7 @@ class Course extends Model
 
     public function grades()
     {
-        return $this->belongsTo(Grade::class);
+        return $this->hasMany(Grade::class);
     }
 
     public function scopeFilter(Builder $query, $filters)
@@ -50,9 +48,8 @@ class Course extends Model
                 'name',
                 'code',
             ], 'REGEXP', $search)
-                ->orWhereHas('faculty', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
+                ->orWhereHas('level', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
                 ->orWhereHas('teacher.user', fn($query) => $query->whereAny(['name', 'email'], 'REGEXP', $search))
-                ->orWhereHas('departement', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
             ;
         });
     }
@@ -61,10 +58,8 @@ class Course extends Model
     {
         $query->when($sorts['field'] ?? null && $sorts['direction'] ?? null, function ($query) use ($sorts) {
             match ($sorts['field']) {
-                'faculty_id' => $query->join('faculties', 'courses.faculty_id', '=', 'faculties.id')
-                    ->orderBy('faculties.name', $sorts['direction']),
-                'departement_id' => $query->join('departements', 'courses.departement_id', '=', 'departements.id')
-                    ->orderBy('departements.name', $sorts['direction']),
+                'level_id' => $query->join('levels', 'courses.level_id', '=', 'levels.id')
+                    ->orderBy('levels.name', $sorts['direction']),
                 'name' => $query
                     ->leftJoin('teachers', 'teachers.id', '=', 'courses.teacher_id')
                     ->leftJoin('users', 'teachers.user_id', '=', 'users.id')

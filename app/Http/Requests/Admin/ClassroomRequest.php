@@ -22,18 +22,16 @@ class ClassroomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'faculty_id' => 'required|exists:faculties,id',
-            'departement_id' => 'required|exists:departements,id',
+            'level_id' => 'required|exists:levels,id',
             'academic_year_id' => 'required|exists:academic_years,name',
-            'name' => 'required|string|min:3|max:255',
+            'name' => $this->routeIs('admin.classrooms.store') ? 'required|string|max:255|unique:classrooms' : 'required|string|max:255',
         ];
     }
 
     public function attributes()
     {
         return [
-            'faculty_id' => 'Fakultas',
-            'departement_id' => 'Program Studi',
+            'level_id' => 'Tingkat',
             'academic_year_id' => 'Tahun Ajaran',
             'name' => 'Nama Kelas',
         ];

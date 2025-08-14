@@ -2,6 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Gender;
+use App\Enums\StudentStatus;
+use App\Models\Course;
+use App\Models\FeeGroup;
+use App\Models\Level;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,8 +20,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        $this->call(FacultySeeder::class);
-        $this->call(FeeGroupSeeder::class);
+        $this->call(LevelSeeder::class);
+        $this->call(AcademicYearSeeder::class);
+        $this->call(ClassroomSeeder::class);
+        $this->call(TeacherSeeder::class);
+        $this->call(StudentSeeder::class);
+        $this->call(CourseSeeder::class);
+
+
 
 
         User::factory()->create([
@@ -34,40 +45,48 @@ class DatabaseSeeder extends Seeder
         ]));
 
         $operator->operator()->create([
-            'faculty_id' => 1,
-            'departement_id' => 1,
+            'level_id' => 1,
             'employee_number' => str()->padLeft(mt_rand(0, 999999), 6, '0')
         ]);
 
 
-        $teacher = User::factory()->create([
-            'name' => 'Sanji',
-            'email' => 'sanji@gmail.com',
-        ])->assignRole(Role::create([
-            'name' => 'Teacher',
-        ]));
+        $level_1 = Level::where('name', 'Kelas 7')->first();
+        $level_2 = Level::where('name', 'Kelas 8')->first();
+        $level_3 = Level::where('name', 'Kelas 9')->first();
 
-        $teacher->teacher()->create([
-            'faculty_id' => 1,
-            'departement_id' => 1,
-            'teacher_number' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
-            'academic_title' => 'Asisten Ahli'
-        ]);
+        FeeGroup::create(['level_id' => $level_1->id, 'amount' => 200000]);
+        FeeGroup::create(['level_id' => $level_2->id, 'amount' => 200000]);
+        FeeGroup::create(['level_id' => $level_3->id, 'amount' => 200000]);
 
-        $student = User::factory()->create([
-            'name' => 'Usop',
-            'email' => 'usop@gmail.com',
-        ])->assignRole(Role::create([
-            'name' => 'Student',
-        ]));
 
-        $student->student()->create([
-            'faculty_id' => 1,
-            'departement_id' => 1,
-            'fee_group_id' => rand(1, 6),
-            'student_number' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
-            'semester' => 1,
-            'batch' => 2025,
-        ]);
+        // $teacher = User::factory()->create([
+        //     'name' => 'Sanji',
+        //     'email' => 'sanji@gmail.com',
+        // ])->assignRole(Role::create([
+        //     'name' => 'Teacher',
+        // ]));
+
+        // $teacher->teacher()->create([
+        //     'level_id' => 1,
+        //     'nip' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
+        //     'academic_title' => 'Asisten Ahli'
+        // ]);
+
+        // $student = User::factory()->create([
+        //     'name' => 'Usop',
+        //     'email' => 'usop@gmail.com',
+        // ])->assignRole(Role::create([
+        //     'name' => 'Student',
+        // ]));
+
+        // $student->student()->create([
+        //     'level_id' => 1,
+        //     'address' => '',
+        //     'gender' => Gender::MALE->value,
+        //     'nisn' => str()->padLeft(mt_rand(0, 999999), 6, '0'),
+        //     'batch' => 2025,
+        //     'status' => StudentStatus::ACTIVE->value,
+        //     'classroom_id' => 1,
+        // ]);
     }
 }

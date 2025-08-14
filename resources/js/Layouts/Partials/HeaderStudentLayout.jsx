@@ -96,8 +96,7 @@ export default function HeaderStudentLayout({ url, auth }) {
                                                     <div className="grid flex-1 text-left text-sm leading-tight">
                                                         <span className="truncate font-semibold">{auth.name}</span>
                                                         <span className="truncate text-xs">
-                                                            {auth.student.student_number} ({auth.student.classroom.name}
-                                                            )
+                                                            {auth.student.nisn} ({auth.student.classroom.name})
                                                         </span>
                                                     </div>
                                                     <IconChevronCompactDown className="ml-auto size-4" />
@@ -120,8 +119,7 @@ export default function HeaderStudentLayout({ url, auth }) {
                                                         <div className="font-sm grid flex-1 text-left leading-tight">
                                                             <span className="truncate font-semibold">{auth.name}</span>
                                                             <span className="truncate text-xs">
-                                                                {auth.student.student_number} (
-                                                                {auth.student.classroom.name})
+                                                                {auth.student.nisn} ({auth.student.classroom.name})
                                                             </span>
                                                         </div>
                                                     </div>

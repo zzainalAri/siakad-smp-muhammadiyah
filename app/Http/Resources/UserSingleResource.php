@@ -24,16 +24,12 @@ class UserSingleResource extends JsonResource
             'role_name' => $this->getRoleNames()->first(),
             'student' => $this->when($this->hasRole('Student'), [
                 'id' => $this->student?->id,
-                'student_number' => $this->student?->student_number,
+                'nisn' => $this->student?->nisn,
                 'batch' => $this->student?->batch,
                 'semester' => $this->student?->semester,
                 'faculty' => [
                     'id' => $this->student?->faculty?->id,
                     'name' => $this->student?->faculty?->name,
-                ],
-                'departement' => [
-                    'id' => $this->student?->departement?->id,
-                    'name' => $this->student?->departement?->name,
                 ],
                 'classroom' => [
                     'id' => $this->student?->classroom?->id,
@@ -47,18 +43,15 @@ class UserSingleResource extends JsonResource
             ]),
             'teacher' => $this->when($this->hasRole('Teacher'), [
                 'id' => $this->teacher?->id,
-                'teacher_number' => $this->teacher?->teacher_number,
+                'nip' => $this->teacher?->nip,
                 'academic_title' => $this->teacher?->academic_title,
-                'faculty_id' => $this->teacher?->faculty_id,
-                'departement_id' => $this->teacher?->departement_id,
+                'level_id' => $this->teacher?->level_id,
             ]),
             'operator' => $this->when($this->hasRole('Operator'), [
                 'id' => $this->operator?->id,
                 'employee_number' => $this->operator?->employee_number,
-                'faculty_id' => $this->operator?->faculty_id,
+                'level_id' => $this->operator?->level_id,
                 'faculty' => $this->operator?->faculty?->name,
-                'departement_id' => $this->operator?->departement_id,
-                'departement' => $this->operator?->departement->name,
             ]),
         ];
     }

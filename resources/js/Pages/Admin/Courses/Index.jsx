@@ -83,8 +83,8 @@ export default function Index(props) {
                         {courses.length === 0 ? (
                             <EmptyState
                                 icon={IconBooks}
-                                title="Tidak ada Mata Kuliah"
-                                subtitle="Mulailah dengan membuat Mata Kuliah baru"
+                                title="Tidak ada Mata Pelajaran"
+                                subtitle="Mulailah dengan membuat Mata Pelajaran baru"
                             />
                         ) : (
                             <Table className="w-full">
@@ -102,37 +102,14 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('faculty_id')}
-                                            >
-                                                Fakultas
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('departement_id')}
-                                            >
-                                                Program Studi
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
+
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
                                                 onClick={() => onSortable('name')}
                                             >
-                                                Nama Dosen
+                                                Nama Mata Pelajaran
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -144,7 +121,7 @@ export default function Index(props) {
                                                 className="group inline-flex"
                                                 onClick={() => onSortable('code')}
                                             >
-                                                Kode Mata Kuliah
+                                                Kode Mata Pelajaran
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -156,7 +133,7 @@ export default function Index(props) {
                                                 className="group inline-flex"
                                                 onClick={() => onSortable('name')}
                                             >
-                                                Nama Mata Kuliah
+                                                Nama Guru
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -166,27 +143,15 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('credit')}
+                                                onClick={() => onSortable('level_id')}
                                             >
-                                                Satuan Kredit Semester (SKS)
+                                                Tingkat
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('semester')}
-                                            >
-                                                Semester
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>Tahun Ajaran</TableHead>
+
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
@@ -206,14 +171,10 @@ export default function Index(props) {
                                     {courses.map((course, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                            <TableCell>{course.faculty.name}</TableCell>
-                                            <TableCell>{course.departement.name}</TableCell>
-                                            <TableCell>{course.teacher.name}</TableCell>
-                                            <TableCell>{course.code}</TableCell>
                                             <TableCell>{course.name}</TableCell>
-                                            <TableCell>{course.credit}</TableCell>
-                                            <TableCell>{course.semester}</TableCell>
-                                            <TableCell>{course.academicYear.name}</TableCell>
+                                            <TableCell>{course.code}</TableCell>
+                                            <TableCell>{course.teacher.name}</TableCell>
+                                            <TableCell>{course.level.name}</TableCell>
                                             <TableCell>{formatDateIndo(course.created_at)}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-x-1">
@@ -244,8 +205,8 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
-                            {meta.total} Mata Kuliah
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
+                            {meta.total} Mata Pelajaran
                         </p>
                         <div className="overflow-x-auto">
                             {meta.has_pages && <PaginationTable meta={meta} links={links} />}

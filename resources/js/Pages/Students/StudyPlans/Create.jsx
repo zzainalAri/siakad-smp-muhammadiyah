@@ -50,7 +50,7 @@ export default function Create(props) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>#</TableHead>
-                                <TableHead>Mata Kuliah</TableHead>
+                                <TableHead>Mata Pelajaran</TableHead>
                                 <TableHead>Kelas</TableHead>
                                 <TableHead>Hari</TableHead>
                                 <TableHead>Jam</TableHead>

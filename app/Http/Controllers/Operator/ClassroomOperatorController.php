@@ -15,23 +15,19 @@ class ClassroomOperatorController extends Controller
     public function index()
     {
         $classrooms = Classroom::query()
-            ->select(['id', 'name', 'academic_year_id', 'slug', 'created_at'])
+            ->select(['id', 'name', 'academic_year_id', 'level_id', 'slug', 'created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->where('faculty_id', auth()->user()->operator->faculty_id)
-            ->where('departement_id', auth()->user()->operator->departement_id)
-            ->with(['academicYear'])
+            ->where('level_id', auth()->user()->operator->level_id)
+            ->with(['academicYear', 'level'])
             ->paginate(request()->load ?? 10);
 
-
-        $faculty_name = auth()->user()->operator->faculty->name;
-        $departement_name = auth()->user()->operator->departement->name;
-
+        $level_name = auth()->user()->operator->level->name;
 
         return inertia('Operators/Classrooms/Index', [
             'page_setting' => [
                 'title' => 'Kelas',
-                'subtitle' => "Menampilkan Mahasiswa yang ada di {$faculty_name} dan program studi {$departement_name}"
+                'subtitle' => "Menampilkan Kelas yang ada di {$level_name} "
             ],
             'classrooms' => ClassroomOperatorResource::collection($classrooms)->additional([
                 'meta' => [
@@ -55,17 +51,22 @@ class ClassroomOperatorController extends Controller
                 'method' => 'POST',
                 'action' => route('operators.classrooms.store')
             ],
+            'academic_year' => activeAcademicYear(),
+            'level' => auth()->user()->operator->level,
         ]);
     }
+
 
     public function store(ClassroomOperatorRequest $request)
     {
         try {
+            $levelName = auth()->user()->operator->level->name;
+            $fullClassName = $levelName . ' ' . $request->name;
+
             Classroom::create([
-                'name' =>  $request->name,
-                'departement_id' => auth()->user()->operator->departement_id,
+                'name' =>  $fullClassName,
                 'academic_year_id' => activeAcademicYear()->id,
-                'faculty_id' => auth()->user()->operator->faculty_id,
+                'level_id' => auth()->user()->operator->level_id,
             ]);
 
             flashMessage(MessageType::CREATED->message('Kelas'));
@@ -76,8 +77,12 @@ class ClassroomOperatorController extends Controller
         }
     }
 
-    public function Edit(Classroom $classroom)
+    public function edit(Classroom $classroom)
     {
+        $classroom->load(['academicYear', 'level']);
+        $levelName = $classroom->level->name . ' ';
+        $suffix = str_replace($levelName, '', $classroom->name);
+
         return inertia('Operators/Classrooms/Edit', [
             'page_setting' => [
                 'title' => 'Edit Kelas',
@@ -86,17 +91,20 @@ class ClassroomOperatorController extends Controller
                 'action' => route('operators.classrooms.update', $classroom)
             ],
             'classroom' => $classroom,
+            'suffix' => $suffix,
         ]);
     }
 
     public function update(ClassroomOperatorRequest $request, Classroom $classroom)
     {
         try {
+            $levelName = auth()->user()->operator->level->name;
+            $fullClassName = $levelName . ' ' . $request->name;
+
             $classroom->update([
-                'name' =>  $request->name,
-                'departement_id' => auth()->user()->operator->departement_id,
+                'name' =>  $fullClassName,
                 'academic_year_id' => activeAcademicYear()->id,
-                'faculty_id' => auth()->user()->operator->faculty_id,
+                'level_id' => auth()->user()->operator->level_id,
             ]);
 
             flashMessage(MessageType::UPDATED->message('Kelas'));
@@ -107,11 +115,9 @@ class ClassroomOperatorController extends Controller
         }
     }
 
-
     public function destroy(Classroom $classroom)
     {
         try {
-
             $classroom->delete();
             flashMessage(MessageType::DELETED->message('Kelas'));
             return to_route('operators.classrooms.index');

@@ -4,22 +4,18 @@ namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Classroom extends Model
 {
-    use Sluggable;
+    use Sluggable, HasFactory;
 
     protected $guarded = [];
 
-    public function faculty()
+    public function level()
     {
-        return $this->belongsTo(faculty::class);
-    }
-
-    public function departement()
-    {
-        return $this->belongsTo(Departement::class);
+        return $this->belongsTo(Level::class);
     }
 
     public function academicYear()

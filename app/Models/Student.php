@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
+    use HasFactory;
     protected $guarded = [];
 
     public function user()
@@ -14,25 +16,18 @@ class Student extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function faculty()
+    public function level()
     {
-        return $this->belongsTo(Faculty::class);
+        return $this->belongsTo(Level::class);
     }
 
-    public function departement()
-    {
-        return $this->belongsTo(Departement::class);
-    }
 
     public function classroom()
     {
         return $this->belongsTo(Classroom::class);
     }
 
-    public function feeGroup()
-    {
-        return $this->belongsTo(FeeGroup::class);
-    }
+
 
     public function attendances()
     {
@@ -44,28 +39,17 @@ class Student extends Model
         return $this->hasMany(Grade::class);
     }
 
-    public function studyPlans()
-    {
-        return $this->hasMany(StudyPlan::class);
-    }
-
-    public function studyResults()
-    {
-        return $this->hasMany(StudyResult::class);
-    }
-
-
     public function scopeFilter(Builder $query, $filters)
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->whereAny([
-                'student_number',
-                'semester',
+                'nisn',
                 'batch',
             ], 'REGEXP', $search)
                 ->orWhereHas('user', fn($query) => $query->whereAny(['name', 'email'], 'REGEXP', $search))
-                ->orWhereHas('faculty', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
-                ->orWhereHas('departement', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
+                ->orWhereHas('level', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
+                ->orWhereHas('classroom', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
+
             ;
         });
     }
@@ -74,16 +58,14 @@ class Student extends Model
     {
         $query->when($sorts['field'] ?? null && $sorts['direction'] ?? null, function ($query) use ($sorts) {
             match ($sorts['field']) {
-                'faculty_id' => $query->join('faculties', 'students.faculty_id', '=', 'faculties.id')
-                    ->orderBy('faculties.name', $sorts['direction']),
-                'departement_id' => $query->join('departements', 'students.departement_id', '=', 'departements.id')
-                    ->orderBy('departements.name', $sorts['direction']),
+                'level_id' => $query->join('levels', 'students.level_id', '=', 'levels.id')
+                    ->orderBy('levels.name', $sorts['direction']),
+
                 'name' => $query->join('users', 'students.user_id', '=', 'users.id')
                     ->orderBy('users.name', $sorts['direction']),
                 'email' => $query->join('users', 'students.user_id', '=', 'users.id')
                     ->orderBy('users.email', $sorts['direction']),
-                'fee_group_id' => $query->join('fee_groups', 'students.fee_group_id', '=', 'fee_groups.id')
-                    ->orderBy('fee_groups.group', $sorts['direction']),
+
                 'classroom_id' => $query->join('classrooms', 'students.classroom_id', '=', 'classrooms.id')
                     ->orderBy('classrooms.name', $sorts['direction']),
                 default => $query->orderBy($sorts['field'], $sorts['direction'])

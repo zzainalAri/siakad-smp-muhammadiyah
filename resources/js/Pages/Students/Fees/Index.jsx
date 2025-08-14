@@ -53,7 +53,6 @@ export default function Index(props) {
             });
         } catch (error) {
             toast['error'](`Kesalahan pembayaran ${error}`);
-            console.log(error);
         }
     };
 
@@ -84,7 +83,7 @@ export default function Index(props) {
                     {!props.checkFee && (
                         <div>
                             <Alert variant="orange">
-                                <AlertTitle>Periode Pembayarann UKT Tahun Ajaran {props.academic_year.name}</AlertTitle>
+                                <AlertTitle>Periode Pembayarann SPP Tahun Ajaran {props.academic_year.name}</AlertTitle>
                                 <AlertDescription>
                                     Silakan melakukan pembayaran dulu agar anda bisa mengajukan Kartu Rencana Studi
                                 </AlertDescription>
@@ -99,12 +98,11 @@ export default function Index(props) {
                                         <TableHeader>
                                             <TableRow>
                                                 <TableHead>Nama</TableHead>
-                                                <TableHead>Nomor Induk Mahasiswa</TableHead>
+                                                <TableHead>Nomor Induk Siswa</TableHead>
                                                 <TableHead>Semester</TableHead>
                                                 <TableHead>Kelas</TableHead>
                                                 <TableHead>Program Studi</TableHead>
                                                 <TableHead>Program Fakultas</TableHead>
-                                                <TableHead>Golongan UKT</TableHead>
                                                 <TableHead>Total Tagihan</TableHead>
                                                 <TableHead>Aksi</TableHead>
                                             </TableRow>
@@ -112,12 +110,11 @@ export default function Index(props) {
                                         <TableBody>
                                             <TableRow>
                                                 <TableCell>{auth.name}</TableCell>
-                                                <TableCell>{auth.student.student_number}</TableCell>
+                                                <TableCell>{auth.student.nisn}</TableCell>
                                                 <TableCell>{auth.student.semester}</TableCell>
                                                 <TableCell>{auth.student.classroom.name}</TableCell>
                                                 <TableCell>{auth.student.departement.name}</TableCell>
                                                 <TableCell>{auth.student.faculty.name}</TableCell>
-                                                <TableCell>{auth.student.feeGroup.group}</TableCell>
                                                 <TableCell>{formatToRupiah(auth.student.feeGroup.amount)}</TableCell>
                                                 <TableCell>
                                                     <Button onClick={handlePayment} variant="blue">
@@ -277,7 +274,7 @@ export default function Index(props) {
                     )}
                     <div className="flex w-full flex-col items-center justify-between gap-y-2 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
                             {meta.total} Pembayaran
                         </p>
                         <div className="overflow-x-auto">

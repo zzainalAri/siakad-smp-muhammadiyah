@@ -2,43 +2,38 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ClassroomEnum;
 use App\Enums\MessageType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ClassroomRequest;
 use App\Http\Resources\Admin\ClassroomResource;
 use App\Models\Classroom;
-use App\Models\Departement;
-use App\Models\Faculty;
+use App\Models\Level;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Throwable;
 
 class ClassroomController extends Controller implements HasMiddleware
-
-
 {
-
     public static function middleware()
     {
-        return [
-            new Middleware('validateDepartement', only: ['store', 'update']),
-        ];
+        return [];
     }
 
     public function index()
     {
         $classrooms = Classroom::query()
-            ->select(['id', 'name', 'faculty_id', 'departement_id', 'academic_year_id', 'slug', 'created_at'])
+            ->select(['id', 'name', 'level_id', 'academic_year_id', 'slug', 'created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->with(['faculty', 'departement', 'academicYear'])
+            ->with(['level', 'academicYear'])
             ->paginate(request()->load ?? 10);
 
         return inertia('Admin/Classrooms/Index', [
             'page_setting' => [
                 'title' => 'Kelas',
-                'subtitle' => 'Menampilkan semua data Kelas yang tersedia pada universitas ini'
+                'subtitle' => 'Menampilkan semua data Kelas yang tersedia di SMP Muhammadiyah ini'
             ],
             'classrooms' => ClassroomResource::collection($classrooms)->additional([
                 'meta' => [
@@ -55,6 +50,8 @@ class ClassroomController extends Controller implements HasMiddleware
 
     public function create()
     {
+        $levels = Level::query()->select(['id', 'name'])->orderBy('name')->get();
+
         return inertia('Admin/Classrooms/Create', [
             'page_setting' => [
                 'title' => 'Tambah Kelas',
@@ -62,14 +59,19 @@ class ClassroomController extends Controller implements HasMiddleware
                 'method' => 'POST',
                 'action' => route('admin.classrooms.store')
             ],
-            'faculties' => Faculty::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'levels' => $levels->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
+                'name' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
+            'classrooms' => $levels->mapWithKeys(function ($item) {
+                return [
+                    $item->name => collect(\App\Enums\ClassroomEnum::cases())
+                        ->filter(fn($c) => str_starts_with($c->value, $item->name))
+                        ->values()
+                        ->map(fn($c) => ['value' => $c->value, 'label' => $c->value])
+                ];
+            }),
         ]);
     }
 
@@ -78,9 +80,8 @@ class ClassroomController extends Controller implements HasMiddleware
         try {
             Classroom::create([
                 'name' =>  $request->name,
-                'departement_id' => $request->departement_id,
                 'academic_year_id' => activeAcademicYear()->id,
-                'faculty_id' => $request->faculty_id,
+                'level_id' => $request->level_id,
             ]);
 
             flashMessage(MessageType::CREATED->message('Kelas'));
@@ -93,6 +94,8 @@ class ClassroomController extends Controller implements HasMiddleware
 
     public function Edit(Classroom $classroom)
     {
+        $levels = Level::query()->select(['id', 'name'])->orderBy('name')->get();
+
         return inertia('Admin/Classrooms/Edit', [
             'page_setting' => [
                 'title' => 'Edit Kelas',
@@ -100,15 +103,20 @@ class ClassroomController extends Controller implements HasMiddleware
                 'method' => 'PUT',
                 'action' => route('admin.classrooms.update', $classroom)
             ],
-            'faculties' => Faculty::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'levels' => $levels->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
+                'name' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
-            'classroom' => $classroom,
+            'classrooms' => $levels->mapWithKeys(function ($item) {
+                return [
+                    $item->name => collect(\App\Enums\ClassroomEnum::cases())
+                        ->filter(fn($c) => str_starts_with($c->value, $item->name))
+                        ->values()
+                        ->map(fn($c) => ['value' => $c->value, 'label' => $c->value])
+                ];
+            }),
+            'classroom' => $classroom->load('level'),
         ]);
     }
 
@@ -117,8 +125,7 @@ class ClassroomController extends Controller implements HasMiddleware
         try {
             $classroom->update([
                 'name' =>  $request->name,
-                'departement_id' => $request->departement_id,
-                'faculty_id' => $request->faculty_id,
+                'level_id' => $request->level_id,
                 'academic_year_id' => activeAcademicYear()->id,
             ]);
 
@@ -130,11 +137,9 @@ class ClassroomController extends Controller implements HasMiddleware
         }
     }
 
-
     public function destroy(Classroom $classroom)
     {
         try {
-
             $classroom->delete();
             flashMessage(MessageType::DELETED->message('Kelas'));
             return to_route('admin.classrooms.index');

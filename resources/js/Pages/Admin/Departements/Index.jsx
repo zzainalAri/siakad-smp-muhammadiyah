@@ -107,7 +107,7 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('faculty_id')}
+                                                onClick={() => onSortable('level_id')}
                                             >
                                                 Fakultas
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
@@ -201,7 +201,7 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
                             {meta.total} program study
                         </p>
                         <div className="overflow-x-auto">

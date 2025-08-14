@@ -54,11 +54,11 @@ export default function Index(props) {
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
-                                    <Label htmlFor="student">Mahasiswa</Label>
+                                    <Label htmlFor="student">Siswa</Label>
                                     <ComboBox
                                         items={props.students}
                                         selectedItem={data.student}
-                                        placeholder="Pilih Mahasiswa"
+                                        placeholder="Pilih Siswa"
                                         onSelect={(currentValue) => setData('student', currentValue)}
                                     />
                                     {errors.student && <InputError message={errors.student} />}
@@ -76,8 +76,8 @@ export default function Index(props) {
                         {classroomsStudents.length == 0 ? (
                             <EmptyState
                                 icon={IconDoor}
-                                title="Tidak ada mahasiswa"
-                                subtitle="mulai dengan memasukan mahasiswa kedalam kelas"
+                                title="Tidak ada Siswa"
+                                subtitle="mulai dengan memasukan Siswa kedalam kelas"
                             />
                         ) : (
                             <>
@@ -100,9 +100,7 @@ export default function Index(props) {
                                                                 <span className="truncate text-base font-semibold">
                                                                     {student.user.name}
                                                                 </span>
-                                                                <span className="text-sm">
-                                                                    {student.student_number}
-                                                                </span>
+                                                                <span className="text-sm">{student.nisn}</span>
                                                             </div>
                                                         </div>
                                                     </Button>

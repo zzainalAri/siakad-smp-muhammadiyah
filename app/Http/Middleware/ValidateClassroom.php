@@ -18,8 +18,7 @@ class ValidateClassroom
     {
         $classroom = Classroom::query()
             ->where('id', $request->classroom_id)
-            ->where('faculty_id', $request->faculty_id)
-            ->where('departement_id', $request->departement_id)
+            ->where('level_id', $request->level_id)
             ->exists();
 
         if (!$classroom) {

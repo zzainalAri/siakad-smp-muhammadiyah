@@ -120,7 +120,7 @@ export default function Index(props) {
                         <div className="flex w-full flex-col gap-4 px-6 py-4 lg:flex-row lg:items-center">
                             <Input
                                 className="w-full sm:w-1/4"
-                                placeholder="Cari nama mahasiswa"
+                                placeholder="Cari nama Siswa"
                                 value={params?.search}
                                 onChange={(e) => setParams((prev) => ({ ...prev, search: e.target.value }))}
                             />
@@ -157,8 +157,8 @@ export default function Index(props) {
                     <CardContent className="[&-td]: p-0 [&-td]:whitespace-nowrap [&-th]:px-6">
                         {students.length === 0 ? (
                             <EmptyState
-                                title="Tidak ada mahasiswa"
-                                subtitle="Tidak ada mahasiswa yang tergabung di kelas ini"
+                                title="Tidak ada Siswa"
+                                subtitle="Tidak ada Siswa yang tergabung di kelas ini"
                                 icon={IconDoor}
                             />
                         ) : (
@@ -168,7 +168,7 @@ export default function Index(props) {
                                         <TableRow>
                                             <TableHead rowSpan="2">#</TableHead>
                                             <TableHead rowSpan="2">Nama</TableHead>
-                                            <TableHead rowSpan="2">Nomor Induk Mahasiswa</TableHead>
+                                            <TableHead rowSpan="2">Nomor Induk Siswa</TableHead>
                                             <TableHead colSpan="12" className="border">
                                                 Absensi
                                             </TableHead>
@@ -230,7 +230,7 @@ export default function Index(props) {
                                                         <span>{student.user.name}</span>
                                                     </div>
                                                 </TableCell>
-                                                <TableCell>{student.student_number}</TableCell>
+                                                <TableCell>{student.nisn}</TableCell>
                                                 {Array.from({ length: 12 }).map((_, section) => {
                                                     const attendance = getAttendanceStudent(
                                                         student.id,

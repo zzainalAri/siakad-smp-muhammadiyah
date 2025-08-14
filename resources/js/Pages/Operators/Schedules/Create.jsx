@@ -58,7 +58,7 @@ export default function Create(props) {
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
-                                    <Label htmlFor="course_id">Mata Kuliah</Label>
+                                    <Label htmlFor="course_id">Mata Pelajaran</Label>
                                     <Select
                                         defaultValue={data.course_id}
                                         onValueChange={(value) => setData('course_id', value)}
@@ -67,7 +67,7 @@ export default function Create(props) {
                                         <SelectTrigger>
                                             <SelectValue>
                                                 {props.courses.find((course) => course.value == data.course_id)
-                                                    ?.label ?? 'Pilih Mata Kuliah'}
+                                                    ?.label ?? 'Pilih Mata Pelajaran'}
                                             </SelectValue>
                                             <SelectContent>
                                                 {props.courses.map((course, index) => (

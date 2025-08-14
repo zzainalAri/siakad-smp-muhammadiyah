@@ -17,7 +17,7 @@ class ClassroomStudentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'student_number' => $this->student_number,
+            'nisn' => $this->nisn,
             'created_at' => $this->created_at,
             'user' => $this->whenLoaded('user', [
                 'id' => $this->user?->id,

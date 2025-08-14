@@ -83,8 +83,8 @@ export default function Index(props) {
                         {feeGroups.length === 0 ? (
                             <EmptyState
                                 icon={IconDroplets}
-                                title="Tidak ada golongan ukt"
-                                subtitle="Mulailah dengan membuat golongan ukt baru"
+                                title="Tidak ada golongan spp"
+                                subtitle="Mulailah dengan membuat golongan spp baru"
                             />
                         ) : (
                             <Table className="w-full">
@@ -106,9 +106,9 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('group')}
+                                                onClick={() => onSortable('level_id')}
                                             >
-                                                Golongan
+                                                Tingkat
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -145,7 +145,7 @@ export default function Index(props) {
                                     {feeGroups.map((feeGroup, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                            <TableCell>{feeGroup.group}</TableCell>
+                                            <TableCell>{feeGroup.level.name}</TableCell>
                                             <TableCell>{formatToRupiah(feeGroup.amount)}</TableCell>
                                             <TableCell>{formatDateIndo(feeGroup.created_at)}</TableCell>
                                             <TableCell>
@@ -177,8 +177,8 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
-                            {meta.total} golongan ukt
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
+                            {meta.total} golongan spp
                         </p>
                         <div className="overflow-x-auto">
                             {meta.has_pages && <PaginationTable meta={meta} links={links} />}

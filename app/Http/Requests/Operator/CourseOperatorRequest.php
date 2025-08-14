@@ -22,9 +22,8 @@ class CourseOperatorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'teacher_id' => 'required|exists:users,id',
+            'teacher_id' => 'required|exists:teachers,id',
             'name' => 'required|string|min:3|max:255',
-            'credit' => 'required|integer',
             'semester' => 'required|integer',
         ];
     }
@@ -32,9 +31,8 @@ class CourseOperatorRequest extends FormRequest
     public function attributes()
     {
         return [
-            'teacher_id' => 'Dosen',
+            'teacher_id' => 'Guru',
             'name' => 'Nama',
-            'credit' => 'Satuan Kredit Semester (SKS)',
             'semester' => 'Semester'
         ];
     }

@@ -37,7 +37,7 @@ class FeeStudentController extends Controller
         return inertia('Students/Fees/Index', [
             'page_setting' => [
                 'title' => 'Pembayaran',
-                'subtitle' => 'Menampilkan semua data pembayaran ukt yang tersedia'
+                'subtitle' => 'Menampilkan semua data pembayaran spp yang tersedia'
             ],
             'fee' => $fee,
             'fees' => FeeStudentResource::collection($fees)->additional([

@@ -61,8 +61,7 @@ class StudyPlanStudentController extends Controller implements HasMiddleware
         if (!activeAcademicYear()) return back();
 
         $schedules = Schedule::query()
-            ->where('schedules.faculty_id', auth()->user()->student->faculty_id)
-            ->where('schedules.departement_id', auth()->user()->student->departement_id)
+            ->where('schedules.level_id', auth()->user()->student->level_id)
             ->where('schedules.academic_year_id', activeAcademicYear()->id)
             ->with(['course', 'classroom'])
             ->withCount(['studyPlans as taken_quota' => fn($query) => $query->where('academic_year_id', activeAcademicYear()->id)])

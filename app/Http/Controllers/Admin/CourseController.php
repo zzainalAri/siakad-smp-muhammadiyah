@@ -7,8 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CourseRequest;
 use App\Http\Resources\Admin\CourseResource;
 use App\Models\Course;
-use App\Models\Departement;
-use App\Models\Faculty;
+use App\Models\Level;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -20,18 +19,16 @@ class CourseController extends Controller implements HasMiddleware
 
     public static function middleware()
     {
-        return [
-            new Middleware('validateDepartement', only: ['store', 'update']),
-        ];
+        return [];
     }
 
     public function index()
     {
         $courses = Course::query()
-            ->select(['courses.id', 'courses.faculty_id', 'courses.departement_id', 'courses.teacher_id', 'courses.code', 'courses.semester', 'courses.name', 'courses.credit', 'courses.created_at', 'courses.academic_year_id'])
+            ->select(['courses.id', 'courses.level_id', 'courses.teacher_id', 'courses.code',  'courses.name', 'courses.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->with(['faculty', 'departement', 'teacher',])
+            ->with(['level', 'teacher',])
             ->paginate(request()->load ?? 10);
 
 
@@ -39,8 +36,8 @@ class CourseController extends Controller implements HasMiddleware
 
         return inertia('Admin/Courses/Index', [
             'page_setting' => [
-                'title' => 'Mata Kuliah',
-                'subtitle' => 'Menampilkan semua data Mata Kuliah yang tersedia pada universitas ini'
+                'title' => 'Mata Pelajaran',
+                'subtitle' => 'Menampilkan semua data Mata Pelajaran yang tersedia di SMP Muhammadiyah ini'
             ],
             'courses' => CourseResource::collection($courses)->additional([
                 'meta' => [
@@ -59,26 +56,23 @@ class CourseController extends Controller implements HasMiddleware
     {
         return inertia('Admin/Courses/Create', [
             'page_setting' => [
-                'title' => 'Tambah Matakuliah',
-                'subtitle' => 'Buat Matakuliah baru disini. Klik simpan setelah selesai',
+                'title' => 'Tambah Mata pelajaran',
+                'subtitle' => 'Buat Mata pelajaran baru disini. Klik simpan setelah selesai',
                 'method' => 'POST',
                 'action' => route('admin.courses.store')
             ],
-            'faculties' => Faculty::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'levels' => Level::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
-            'teachers' => Teacher::query()->select(['id', 'user_id'])
+            'teachers' => Teacher::query()->select(['id', 'user_id', 'level_id'])
                 ->whereHas('user', function ($query) {
                     $query->whereHas('roles', fn($query) => $query->where('name', 'Teacher'))->orderBy('name');
                 })
                 ->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->user?->name,
+                    'level_id' => $item->level_id,
                 ]),
         ]);
     }
@@ -87,18 +81,14 @@ class CourseController extends Controller implements HasMiddleware
     {
         try {
             Course::create([
-                'faculty_id' => $request->faculty_id,
-                'departement_id' => $request->departement_id,
+                'level_id' => $request->level_id,
                 'teacher_id' => $request->teacher_id,
-                'academic_year_id' => activeAcademicYear()->id,
                 'code' => str()->random(10),
                 'name' => $request->name,
-                'credit' => $request->credit,
-                'semester' => $request->semester
             ]);
 
 
-            flashMessage(MessageType::CREATED->message('Mata Kuliah'));
+            flashMessage(MessageType::CREATED->message('Mata Pelajaran'));
             return to_route('admin.courses.index');
         } catch (Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
@@ -106,31 +96,28 @@ class CourseController extends Controller implements HasMiddleware
         }
     }
 
-    public function Edit(Course $course)
+    public function edit(Course $course)
     {
         return inertia('Admin/Courses/Edit', [
             'page_setting' => [
-                'title' => 'Edit Matakuliah',
-                'subtitle' => 'Edit Matakuliah disini. Klik simpan setelah selesai',
+                'title' => 'Edit Mata Pelajaran',
+                'subtitle' => 'Edit Mata Pelajaran disini. Klik simpan setelah selesai',
                 'method' => 'PUT',
                 'action' => route('admin.courses.update', $course)
             ],
             'course' => $course,
-            'faculties' => Faculty::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'levels' => Level::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'departements' => Departement::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
-            'teachers' => Teacher::query()->select(['id', 'user_id'])
+            'teachers' => Teacher::query()->select(['id', 'user_id', 'level_id'])
                 ->whereHas('user', function ($query) {
                     $query->whereHas('roles', fn($query) => $query->where('name', 'Teacher'))->orderBy('name');
                 })
                 ->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->user?->name,
+                    'level_id' => $item->level_id,
                 ]),
         ]);
     }
@@ -139,18 +126,14 @@ class CourseController extends Controller implements HasMiddleware
     {
         try {
             $course->update([
-                'faculty_id' => $request->faculty_id,
-                'departement_id' => $request->departement_id,
+                'level_id' => $request->level_id,
                 'teacher_id' => $request->teacher_id,
-                'academic_year_id' => activeAcademicYear()->id,
                 'code' => str()->random(10),
                 'name' => $request->name,
-                'credit' => $request->credit,
-                'semester' => $request->semester
             ]);
 
 
-            flashMessage(MessageType::UPDATED->message('Mata Kuliah'));
+            flashMessage(MessageType::UPDATED->message('Mata Pelajaran'));
             return to_route('admin.courses.index');
         } catch (Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
@@ -163,7 +146,7 @@ class CourseController extends Controller implements HasMiddleware
         try {
 
             $course->delete();
-            flashMessage(MessageType::DELETED->message('Mata Kuliah'));
+            flashMessage(MessageType::DELETED->message('Mata Pelajaran'));
             return to_route('admin.courses.index');
         } catch (Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');

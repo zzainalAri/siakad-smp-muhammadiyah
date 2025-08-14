@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Classroom;
 use App\Models\Course;
-use App\Models\Departement;
-use App\Models\Faculty;
+use App\Models\Level;
+use App\Models\Operator;
+use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 
 class DashboardAdminController extends Controller
@@ -20,10 +22,12 @@ class DashboardAdminController extends Controller
                 'subtitle' => 'Menampilkan semua statistik pada platform ini',
             ],
             'count' => [
-                'faculties' => Faculty::count(),
-                'departements' => Departement::count(),
+                'levels' => Level::count(),
                 'classrooms' => Classroom::count(),
                 'courses' => Course::count(),
+                'students' => Student::count(),
+                'teachers' => Teacher::count(),
+                'operators' => Operator::count(),
             ]
         ]);
     }

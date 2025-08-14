@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests\Operator;
 
+use App\Enums\Gender;
+use App\Enums\StudentStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class StudentOperatorRequest extends FormRequest
 {
@@ -12,9 +15,7 @@ class StudentOperatorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasRole(
-            'Operator'
-        );
+        return auth()->check() && auth()->user()->hasRole('Operator');
     }
 
     /**
@@ -35,34 +36,30 @@ class StudentOperatorRequest extends FormRequest
             'password' => $this->routeIs('operators.students.store')
                 ? ['required', 'string', 'min:4', 'max:255']
                 : ['nullable', 'string', 'min:4', 'max:255'],
-
-            'fee_group_id' => [
-                'required',
-                'exists:fee_groups,id'
-            ],
             'classroom_id' => [
                 'required',
                 'exists:classrooms,id'
             ],
-            'student_number' => $this->routeIs('operators.students.store') ? 'required|string|max:13|unique:students' : 'required|string|max:13',
-            'semester' => 'required|integer|',
+            'nisn' => $this->routeIs('operators.students.store') ? 'required|string|max:13|unique:students' : 'required|string|max:13',
             'batch' => 'required|integer|',
             'avatar' => 'nullable|mimes:png,jpg,webp',
-
+            'status' => ['required', new Enum(StudentStatus::class)],
+            'gender' => ['required', new Enum(Gender::class)],
         ];
     }
-
 
     public function attributes()
     {
         return [
             'name' => 'Nama',
             'email' => 'Email',
-            'password' => 'password',
-            'fee_group_id' => 'Golongan UKT',
-            'student_number' => 'Nomor Induk Mahasiswa',
-            'batch' => 'Angkatan',
+            'password' => 'Password',
             'classroom_id' => 'Kelas',
+            'nisn' => 'NISN',
+            'batch' => 'Angkatan',
+            'avatar' => 'Avatar',
+            'status' => 'Status',
+            'gender' => 'Jenis Kelamin',
         ];
     }
 }

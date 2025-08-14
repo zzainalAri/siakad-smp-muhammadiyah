@@ -7,12 +7,12 @@ import {
     IconCalendar,
     IconCalendarTime,
     IconCircleKey,
+    IconClipboardPlus,
     IconDoor,
-    IconDroplets,
     IconLayout2,
     IconLogout2,
     IconMoneybag,
-    IconSchool,
+    IconReportMoney,
     IconUser,
     IconUsers,
     IconUsersGroup,
@@ -41,7 +41,7 @@ export default function SidebarResponsive({ url, auth }) {
                     <>
                         {/* dashboard */}
                         <NavLink
-                            url={route('admin.faculties.index')}
+                            url={route('admin.levels.index')}
                             active={url.startsWith('/admin/dashboard')}
                             title={'Dashboard'}
                             icon={IconLayout2}
@@ -50,16 +50,10 @@ export default function SidebarResponsive({ url, auth }) {
                         {/* master */}
                         <div className="px-3 py-2 text-base font-medium text-white">Master</div>
                         <NavLink
-                            url={route('admin.faculties.index')}
-                            active={url.startsWith('/admin/faculties')}
-                            title={'Fakultas'}
+                            url={route('admin.levels.index')}
+                            active={url.startsWith('/admin/levels')}
+                            title={'Tingkat'}
                             icon={IconBuildingSkyscraper}
-                        />
-                        <NavLink
-                            url={route('admin.departements.index')}
-                            active={url.startsWith('/admin/departements')}
-                            title={'Program Studi'}
-                            icon={IconSchool}
                         />
                         <NavLink
                             url={route('admin.academic-years.index')}
@@ -85,13 +79,13 @@ export default function SidebarResponsive({ url, auth }) {
                         <NavLink
                             url={route('admin.students.index')}
                             active={url.startsWith('/admin/students')}
-                            title={'Mahasiswa'}
+                            title={'Siswa'}
                             icon={IconUsers}
                         />
                         <NavLink
                             url={route('admin.teachers.index')}
                             active={url.startsWith('/admin/teachers')}
-                            title={'Dosen'}
+                            title={'Guru'}
                             icon={IconUsersGroup}
                         />
                         <NavLink
@@ -106,7 +100,7 @@ export default function SidebarResponsive({ url, auth }) {
                         <NavLink
                             url={route('admin.courses.index')}
                             active={url.startsWith('/admin/courses')}
-                            title={'Matakuliah'}
+                            title={'Mata Pelajaran'}
                             icon={IconBooks}
                         />
                         <NavLink
@@ -121,14 +115,14 @@ export default function SidebarResponsive({ url, auth }) {
                         <NavLink
                             url={route('admin.fees.index')}
                             active={url.startsWith('/admin/fees')}
-                            title={'Uang Kuliah Tunggal'}
-                            icon={IconMoneybag}
+                            title={'SPP'}
+                            icon={IconReportMoney}
                         />
                         <NavLink
                             url={route('admin.fee-groups.index')}
                             active={url.startsWith('/admin/fee-groups')}
-                            title={'Golongan UKT'}
-                            icon={IconDroplets}
+                            title={'Pengaturan SPP'}
+                            icon={IconMoneybag}
                         />
                     </>
                 )}
@@ -146,7 +140,7 @@ export default function SidebarResponsive({ url, auth }) {
                         <NavLink
                             url={route('teachers.courses.index')}
                             active={url.startsWith('/teachers/courses')}
-                            title={'Mata Kuliah'}
+                            title={'Mata Pelajaran'}
                             icon={IconBooks}
                         />
                         <NavLink
@@ -170,13 +164,13 @@ export default function SidebarResponsive({ url, auth }) {
                         <NavLink
                             url={route('operators.teachers.index')}
                             active={url.startsWith('/operators/students')}
-                            title={'Mahasiswa'}
+                            title={'Siswa'}
                             icon={IconUsers}
                         />
                         <NavLink
                             url={route('operators.teachers.index')}
                             active={url.startsWith('/operators/teachers')}
-                            title={'Dosen'}
+                            title={'Guru'}
                             icon={IconUsersGroup}
                         />
                         <div className="px-3 py-1 text-base font-medium text-white">Akademik</div>
@@ -189,7 +183,7 @@ export default function SidebarResponsive({ url, auth }) {
                         <NavLink
                             url={route('operators.courses.index')}
                             active={url.startsWith('/operators/courses')}
-                            title={'Mata Kuliah'}
+                            title={'Mata Pelajaran'}
                             icon={IconUsersGroup}
                         />
                         <NavLink
@@ -203,6 +197,16 @@ export default function SidebarResponsive({ url, auth }) {
 
                 {/* Lainnya */}
                 <div className="px-3 py-2 text-base font-medium text-white">Lainnya</div>
+                {auth.user.roles.some((role) => ['Admin'].includes(role)) && (
+                    <>
+                        <NavLink
+                            url={route('admin.student-registrations.index')}
+                            active={url.startsWith('/admin/student-registrations')}
+                            title={'PPDB'}
+                            icon={IconClipboardPlus}
+                        />
+                    </>
+                )}
                 <NavLink
                     url={route('logout')}
                     method="post"

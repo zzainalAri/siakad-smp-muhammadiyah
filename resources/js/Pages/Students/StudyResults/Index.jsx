@@ -64,7 +64,7 @@ export default function Index(props) {
                                 <TableHeader>
                                     <TableRow>
                                         <TableCell>#</TableCell>
-                                        <TableCell>Nomor Induk Mahasiswa</TableCell>
+                                        <TableCell>Nomor Induk Siswa</TableCell>
                                         <TableCell>Tahun Ajaran</TableCell>
                                         <TableCell>Semester</TableCell>
                                         <TableCell>Dibuat Pada</TableCell>
@@ -75,7 +75,7 @@ export default function Index(props) {
                                     {studyResults.map((studyResult, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                            <TableCell>{studyResult.student.student_number}</TableCell>
+                                            <TableCell>{studyResult.student.nisn}</TableCell>
                                             <TableCell>{studyResult.academicYear.name}</TableCell>
                                             <TableCell>{studyResult.semester}</TableCell>
                                             <TableCell>{formatDateIndo(studyResult.created_at)}</TableCell>
@@ -96,7 +96,7 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
                             {meta.total} kartu hasil studi
                         </p>
                         <div className="overflow-x-auto">

@@ -114,21 +114,9 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('faculty_id')}
+                                                onClick={() => onSortable('level_id')}
                                             >
-                                                Fakultas
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('departement_id')}
-                                            >
-                                                Program Studi
+                                                Tingkat
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -178,10 +166,9 @@ export default function Index(props) {
                                     {classrooms.map((classroom, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                            <TableCell>{classroom.faculty.name}</TableCell>
-                                            <TableCell>{classroom.departement.name}</TableCell>
+                                            <TableCell>{classroom.level.name}</TableCell>
                                             <TableCell>{classroom.academicYear.name}</TableCell>
-                                            <TableCell>{classroom.name}</TableCell>
+                                            <TableCell>{`${classroom.name}`}</TableCell>
 
                                             <TableCell>{formatDateIndo(classroom.created_at)}</TableCell>
 
@@ -223,7 +210,7 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
                             {meta.total} Kelas
                         </p>
                         <div className="overflow-x-auto">
