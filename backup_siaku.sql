@@ -266,7 +266,7 @@ CREATE TABLE `levels` (
 
 LOCK TABLES `levels` WRITE;
 /*!40000 ALTER TABLE `levels` DISABLE KEYS */;
-INSERT INTO `levels` VALUES (1,'Fakultas Ilmu Sosial dan Ilmu Politik','bjq2hd',NULL,'fakultas-ilmu-sosial-dan-ilmu-politik','2025-05-14 22:57:18','2025-05-14 22:57:18'),(2,'Fakultas Teknik','coikeg',NULL,'fakultas-teknik','2025-05-14 22:57:18','2025-05-14 22:57:18'),(3,'Fakultas Ilmu Komputer','dfwubb',NULL,'fakultas-ilmu-komputer','2025-05-14 22:57:18','2025-05-14 22:57:18'),(4,'Fakultas Desainnnnn','nhkp72','levels/mNwyQCZ4x34wc2MP9kGgLQQlbNJynk4ufVPjN8JL.png','fakultas-desain','2025-05-15 09:21:33','2025-05-15 09:41:12'),(5,'Fakultas Kedokteran','yvjj7a','levels/v9mXRu8Q9xgW7puP1T8wGFMJtT1938rXS2qmsonf.png','fakultas-kedokteran','2025-05-15 09:22:59','2025-05-15 09:22:59');
+INSERT INTO `levels` VALUES (1,'Tingkat Ilmu Sosial dan Ilmu Politik','bjq2hd',NULL,'Tingkat-ilmu-sosial-dan-ilmu-politik','2025-05-14 22:57:18','2025-05-14 22:57:18'),(2,'Tingkat Teknik','coikeg',NULL,'Tingkat-teknik','2025-05-14 22:57:18','2025-05-14 22:57:18'),(3,'Tingkat Ilmu Komputer','dfwubb',NULL,'Tingkat-ilmu-komputer','2025-05-14 22:57:18','2025-05-14 22:57:18'),(4,'Tingkat Desainnnnn','nhkp72','levels/mNwyQCZ4x34wc2MP9kGgLQQlbNJynk4ufVPjN8JL.png','Tingkat-desain','2025-05-15 09:21:33','2025-05-15 09:41:12'),(5,'Tingkat Kedokteran','yvjj7a','levels/v9mXRu8Q9xgW7puP1T8wGFMJtT1938rXS2qmsonf.png','Tingkat-kedokteran','2025-05-15 09:22:59','2025-05-15 09:22:59');
 /*!40000 ALTER TABLE `levels` ENABLE KEYS */;
 UNLOCK TABLES;
 

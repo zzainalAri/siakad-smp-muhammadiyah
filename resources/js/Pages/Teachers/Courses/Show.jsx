@@ -1,9 +1,10 @@
 import EmptyState from '@/Components/EmptyState';
 import HeaderTitle from '@/Components/HeaderTitle';
+import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import AppLayout from '@/Layouts/AppLayout';
 import { Link } from '@inertiajs/react';
-import { IconDoor } from '@tabler/icons-react';
+import { IconArrowLeft, IconDoor } from '@tabler/icons-react';
 
 export default function Show(props) {
     return (
@@ -15,10 +16,15 @@ export default function Show(props) {
                         subtitle={props.page_setting.subtitle}
                         icon={IconDoor}
                     />
+                    <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
+                        <Link href={route('teachers.courses.index')}>
+                            <IconArrowLeft className="size-4" /> Kembali
+                        </Link>
+                    </Button>
                 </div>
                 <Card>
                     <CardHeader>
-                        <CardTitle>Daftar Kelas</CardTitle>
+                        <CardTitle>Daftar Kelas Mata Pelajaran {props.course.name}</CardTitle>
                     </CardHeader>
 
                     <CardContent>
@@ -43,7 +49,7 @@ export default function Show(props) {
                                                 {schedule.classroom.name}
                                             </div>
                                             <div className="text-sm font-medium leading-relaxed text-muted-foreground">
-                                                {schedule.faculty.name} - {schedule.departement.name}
+                                                {schedule.day_of_week} ({schedule.start_time} - {schedule.end_time})
                                             </div>
                                         </Link>
                                     </li>

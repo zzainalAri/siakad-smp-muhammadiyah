@@ -55,11 +55,7 @@ export default function Edit(props) {
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
                                     <Label htmlFor="level_id">Nama Tingkat</Label>
-                                    <Select
-                                        defaultValue={data.level_id}
-                                        onValueChange={(value) => setData('level_id', value)}
-                                        id="level_id"
-                                    >
+                                    <Select defaultValue={data.level_id} disabled id="level_id">
                                         <SelectTrigger>
                                             <SelectValue>
                                                 {props.levels.find((level) => level.value == data.level_id)?.label ??

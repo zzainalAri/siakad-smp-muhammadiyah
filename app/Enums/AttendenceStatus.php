@@ -2,12 +2,12 @@
 
 namespace App\Enums;
 
-enum StudentStatus: string
+enum AttendenceStatus: string
 {
-    case ACTIVE = 'Aktif';
-    case INACTIVE = 'Tidak Aktif';
-    case TRANSFER = 'Pindah';
-    case GRUADUATED = 'Lulus';
+    case ATTENDED = 'Hadir';
+    case PERMIT = 'Izin';
+    case SICK = 'Sakit';
+    case ALPA = 'Alpha';
 
     public static function options()
     {

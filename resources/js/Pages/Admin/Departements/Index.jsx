@@ -85,7 +85,7 @@ export default function Index(props) {
                             <EmptyState
                                 icon={IconSchool}
                                 title="Tidak ada Program Studi"
-                                subtitle="Mulailah dengan membuat fakultas baru"
+                                subtitle="Mulailah dengan membuat Tingkat baru"
                             />
                         ) : (
                             <Table className="w-full">
@@ -109,7 +109,7 @@ export default function Index(props) {
                                                 className="group inline-flex"
                                                 onClick={() => onSortable('level_id')}
                                             >
-                                                Fakultas
+                                                Tingkat
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>

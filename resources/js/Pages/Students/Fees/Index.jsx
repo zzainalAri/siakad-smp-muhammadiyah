@@ -102,7 +102,7 @@ export default function Index(props) {
                                                 <TableHead>Semester</TableHead>
                                                 <TableHead>Kelas</TableHead>
                                                 <TableHead>Program Studi</TableHead>
-                                                <TableHead>Program Fakultas</TableHead>
+                                                <TableHead>Program Tingkat</TableHead>
                                                 <TableHead>Total Tagihan</TableHead>
                                                 <TableHead>Aksi</TableHead>
                                             </TableRow>

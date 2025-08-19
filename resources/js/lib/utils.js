@@ -13,6 +13,19 @@ export function flashMessage(params) {
     return params.props.flash_message;
 }
 
+export function groupSchedulesByDay(schedules) {
+    const grouped = {};
+
+    schedules.forEach((item) => {
+        if (!grouped[item.day]) {
+            grouped[item.day] = [];
+        }
+        grouped[item.day].push(item);
+    });
+
+    return grouped;
+}
+
 export const deleteAction = (url, { closeModal, ...options } = {}) => {
     const defaultOptions = {
         preserveScroll: true,

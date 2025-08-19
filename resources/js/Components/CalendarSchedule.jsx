@@ -192,15 +192,28 @@ export default function CalendarSchedule({ days, schedules, student = null }) {
                                             }}
                                         >
                                             <Link
-                                                href="#"
+                                                href={
+                                                    schedule.classroom_id
+                                                        ? route('teachers.classrooms.index', [
+                                                              schedule.course_id,
+                                                              schedule.classroom_id,
+                                                          ])
+                                                        : '#'
+                                                }
                                                 className={cn(
                                                     'overflow-y-aut group absolute inset-1 flex flex-col rounded-lg p-2 text-xs leading-5',
                                                     bgColor,
                                                 )}
                                             >
-                                                <p className="order-1 font-semibold text-white">{schedule.course}</p>
+                                                <p className="font-semibold text-white">{schedule.course}</p>
                                                 <p className="text-white">
                                                     {startTime} - {schedule.end_time}
+                                                </p>
+                                                <p className="line-clamp-1 font-semibold text-white">
+                                                    {schedule.teacher ?? null}
+                                                </p>
+                                                <p className="line-clamp-1 font-semibold text-white">
+                                                    {schedule.classroom ?? null}
                                                 </p>
                                             </Link>
                                         </li>

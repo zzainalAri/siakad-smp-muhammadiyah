@@ -23,7 +23,7 @@ class ValidateMiddleware
             ->exists();
 
         if (!$departement) {
-            flashMessage('Program studi yang anda pilih tidak terdaftar pada fakultas yang anda pilih', 'error');
+            flashMessage('Program studi yang anda pilih tidak terdaftar pada Tingkat yang anda pilih', 'error');
             return back();
         }
         return $next($request);

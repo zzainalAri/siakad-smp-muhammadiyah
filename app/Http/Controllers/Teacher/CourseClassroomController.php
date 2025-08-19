@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use App\Enums\AttendenceStatus;
 use App\Enums\MessageType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\CourseClassroomRequest;
@@ -11,6 +12,7 @@ use App\Models\Classroom;
 use App\Models\Course;
 use App\Models\Grade;
 use App\Models\Schedule;
+use App\Models\Section;
 use App\Models\Student;
 use App\Models\StudyResult;
 use App\Models\StudyResultGrade;
@@ -26,54 +28,28 @@ class CourseClassroomController extends Controller
 
     public function index(Course $course, Classroom $classroom)
     {
-        $schedule = Schedule::query()
-            ->where('course_id', $course->id)
-            ->where('classroom_id', $classroom->id)->first();
 
-        $students = Student::query()
+        $schedule = Schedule::where('classroom_id', $classroom->id)->where('course_id', $course->id)->where('level_id', $course->level->id)->first();
+
+        $section = Section::where('schedule_id', $schedule->id)->first();
+
+        $students = Student::with(['attendances' => fn($query) => $query->where('section_id', $section->id)])
             ->where('level_id', $classroom->level_id)
             ->where('classroom_id', $classroom->id)
             ->filter(request()->only(['search']))
             ->whereHas('user', function ($query) {
                 $query->whereHas('roles', fn($query) => $query->where('name', 'Student'));
             })
-            ->whereHas('studyPlans', function ($query) use ($schedule) {
-                $query->where('academic_year_id', activeAcademicYear()->id)
-                    ->approved()
-                    ->whereHas('schedules', fn($query) => $query->where('schedule_id', $schedule->id));
-            })
-            ->with([
-                'user',
-                'attendances' => fn($query) => $query->where('course_id', $course->id)->where('classroom_id', $classroom->id),
-                'grades' => fn($query) => $query->where('course_id', $course->id)->where('classroom_id', $classroom->id),
-            ])
-            ->withCount([
-                'attendances' => fn($query) => $query->where('course_id', $course->id)->where('classroom_id', $classroom->id),
-            ])
-            ->withSum(
-                ['grades as tasks_count' => fn($query) => $query
-                    ->where('course_id', $course->id)
-                    ->where('classroom_id', $classroom->id)
-                    ->where('category', 'tugas')
-                    ->whereBetween('section', [1, 10])],
-                'grade',
-            )
-            ->withSum(
-                ['grades as uts_count' => fn($query) => $query
-                    ->where('course_id', $course->id)
-                    ->where('classroom_id', $classroom->id)
-                    ->where('category', 'uts')
-                    ->whereNull('section')],
-                'grade',
-            )
-            ->withSum(
-                ['grades as uas_count' => fn($query) => $query
-                    ->where('course_id', $course->id)
-                    ->where('classroom_id', $classroom->id)
-                    ->where('category', 'uas')
-                    ->whereNull('section')],
-                'grade',
-            )->get();
+            ->get();
+
+
+
+
+        $sections = Section::with(['attendances' => fn($query) => $query->with(['student'])])->where('schedule_id', $schedule->id)->get();
+
+
+
+
 
         return inertia('Teachers/Classrooms/Index', [
             'page_setting' => [
@@ -81,10 +57,13 @@ class CourseClassroomController extends Controller
                 'subtitle' => 'Menampilkan data Siswa',
                 'method' => 'PUT',
                 'action' => route('teachers.classrooms.sync', [$course, $classroom]),
+
             ],
+            'students' => CourseStudentClassroomResource::collection($students),
+            'sections' => $sections,
             'course' => $course,
             'classroom' => $classroom,
-            'students' => CourseStudentClassroomResource::collection($students),
+            'attendanceStatuses' => AttendenceStatus::options(),
             'state' => [
                 'search' => request()->search ?? '',
             ]
@@ -157,70 +136,23 @@ class CourseClassroomController extends Controller
         try {
             DB::beginTransaction();
 
-            $attendances = array_map(function ($attendance) {
-                $attendance['created_at'] = Carbon::now();
-                $attendance['updated_at'] = Carbon::now();
-                return $attendance;
-            }, $request->attendances);
+            $schedule = Schedule::where('classroom_id', $classroom->id)->where('course_id', $course->id)->where('level_id', $course->level->id)->first();
 
+            $section = Section::where('schedule_id', $schedule->id)->first();
 
-            $grades = array_map(function ($grade) {
-                $grade['created_at'] = Carbon::now();
-                $grade['updated_at'] = Carbon::now();
-                return $grade;
-            }, $request->grades);
-
-            $studentIds = collect($attendances)
-                ->pluck('student_id')
-                ->merge(collect($grades)->pluck('student_id'))
-                ->unique()
-                ->values();
-
-            $studyResult = StudyResult::query()
-                ->whereIn('student_id', $studentIds)
-                ->get();
-
-
-            Attendance::insert($attendances);
-            Grade::insert($grades);
-
-            $studyResult->each(function ($result) use ($course, $classroom) {
-                $final_score = $this->calculateFinalScore(
-                    attendancePercentage: $this->calculateAttendancePercentage(
-                        $this->getAttendanceCount($result->student_id, $course->id, $classroom->id),
-                    ),
-                    taskPercentage: (
-                        $this->calculateTaskPercentage(
-                            $this->getGradeCount($result->student_id, $course->id, $classroom->id, 'tugas'),
-                        )
-                    ),
-                    utsPercentage: (
-                        $this->calculateUtsPercentage(
-                            $this->getGradeCount($result->student_id, $course->id, $classroom->id, 'uts'),
-                        )
-                    ),
-                    uasPercentage: (
-                        $this->calculateUasPercentage(
-                            $this->getGradeCount($result->student_id, $course->id, $classroom->id, 'uas'),
-                        )
-                    ),
+            foreach ($request->attendances as $att) {
+                Attendance::updateOrInsert(
+                    [
+                        'student_id' => $att['student_id'],
+                        'section_id' => $section->id,
+                    ],
+                    [
+                        'status' => $att['status'],
+                        'updated_at' => now(),
+                        'created_at' => now(),
+                    ]
                 );
-
-
-
-                StudyResultGrade::updateOrCreate([
-                    'study_result_id' => $result->id,
-                    'course_id' => $course->id,
-
-                ], [
-                    'grade' => $final_score,
-                    'letter' => getLetterGrade($final_score),
-                    'weight_of_value' => $this->getWeight(getLetterGrade($final_score)),
-
-                ]);
-
-                $this->updateGPA($result->student_id);
-            });
+            }
 
 
             DB::commit();
@@ -231,7 +163,7 @@ class CourseClassroomController extends Controller
         } catch (Throwable $e) {
             DB::rollBack();
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
-            return to_route('teachers.classrooms.index', [$course, $classroom]);
+            return back();
         }
     }
 }

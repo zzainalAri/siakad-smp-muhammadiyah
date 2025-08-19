@@ -13,18 +13,17 @@ import {
     IconLogout2,
     IconMoneybag,
     IconReportMoney,
-    IconUser,
     IconUsers,
     IconUsersGroup,
 } from '@tabler/icons-react';
 
 export default function SidebarResponsive({ url, auth }) {
     return (
-        <nav className="mt-4 flex flex-1 flex-col">
-            <ul className="flex flex-1 flex-col" role="list">
+        <nav className="flex flex-col flex-1 mt-4">
+            <ul className="flex flex-col flex-1" role="list">
                 <li className="-mx-6">
                     <Link
-                        className="items-cemter flex gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-blue-800"
+                        className="flex px-6 py-3 text-sm font-semibold leading-6 text-white items-cemter gap-x-4 hover:bg-blue-800"
                         href={'#'}
                     >
                         <Avatar>
@@ -32,7 +31,7 @@ export default function SidebarResponsive({ url, auth }) {
                             <AvatarFallback>{auth.user.name.substring(0, 1)}</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col text-left">
-                            <span className="truncate font-bold">{auth.user.name}</span>
+                            <span className="font-bold truncate">{auth.user.name}</span>
                             <span className="truncate">{auth.user.role_name}</span>
                         </div>
                     </Link>
@@ -87,12 +86,6 @@ export default function SidebarResponsive({ url, auth }) {
                             active={url.startsWith('/admin/teachers')}
                             title={'Guru'}
                             icon={IconUsersGroup}
-                        />
-                        <NavLink
-                            url={route('admin.operators.index')}
-                            active={url.startsWith('/admin/operators')}
-                            title={'Operator'}
-                            icon={IconUser}
                         />
 
                         {/* Akademik */}

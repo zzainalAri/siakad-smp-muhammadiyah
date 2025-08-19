@@ -11,9 +11,12 @@ use App\Models\Classroom;
 use App\Models\Course;
 use App\Models\Level;
 use App\Models\Schedule;
+use App\Models\Section;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class ScheduleController extends Controller
@@ -82,24 +85,68 @@ class ScheduleController extends Controller
 
     public function store(ScheduleRequest $request)
     {
-
         try {
-            Schedule::create([
+
+            $exists = Schedule::where('level_id', $request->level_id)
+                ->where('classroom_id', $request->classroom_id)
+                ->where('course_id', $request->course_id)
+                ->where('day_of_week', $request->day_of_week)
+                ->first();
+
+            if ($exists) {
+                flashMessage('Jadwal dengan tingkat, kelas, mata kuliah, dan hari yang sama sudah ada.', 'error');
+                return back()->withInput();
+            }
+            DB::beginTransaction();
+
+
+            $schedule = Schedule::create([
                 'level_id' => $request->level_id,
                 'course_id' => $request->course_id,
                 'classroom_id' => $request->classroom_id,
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
                 'day_of_week' => $request->day_of_week,
-
             ]);
+
+            $daysMap = [
+                'Senin'   => Carbon::MONDAY,
+                'Selasa'  => Carbon::TUESDAY,
+                'Rabu'    => Carbon::WEDNESDAY,
+                'Kamis'   => Carbon::THURSDAY,
+                'Jumat'   => Carbon::FRIDAY,
+                'Sabtu'   => Carbon::SATURDAY,
+                'Minggu'  => Carbon::SUNDAY,
+            ];
+
+            $dayNumber = $daysMap[$request->day_of_week];
+
+            $startDate = Carbon::now()->startOfWeek(Carbon::MONDAY)->addDays($dayNumber - 1);
+
+            if ($startDate->lt(Carbon::now())) {
+                $startDate->addWeek();
+            }
+
+
+            for ($i = 1; $i <= 10; $i++) {
+                Section::create([
+                    'meeting_number' => $i,
+                    'meeting_date'   => $startDate->copy()->addWeeks($i - 1)->toDateString(),
+                    'schedule_id'      => $schedule->id,
+                ]);
+            }
+
+            DB::commit();
+
             flashMessage(MessageType::CREATED->message('Jadwal'));
             return to_route('admin.schedules.index');
         } catch (Throwable $e) {
+            DB::rollBack();
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
-            return to_route('admin.schedules.index');
+            return back();
         }
     }
+
 
     public function Edit(Schedule $schedule)
     {
@@ -132,6 +179,23 @@ class ScheduleController extends Controller
     public function update(ScheduleRequest $request, Schedule $schedule)
     {
         try {
+
+
+            $exists = Schedule::where('level_id', $request->level_id)
+                ->where('classroom_id', $request->classroom_id)
+                ->where('course_id', $request->course_id)
+                ->where('day_of_week', $request->day_of_week)
+                ->where('id', '!=', $schedule->id) // abaikan jadwal yang sedang diupdate
+                ->exists();
+
+
+            if ($exists) {
+                flashMessage('Jadwal dengan tingkat, kelas, mata kuliah, dan hari yang sama sudah ada.', 'error');
+                return back()->withInput();
+            }
+
+            DB::beginTransaction();
+
             $schedule->update([
                 'level_id' => $request->level_id,
                 'course_id' => $request->course_id,
@@ -139,15 +203,47 @@ class ScheduleController extends Controller
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
                 'day_of_week' => $request->day_of_week,
-
             ]);
+
+            $schedule->sections()->delete();
+
+            $daysMap = [
+                'Senin'   => Carbon::MONDAY,
+                'Selasa'  => Carbon::TUESDAY,
+                'Rabu'    => Carbon::WEDNESDAY,
+                'Kamis'   => Carbon::THURSDAY,
+                'Jumat'   => Carbon::FRIDAY,
+                'Sabtu'   => Carbon::SATURDAY,
+                'Minggu'  => Carbon::SUNDAY,
+            ];
+
+            $dayNumber = $daysMap[$request->day_of_week];
+
+            $startDate = Carbon::now()->startOfWeek(Carbon::MONDAY)->addDays($dayNumber - 1);
+
+            if ($startDate->lt(Carbon::now())) {
+                $startDate->addWeek();
+            }
+
+            for ($i = 1; $i <= 10; $i++) {
+                Section::create([
+                    'meeting_number' => $i,
+                    'meeting_date'   => $startDate->copy()->addWeeks($i - 1)->toDateString(),
+                    'schedule_id'    => $schedule->id,
+                ]);
+            }
+
+            DB::commit();
+
             flashMessage(MessageType::UPDATED->message('Jadwal'));
             return to_route('admin.schedules.index');
         } catch (Throwable $e) {
+            DB::rollBack();
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
-            return to_route('admin.schedules.index');
+            return back();
         }
     }
+
 
     public function destroy(Schedule $schedule)
     {

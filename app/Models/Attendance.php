@@ -9,19 +9,14 @@ class Attendance extends Model
 {
     protected $guarded = [];
 
-    public function course()
-    {
-        return $this->belongsTo(Course::class);
-    }
-
     public function student()
     {
         return $this->belongsTo(Student::class);
     }
 
-    public function classroom()
+    public function section()
     {
-        return $this->belongsTo(Classroom::class);
+        return $this->belongsTo(Section::class);
     }
 
     public function scopeActive(Builder $query)

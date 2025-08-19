@@ -1,4 +1,3 @@
-import AlertAction from '@/Components/AlertAction';
 import EmptyState from '@/Components/EmptyState';
 import HeaderTitle from '@/Components/HeaderTitle';
 import PaginationTable from '@/Components/PaginationTable';
@@ -10,9 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
-import { deleteAction, formatDateIndo, formatToRupiah } from '@/lib/utils';
+import { formatToRupiah } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
-import { IconArrowsDownUp, IconDroplets, IconPencil, IconPlus, IconRefresh, IconTrash } from '@tabler/icons-react';
+import { IconArrowsDownUp, IconDroplets, IconPencil, IconRefresh } from '@tabler/icons-react';
 import { useState } from 'react';
 
 export default function Index(props) {
@@ -41,11 +40,6 @@ export default function Index(props) {
                         subtitle={props.page_setting.subtitle}
                         icon={IconDroplets}
                     />
-                    <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
-                        <Link href={route('admin.fee-groups.create')}>
-                            <IconPlus className="size-4" /> Tambah
-                        </Link>
-                    </Button>
                 </div>
                 <Card>
                     <CardHeader className="mb-4 p-0">
@@ -126,18 +120,7 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('created_at')}
-                                            >
-                                                Dibuat Pada
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
+
                                         <TableHead>Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -147,7 +130,6 @@ export default function Index(props) {
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
                                             <TableCell>{feeGroup.level.name}</TableCell>
                                             <TableCell>{formatToRupiah(feeGroup.amount)}</TableCell>
-                                            <TableCell>{formatDateIndo(feeGroup.created_at)}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-x-1">
                                                     <Button variant="blue" size="sm" asChild>
@@ -156,17 +138,6 @@ export default function Index(props) {
                                                             Edit
                                                         </Link>
                                                     </Button>
-                                                    <AlertAction
-                                                        trigger={
-                                                            <Button variant="red" size="sm">
-                                                                <IconTrash className="size-4" />
-                                                                Delete
-                                                            </Button>
-                                                        }
-                                                        action={() =>
-                                                            deleteAction(route('admin.fee-groups.destroy', [feeGroup]))
-                                                        }
-                                                    />
                                                 </div>
                                             </TableCell>
                                         </TableRow>
