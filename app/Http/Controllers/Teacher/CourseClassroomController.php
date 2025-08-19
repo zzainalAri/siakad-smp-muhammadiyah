@@ -27,13 +27,18 @@ class CourseClassroomController extends Controller
     use CalculateFinalScore;
 
     public function index(Course $course, Classroom $classroom)
+
     {
+
 
         $schedule = Schedule::where('classroom_id', $classroom->id)->where('course_id', $course->id)->where('level_id', $course->level->id)->first();
 
-        $section = Section::where('schedule_id', $schedule->id)->first();
+        $section = Section::where('schedule_id', $schedule->id)
+            ->where('meeting_number',  request()->get('meetingNumber', 1))
+            ->first();
 
-        $students = Student::with(['attendances' => fn($query) => $query->where('section_id', $section->id)])
+
+        $students = Student::with(['user', 'attendances' => fn($query) => $query->where('section_id', $section->id)])
             ->where('level_id', $classroom->level_id)
             ->where('classroom_id', $classroom->id)
             ->filter(request()->only(['search']))
@@ -45,7 +50,9 @@ class CourseClassroomController extends Controller
 
 
 
-        $sections = Section::with(['attendances' => fn($query) => $query->with(['student'])])->where('schedule_id', $schedule->id)->get();
+
+
+        $sections = Section::where('schedule_id', $schedule->id)->get();
 
 
 
@@ -138,13 +145,13 @@ class CourseClassroomController extends Controller
 
             $schedule = Schedule::where('classroom_id', $classroom->id)->where('course_id', $course->id)->where('level_id', $course->level->id)->first();
 
-            $section = Section::where('schedule_id', $schedule->id)->first();
+            $section = Section::where('schedule_id', $schedule->id)->where('meeting_number', $request->meeting_number)->first();
 
             foreach ($request->attendances as $att) {
                 Attendance::updateOrInsert(
                     [
                         'student_id' => $att['student_id'],
-                        'section_id' => $section->id,
+                        'section_id' => $att['section_id'],
                     ],
                     [
                         'status' => $att['status'],
@@ -159,7 +166,7 @@ class CourseClassroomController extends Controller
 
             flashMessage('Berhasil melakukan perubahan');
 
-            return to_route('teachers.classrooms.index', [$course, $classroom]);
+            return back();
         } catch (Throwable $e) {
             DB::rollBack();
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');

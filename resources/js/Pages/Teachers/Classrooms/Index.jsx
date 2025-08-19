@@ -1,3 +1,4 @@
+import AbsenStatistic from '@/Components/AbsenStatistic';
 import EmptyState from '@/Components/EmptyState';
 import HeaderTitle from '@/Components/HeaderTitle';
 import ShowFilter from '@/Components/ShowFilter';
@@ -5,6 +6,13 @@ import { Alert, AlertDescription } from '@/Components/ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader } from '@/Components/ui/card';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/Components/ui/dropdown-menu';
 import { Input } from '@/Components/ui/input';
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
@@ -12,20 +20,22 @@ import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
 import { flashMessage, formatDateIndo } from '@/lib/utils';
 import { useForm } from '@inertiajs/react';
-import { IconCheck, IconDoor, IconRefresh } from '@tabler/icons-react';
+import { IconCheck, IconDoor, IconDotsVertical, IconRefresh } from '@tabler/icons-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Index(props) {
     const { students, sections, attendanceStatuses } = props;
     const [params, setParams] = useState(props.state);
-    const today = new Date().toISOString().slice(0, 10);
+    const today = new Date().toISOString().split('T')[0];
 
     const { data, setData, errors, processing, post, reset } = useForm({
         attendances: [],
         grades: [],
         _method: props.page_setting.method,
     });
+
+    console.log(props.students);
 
     const onHandleSubmit = (e) => {
         e.preventDefault();
@@ -97,18 +107,25 @@ export default function Index(props) {
                         <ShowFilter params={params} />
                     </CardHeader>
                     <CardContent className="[&-td]: p-0 [&-td]:whitespace-nowrap [&-th]:px-6">
-                        <Tabs className="mx-4 overflow-x-auto" defaultValue={sections[0]?.id.toString() || '0'}>
-                            <TabsList className="scroll-bar w-full items-center justify-start overflow-x-auto md:w-fit">
+                        <Tabs className="mx-4" defaultValue={sections[0]?.id.toString() || '0'}>
+                            <TabsList className="scroll-bar flex h-fit w-full flex-wrap items-center justify-start gap-2 overflow-x-auto md:w-fit">
                                 {sections.map((section) => (
-                                    <TabsTrigger key={section.id} value={section.id.toString()}>
+                                    <TabsTrigger
+                                        key={section.id}
+                                        value={section.id.toString()}
+                                        onClick={() => {
+                                            setParams((prev) => ({ ...prev, meetingNumber: section.meeting_number }));
+                                            setData('attendances', []);
+                                            setData('grades', []);
+                                        }}
+                                    >
                                         Pertemuan {section.meeting_number}
                                     </TabsTrigger>
                                 ))}
                             </TabsList>
 
-                            {sections.map((section, index) => {
-                                const isLocked = section.meeting_number == index + 1;
-                                // const isLocked = section.attendances.length === 0 || section.meeting_date > today;
+                            {sections.map((section) => {
+                                const isLocked = section.meeting_date > today;
                                 const studentsInSection = students.map((student) => {
                                     const attendance = student.attendances.find((att) => att.section_id === section.id);
                                     return { ...student, sectionAttendance: attendance };
@@ -116,105 +133,141 @@ export default function Index(props) {
 
                                 return (
                                     <TabsContent key={section.id} value={section.id.toString()}>
-                                        {!isLocked ? (
+                                        {isLocked ? (
                                             <EmptyState
                                                 title="Belum bisa diakses"
                                                 subtitle={`Pertemuan ini akan dibuka pada ${formatDateIndo(section.meeting_date)}`}
                                                 icon={IconDoor}
                                             />
                                         ) : (
-                                            <form onSubmit={onHandleSubmit}>
-                                                <Table className="w-full border">
-                                                    <TableHeader>
-                                                        <TableRow>
-                                                            <TableHead rowSpan="2">#</TableHead>
-                                                            <TableHead rowSpan="2">Nama</TableHead>
-                                                            <TableHead rowSpan="2">Nomor Induk Siswa</TableHead>
-                                                            <TableHead colSpan="4" className="border">
-                                                                Absensi
-                                                            </TableHead>
-                                                            <TableHead rowSpan="2" className="border">
-                                                                Nilai Tugas Pertemuan 1
-                                                            </TableHead>
-                                                        </TableRow>
-                                                        <TableRow rowSpan="4" className="border">
-                                                            {props.attendanceStatuses.map((item, i) => (
-                                                                <TableHead key={i} className="border">
-                                                                    {item.value}
-                                                                </TableHead>
-                                                            ))}
-                                                        </TableRow>
-                                                    </TableHeader>
-                                                    <TableBody>
-                                                        {studentsInSection.map((student, index) => (
-                                                            <TableRow key={index}>
-                                                                <TableCell>{index + 1}</TableCell>
-                                                                <TableCell>
-                                                                    <div className="flex items-center gap-2">
-                                                                        <Avatar>
-                                                                            <AvatarImage src={student.user.avatar} />
-                                                                            <AvatarFallback>
-                                                                                {student.user.name.substring(0, 1)}
-                                                                            </AvatarFallback>
-                                                                        </Avatar>
-                                                                        <span>{student.user.name}</span>
+                                            <>
+                                                <form onSubmit={onHandleSubmit}>
+                                                    <Table className="w-full border">
+                                                        <TableHeader>
+                                                            <TableRow>
+                                                                <TableHead rowSpan="2">#</TableHead>
+                                                                <TableHead rowSpan="2">Nama</TableHead>
+                                                                <TableHead rowSpan="2">Nomor Induk Siswa</TableHead>
+                                                                <TableHead colSpan="4" className="border">
+                                                                    <div className="flex items-center justify-between">
+                                                                        <p>Absensi</p>
+                                                                        <DropdownMenu>
+                                                                            <DropdownMenuTrigger asChild>
+                                                                                <Button variant="ghost">
+                                                                                    <IconDotsVertical className="size-4" />
+                                                                                </Button>
+                                                                            </DropdownMenuTrigger>
+                                                                            <DropdownMenuContent className="w-fit">
+                                                                                <DropdownMenuGroup>
+                                                                                    <DropdownMenuItem asChild>
+                                                                                        <AbsenStatistic
+                                                                                            students={students}
+                                                                                            classroom={
+                                                                                                props.classroom.name
+                                                                                            }
+                                                                                            meetingNumber={
+                                                                                                section.meeting_number
+                                                                                            }
+                                                                                            course={props.course.name}
+                                                                                        />
+                                                                                    </DropdownMenuItem>
+                                                                                </DropdownMenuGroup>
+                                                                            </DropdownMenuContent>
+                                                                        </DropdownMenu>
                                                                     </div>
-                                                                </TableCell>
-                                                                <TableCell>{student.nisn}</TableCell>
-                                                                {props.attendanceStatuses.map((attendance) => {
-                                                                    const currentStatus = data.attendances.find(
-                                                                        (att) => att.student_id === student.id,
-                                                                    )?.status;
+                                                                </TableHead>
 
-                                                                    const attendanced = (
-                                                                        student.attendances || []
-                                                                    ).find((att) => att.status === attendance.value);
-
-                                                                    return (
-                                                                        <TableCell
-                                                                            key={attendance.value}
-                                                                            className="border text-center"
-                                                                        >
-                                                                            {(student.attendances || []).length ===
-                                                                            0 ? (
-                                                                                <input
-                                                                                    type="checkbox"
-                                                                                    checked={
-                                                                                        currentStatus ===
-                                                                                        attendance.value
-                                                                                    }
-                                                                                    onChange={() => {
-                                                                                        const updated =
-                                                                                            data.attendances.filter(
-                                                                                                (att) =>
-                                                                                                    att.student_id !==
-                                                                                                    student.id,
-                                                                                            );
-
-                                                                                        if (
-                                                                                            currentStatus !==
-                                                                                            attendance.value
-                                                                                        ) {
-                                                                                            updated.push({
-                                                                                                student_id: student.id,
-                                                                                                status: attendance.value,
-                                                                                            });
-                                                                                        }
-
-                                                                                        setData('attendances', updated);
-                                                                                    }}
-                                                                                />
-                                                                            ) : (
-                                                                                attendanced && (
-                                                                                    <IconCheck className="size-4 text-green-500" />
-                                                                                )
-                                                                            )}
-                                                                        </TableCell>
-                                                                    );
-                                                                })}
-
-                                                                <TableCell>
+                                                                <TableHead rowSpan="2" className="border">
+                                                                    Nilai Tugas Pertemuan {section.meeting_number}
+                                                                </TableHead>
+                                                            </TableRow>
+                                                            <TableRow rowSpan="4" className="border">
+                                                                {props.attendanceStatuses.map((item, i) => (
+                                                                    <TableHead key={i} className="border">
+                                                                        {item.value}
+                                                                    </TableHead>
+                                                                ))}
+                                                            </TableRow>
+                                                        </TableHeader>
+                                                        <TableBody>
+                                                            {studentsInSection.map((student, index) => (
+                                                                <TableRow key={index}>
+                                                                    <TableCell>{index + 1}</TableCell>
                                                                     <TableCell>
+                                                                        <div className="flex items-center gap-2">
+                                                                            <Avatar>
+                                                                                <AvatarImage
+                                                                                    src={student.user.avatar}
+                                                                                />
+                                                                                <AvatarFallback>
+                                                                                    {student.user.name.substring(0, 1)}
+                                                                                </AvatarFallback>
+                                                                            </Avatar>
+                                                                            <span>{student.user.name}</span>
+                                                                        </div>
+                                                                    </TableCell>
+                                                                    <TableCell>{student.nisn}</TableCell>
+                                                                    {attendanceStatuses.map((attendance) => {
+                                                                        const currentStatus = data.attendances.find(
+                                                                            (att) => att.student_id === student.id,
+                                                                        )?.status;
+
+                                                                        const attendanced = (
+                                                                            student.attendances || []
+                                                                        ).find(
+                                                                            (att) => att.status === attendance.value,
+                                                                        );
+
+                                                                        return (
+                                                                            <TableCell
+                                                                                key={attendance.value}
+                                                                                className="border text-center"
+                                                                            >
+                                                                                {(student.attendances || []).length ===
+                                                                                0 ? (
+                                                                                    <input
+                                                                                        type="checkbox"
+                                                                                        checked={
+                                                                                            currentStatus ===
+                                                                                            attendance.value
+                                                                                        }
+                                                                                        onChange={() => {
+                                                                                            const updated =
+                                                                                                data.attendances.filter(
+                                                                                                    (att) =>
+                                                                                                        att.student_id !==
+                                                                                                        student.id,
+                                                                                                );
+
+                                                                                            if (
+                                                                                                currentStatus !==
+                                                                                                attendance.value
+                                                                                            ) {
+                                                                                                updated.push({
+                                                                                                    student_id:
+                                                                                                        student.id,
+                                                                                                    status: attendance.value,
+                                                                                                    section_id:
+                                                                                                        section.id,
+                                                                                                });
+                                                                                            }
+
+                                                                                            setData(
+                                                                                                'attendances',
+                                                                                                updated,
+                                                                                            );
+                                                                                        }}
+                                                                                    />
+                                                                                ) : (
+                                                                                    attendanced && (
+                                                                                        <IconCheck className="size-4 text-green-500" />
+                                                                                    )
+                                                                                )}
+                                                                            </TableCell>
+                                                                        );
+                                                                    })}
+
+                                                                    <TableCell colSpan="2">
                                                                         <Input
                                                                             type="number"
                                                                             className="mx-auto w-[120px]"
@@ -249,27 +302,27 @@ export default function Index(props) {
                                                                             }}
                                                                         />
                                                                     </TableCell>
+                                                                </TableRow>
+                                                            ))}
+                                                        </TableBody>
+                                                        <TableFooter>
+                                                            <TableRow>
+                                                                <TableCell colSpan="37">
+                                                                    <Button
+                                                                        variant="blue"
+                                                                        type="submit"
+                                                                        size="lg"
+                                                                        disabled={processing}
+                                                                    >
+                                                                        <IconCheck />
+                                                                        Simpan
+                                                                    </Button>
                                                                 </TableCell>
                                                             </TableRow>
-                                                        ))}
-                                                    </TableBody>
-                                                    <TableFooter>
-                                                        <TableRow>
-                                                            <TableCell colSpan="37">
-                                                                <Button
-                                                                    variant="blue"
-                                                                    type="submit"
-                                                                    size="lg"
-                                                                    disabled={processing}
-                                                                >
-                                                                    <IconCheck />
-                                                                    Simpan
-                                                                </Button>
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    </TableFooter>
-                                                </Table>
-                                            </form>
+                                                        </TableFooter>
+                                                    </Table>
+                                                </form>
+                                            </>
                                         )}
                                     </TabsContent>
                                 );
