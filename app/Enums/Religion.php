@@ -2,12 +2,15 @@
 
 namespace App\Enums;
 
-enum StudentStatus: string
+enum Religion: string
 {
-    case ACTIVE = 'Aktif';
-    case INACTIVE = 'Tidak Aktif';
-    case TRANSFER = 'Pindah';
-    case GRUADUATED = 'Lulus';
+    case ISLAM = 'Islam';
+    case KATOLIK = 'Katolik';
+    case PROTESTAN = 'Protestan';
+    case HINDU = 'Hindu';
+    case BUDDHA = 'Buddha';
+    case KONGHUCU = 'Konghucu';
+    case OTHER = 'Lainnya';
 
     public static function options()
     {

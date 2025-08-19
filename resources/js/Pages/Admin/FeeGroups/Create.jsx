@@ -82,7 +82,7 @@ export default function Create(props) {
                                         type="number"
                                         name="amount"
                                         id="amount"
-                                        placeholder="Masukkan jumlah ukt"
+                                        placeholder="Masukkan jumlah SPP"
                                         value={data.amount}
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />

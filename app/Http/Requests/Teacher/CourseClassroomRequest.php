@@ -11,9 +11,7 @@ class CourseClassroomRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasRole(
-            'Teacher'
-        );
+        return true;
     }
 
     /**
@@ -24,16 +22,8 @@ class CourseClassroomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'attendances.*.status' => [
-                'nullable',
-                'boolean'
-            ],
-            'grades.*.grade' => [
-                'nullable',
-                'numeric',
-                'min:0',
-                'max:100'
-            ]
+            'attendances.*.status' => ['required', 'string'],
+            'grades.*.grade' => ['required', 'numeric', 'min:0', 'max:100']
         ];
     }
 

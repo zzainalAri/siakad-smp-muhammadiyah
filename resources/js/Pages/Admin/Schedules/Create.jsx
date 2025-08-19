@@ -22,7 +22,6 @@ export default function Create(props) {
         day_of_week: null,
         _method: props.page_setting.method,
     });
-
     const [filteredCourse, setFilteredCourse] = useState([]);
     const [filteredClassroom, setFilteredClassroom] = useState([]);
     const onHandleReset = () => {

@@ -76,7 +76,7 @@ export default function Edit(props) {
                                     {errors.name && <InputError message={errors.name} />}
                                 </div>
                                 <div className="col-span-full">
-                                    <Label htmlFor="level_id">Nama Fakultas</Label>
+                                    <Label htmlFor="level_id">Nama Tingkat</Label>
                                     <Select
                                         defaultValue={data.level_id}
                                         onValueChange={(value) => setData('level_id', value)}

@@ -22,7 +22,7 @@ class ValidateClassroom
             ->exists();
 
         if (!$classroom) {
-            flashMessage('Kelas tersebut tidak ada di program studi atau fakultas yang anda pilih', 'error');
+            flashMessage('Kelas tersebut tidak ada di program studi atau Tingkat yang anda pilih', 'error');
             return back();
         }
 

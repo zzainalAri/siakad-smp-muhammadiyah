@@ -4,27 +4,33 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\Gender;
 use App\Enums\MessageType;
+use App\Enums\Religion;
 use App\Enums\StudentRegistrationStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StudentRegistrationRequest;
 use App\Http\Resources\Admin\StudentRegistrationResource;
+use App\Models\Classroom;
+use App\Models\Level;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\StudentRegistration;
 use App\Traits\HasFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Throwable;
 
 class StudentRegistrationController extends Controller
 {
-    use HasFile;
     public function index()
     {
         $students = StudentRegistration::filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
             ->orderBy('created_at', 'desc')
             ->paginate(request()->load ?? 10);
+
+        $level = Level::where('name', 'Kelas 7')->first();
+
 
 
 
@@ -39,6 +45,12 @@ class StudentRegistrationController extends Controller
                     'has_pages' => $students->hasPages(),
                 ],
             ]),
+            'classrooms' => Classroom::query()->select(['id', 'name', 'level_id'])->where('level_id', $level->id)->orderBy('name')->get()->map(fn($item) => [
+                'value' => $item->id,
+                'level_id' => $item->level_id,
+                'label' => $item->name,
+            ]),
+            'statuses' => StudentRegistrationStatus::options(),
             'state' => [
                 'page' => request()->page ?? 1,
                 'search' => request()->search ?? '',
@@ -58,6 +70,7 @@ class StudentRegistrationController extends Controller
             ],
             'statuses' => StudentRegistrationStatus::options(),
             'genders' => Gender::options(),
+            'religions' => Religion::options(),
         ]);
     }
 
@@ -68,6 +81,14 @@ class StudentRegistrationController extends Controller
 
             StudentRegistration::create([
                 'name' => $request->name,
+                'email' => $request->email,
+                'mother_name' => $request->mother_name,
+                'father_name' => $request->father_name,
+                'father_nik' => $request->father_nik,
+                'mother_nik' => $request->mother_nik,
+                'religion' => $request->religion,
+                'no_kk' => $request->no_kk,
+                'accepted_date' => $request->accepted_date,
                 'nisn' => $request->nisn,
                 'gender' => $request->gender,
                 'birth_place' => $request->birth_place,
@@ -75,12 +96,7 @@ class StudentRegistrationController extends Controller
                 'previous_school' => $request->previous_school,
                 'phone' => $request->phone,
                 'nik' => $request->nik,
-                'status' => $request->status,
                 'address' => $request->address,
-                'doc_kk' => $this->upload_file($request, 'doc_kk', 'kartu_keluarga'),
-                'doc_kk' => $this->upload_file($request, 'doc_kk', 'kartu_keluarga'),
-                'doc_akta' => $this->upload_file($request, 'doc_akta', 'akta_kelahiran'),
-                'doc_akta' => $this->upload_file($request, 'doc_akta', 'akta_kelahiran'),
 
             ]);
 
@@ -108,6 +124,7 @@ class StudentRegistrationController extends Controller
             'statuses' => StudentRegistrationStatus::options(),
             'genders' => Gender::options(),
             'student' => $studentRegistration,
+            'religions' => Religion::options(),
         ]);
     }
 
@@ -118,6 +135,14 @@ class StudentRegistrationController extends Controller
 
             $studentRegistration->update([
                 'name' => $request->name,
+                'email' => $request->email,
+                'mother_name' => $request->mother_name,
+                'father_name' => $request->father_name,
+                'father_nik' => $request->father_nik,
+                'no_kk' => $request->no_kk,
+                'mother_nik' => $request->mother_nik,
+                'religion' => $request->religion,
+                'accepted_date' => $request->accepted_date,
                 'nisn' => $request->nisn,
                 'gender' => $request->gender,
                 'birth_place' => $request->birth_place,
@@ -125,10 +150,7 @@ class StudentRegistrationController extends Controller
                 'previous_school' => $request->previous_school,
                 'phone' => $request->phone,
                 'nik' => $request->nik,
-                'status' => $request->status,
                 'address' => $request->address,
-                'doc_kk' => $this->update_file($request, $studentRegistration, 'doc_kk', 'kartu_keluarga'),
-                'doc_akta' => $this->update_file($request, $studentRegistration, 'doc_akta', 'akta_kelahiran'),
 
             ]);
 
@@ -147,8 +169,6 @@ class StudentRegistrationController extends Controller
     public function destroy(StudentRegistration $studentRegistration)
     {
         try {
-            $this->delete_file($studentRegistration, 'doc_kk');
-            $this->delete_file($studentRegistration, 'doc_akta');
 
             $studentRegistration->delete();
             flashMessage(MessageType::DELETED->message('PPDB'));
@@ -156,6 +176,50 @@ class StudentRegistrationController extends Controller
         } catch (Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
             return to_route('admin.student-registrations.index');
+        }
+    }
+
+    public function approve(Request $request, StudentRegistration $studentRegistration)
+    {
+        $classroom = Classroom::where('id', $request->classroom_id)->with('level')->first();
+
+        DB::beginTransaction();
+        try {
+
+            $studentRegistration->update([
+                'status' => StudentRegistrationStatus::APPROVED->value,
+                'rejected_description' => $request->rejected_description
+
+            ]);
+
+            $user = User::create([
+                'name' => $studentRegistration->name,
+                'email' => $studentRegistration->email,
+                'password' => Hash::make('password')
+            ]);
+
+            $user->student()->create([
+                'classroom_id' => $request->classroom_id,
+                'level_id' => $classroom->level->id,
+                'nisn' => $studentRegistration->nisn,
+                'gender' => $studentRegistration->gender,
+                'status' => $studentRegistration->status,
+                'batch' => now()->year,
+                'address' => $studentRegistration->address,
+                'student_registration_id' => $studentRegistration->id,
+            ]);
+
+
+            DB::commit();
+            $user->assignRole('Student');
+
+
+            flashMessage(MessageType::UPDATED->message('Status PPDB'));
+            return to_route('admin.student-registrations.index');
+        } catch (Throwable $e) {
+            DB::rollBack();
+            flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
+            return back();
         }
     }
 }

@@ -1,3 +1,4 @@
+import AbsenStatistic from '@/Components/AbsenStatistic';
 import EmptyState from '@/Components/EmptyState';
 import HeaderTitle from '@/Components/HeaderTitle';
 import ShowFilter from '@/Components/ShowFilter';
@@ -5,26 +6,36 @@ import { Alert, AlertDescription } from '@/Components/ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardHeader } from '@/Components/ui/card';
-import { Checkbox } from '@/Components/ui/checkbox';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/Components/ui/dropdown-menu';
 import { Input } from '@/Components/ui/input';
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
-import { flashMessage } from '@/lib/utils';
+import { flashMessage, formatDateIndo } from '@/lib/utils';
 import { useForm } from '@inertiajs/react';
-import { IconCheck, IconDoor, IconRefresh } from '@tabler/icons-react';
+import { IconCheck, IconDoor, IconDotsVertical, IconRefresh } from '@tabler/icons-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Index(props) {
-    const students = props.students;
+    const { students, sections, attendanceStatuses } = props;
     const [params, setParams] = useState(props.state);
+    const today = new Date().toISOString().split('T')[0];
 
     const { data, setData, errors, processing, post, reset } = useForm({
         attendances: [],
         grades: [],
         _method: props.page_setting.method,
     });
+
+    console.log(props.students);
 
     const onHandleSubmit = (e) => {
         e.preventDefault();
@@ -37,65 +48,6 @@ export default function Index(props) {
                 reset();
             },
         });
-    };
-
-    const isAttendanceChecked = (attendances, studentId, section) => {
-        return attendances.some(
-            (attendance) => attendance.student_id === studentId && attendance.section === section && attendance.status,
-        );
-    };
-
-    const updateAttendance = (attendances, setData, studentId, section, checked) => {
-        const updatedAttendance = attendances.filter(
-            (attendance) => !(attendance.student_id === studentId && attendance.section === section),
-        );
-
-        if (checked) {
-            updatedAttendance.push({
-                student_id: studentId,
-                course_id: props.course.id,
-                classroom_id: props.classroom.id,
-                section,
-                status: true,
-            });
-        }
-
-        setData('attendances', updatedAttendance);
-    };
-
-    const getGradeValue = (grades, studentId, category, section) => {
-        return (
-            grades.find(
-                (grade) => grade.student_id === studentId && grade.category === category && grade.section === section,
-            )?.grade || ''
-        );
-    };
-
-    const updateGrade = (grades, setData, studentId, category, section, gradeValue) => {
-        const updatedGrades = grades.filter(
-            (grade) => !(grade.student_id === studentId && grade.category === category && grade.section === section),
-        );
-
-        updatedGrades.push({
-            student_id: studentId,
-            course_id: props.course.id,
-            classroom_id: props.classroom.id,
-            category,
-            section,
-            grade: parseInt(gradeValue, 10) || 0,
-        });
-
-        setData('grades', updatedGrades);
-    };
-
-    const getAttendanceStudent = (student_id, attendances, section) => {
-        return attendances.find((grade) => grade.student_id === student_id && grade.section === section);
-    };
-
-    const getGradeStudent = (student_id, grades, category, section) => {
-        return grades.find(
-            (grade) => grade.student_id === student_id && grade.category === category && grade.section === section,
-        );
     };
 
     UseFilter({
@@ -155,219 +107,227 @@ export default function Index(props) {
                         <ShowFilter params={params} />
                     </CardHeader>
                     <CardContent className="[&-td]: p-0 [&-td]:whitespace-nowrap [&-th]:px-6">
-                        {students.length === 0 ? (
-                            <EmptyState
-                                title="Tidak ada Siswa"
-                                subtitle="Tidak ada Siswa yang tergabung di kelas ini"
-                                icon={IconDoor}
-                            />
-                        ) : (
-                            <form onSubmit={onHandleSubmit}>
-                                <Table className="w-full border">
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead rowSpan="2">#</TableHead>
-                                            <TableHead rowSpan="2">Nama</TableHead>
-                                            <TableHead rowSpan="2">Nomor Induk Siswa</TableHead>
-                                            <TableHead colSpan="12" className="border">
-                                                Absensi
-                                            </TableHead>
-                                            <TableHead colSpan="10" className="border">
-                                                Tugas
-                                            </TableHead>
-                                            <TableHead rowSpan="2" className="border">
-                                                UTS
-                                            </TableHead>
-                                            <TableHead rowSpan="2" className="border">
-                                                UAS
-                                            </TableHead>
-                                            <TableHead colSpan="4" className="border">
-                                                Total
-                                            </TableHead>
-                                            <TableHead colSpan="4" className="border">
-                                                Persentase Nilai
-                                            </TableHead>
-                                            <TableHead rowSpan="2" className="border">
-                                                Nilai Akhir
-                                            </TableHead>
-                                            <TableHead rowSpan="2" className="border">
-                                                Huruf Mutu
-                                            </TableHead>
-                                        </TableRow>
-                                        <TableRow className="border">
-                                            {Array.from({ length: 12 }).map((_, i) => (
-                                                <TableHead key={i} className="border">
-                                                    {i + 1}
-                                                </TableHead>
-                                            ))}
-                                            {Array.from({ length: 10 }).map((_, i) => (
-                                                <TableHead key={i} className="border">
-                                                    {i + 1}
-                                                </TableHead>
-                                            ))}
-                                            <TableHead className="border">Absen</TableHead>
-                                            <TableHead className="border">Tugas</TableHead>
-                                            <TableHead className="border">UTS</TableHead>
-                                            <TableHead className="border">UAS</TableHead>
-                                            <TableHead className="border">Absen (10%)</TableHead>
-                                            <TableHead className="border">Tugas (20%)</TableHead>
-                                            <TableHead className="border">UTS (30%)</TableHead>
-                                            <TableHead className="border">UAS (40%)</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {students.map((student, index) => (
-                                            <TableRow key={index}>
-                                                <TableCell>{index + 1}</TableCell>
-                                                <TableCell>
-                                                    <div className="flex items-center gap-2">
-                                                        <Avatar>
-                                                            <AvatarImage src={student.user.avatar} />
-                                                            <AvatarFallback>
-                                                                {student.user.name.substring(0, 1)}
-                                                            </AvatarFallback>
-                                                        </Avatar>
-                                                        <span>{student.user.name}</span>
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell>{student.nisn}</TableCell>
-                                                {Array.from({ length: 12 }).map((_, section) => {
-                                                    const attendance = getAttendanceStudent(
-                                                        student.id,
-                                                        student.attendances,
-                                                        section + 1,
-                                                    );
-                                                    return (
-                                                        <TableCell key={section}>
-                                                            {attendance ? (
-                                                                <IconCheck className="size-4 text-green-500" />
-                                                            ) : (
-                                                                <Checkbox
-                                                                    id={`attendances_${student.id}_section_${section + 1}`}
-                                                                    name="attendances"
-                                                                    checked={isAttendanceChecked(
-                                                                        data.attendances,
-                                                                        student.id,
-                                                                        section + 1,
-                                                                    )}
-                                                                    onCheckedChange={(checked) => {
-                                                                        updateAttendance(
-                                                                            data.attendances,
-                                                                            setData,
-                                                                            student.id,
-                                                                            section + 1,
-                                                                            checked,
-                                                                        );
-                                                                    }}
-                                                                />
-                                                            )}
-                                                        </TableCell>
-                                                    );
-                                                })}
-                                                {Array.from({ length: 10 }).map((_, task) => {
-                                                    const grade = getGradeStudent(
-                                                        student.id,
-                                                        student.grades,
-                                                        'tugas',
-                                                        task + 1,
-                                                    );
-                                                    return (
-                                                        <TableCell key={task}>
-                                                            {grade ? (
-                                                                grade.grade
-                                                            ) : (
-                                                                <>
-                                                                    <Input
-                                                                        className="w-[70px]"
-                                                                        value={getGradeValue(
-                                                                            data.grades,
-                                                                            student.id,
-                                                                            'tugas',
-                                                                            task + 1,
-                                                                        )}
-                                                                        onChange={(e) => {
-                                                                            updateGrade(
-                                                                                data.grades,
-                                                                                setData,
-                                                                                student.id,
-                                                                                'tugas',
-                                                                                task + 1,
-                                                                                e.target.value,
-                                                                            );
-                                                                        }}
-                                                                    />
-                                                                </>
-                                                            )}
-                                                        </TableCell>
-                                                    );
-                                                })}
+                        <Tabs className="mx-4" defaultValue={sections[0]?.id.toString() || '0'}>
+                            <TabsList className="scroll-bar flex h-fit w-full flex-wrap items-center justify-start gap-2 overflow-x-auto md:w-fit">
+                                {sections.map((section) => (
+                                    <TabsTrigger
+                                        key={section.id}
+                                        value={section.id.toString()}
+                                        onClick={() => {
+                                            setParams((prev) => ({ ...prev, meetingNumber: section.meeting_number }));
+                                            setData('attendances', []);
+                                            setData('grades', []);
+                                        }}
+                                    >
+                                        Pertemuan {section.meeting_number}
+                                    </TabsTrigger>
+                                ))}
+                            </TabsList>
 
-                                                <TableCell>
-                                                    {getGradeStudent(student.id, student.grades, 'uts', null) ? (
-                                                        getGradeStudent(student.id, student.grades, 'uts', null).grade
-                                                    ) : (
-                                                        <Input
-                                                            className="w-[60px]"
-                                                            value={getGradeValue(data.grades, student.id, 'uts', null)}
-                                                            onChange={(e) => {
-                                                                updateGrade(
-                                                                    data.grades,
-                                                                    setData,
-                                                                    student.id,
-                                                                    'uts',
-                                                                    null,
-                                                                    e.target.value,
-                                                                );
-                                                            }}
-                                                        />
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {getGradeStudent(student.id, student.grades, 'uas', null) ? (
-                                                        getGradeStudent(student.id, student.grades, 'uas', null).grade
-                                                    ) : (
-                                                        <Input
-                                                            className="w-[60px]"
-                                                            value={getGradeValue(data.grades, student.id, 'uas', null)}
-                                                            onChange={(e) => {
-                                                                updateGrade(
-                                                                    data.grades,
-                                                                    setData,
-                                                                    student.id,
-                                                                    'uas',
-                                                                    null,
-                                                                    e.target.value,
-                                                                );
-                                                            }}
-                                                        />
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>{student.total.attendances_count}</TableCell>
-                                                <TableCell>{student.total.tasks_count}</TableCell>
-                                                <TableCell>{student.total.uts_count}</TableCell>
-                                                <TableCell>{student.total.uas_count}</TableCell>
-                                                <TableCell>{student.percentage.attendance_percentage}</TableCell>
-                                                <TableCell>{student.percentage.task_percentage}</TableCell>
-                                                <TableCell>{student.percentage.uts_percentage}</TableCell>
-                                                <TableCell>{student.percentage.uas_percentage}</TableCell>
-                                                <TableCell>{student.final_score}</TableCell>
-                                                <TableCell>{student.letter}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                    <TableFooter>
-                                        <TableRow>
-                                            <TableCell colSpan="37">
-                                                <Button variant="blue" type="submit" size="lg" disabled={processing}>
-                                                    <IconCheck />
-                                                    Simpan
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableFooter>
-                                </Table>
-                            </form>
-                        )}
+                            {sections.map((section) => {
+                                const isLocked = section.meeting_date > today;
+                                const studentsInSection = students.map((student) => {
+                                    const attendance = student.attendances.find((att) => att.section_id === section.id);
+                                    return { ...student, sectionAttendance: attendance };
+                                });
+
+                                return (
+                                    <TabsContent key={section.id} value={section.id.toString()}>
+                                        {isLocked ? (
+                                            <EmptyState
+                                                title="Belum bisa diakses"
+                                                subtitle={`Pertemuan ini akan dibuka pada ${formatDateIndo(section.meeting_date)}`}
+                                                icon={IconDoor}
+                                            />
+                                        ) : (
+                                            <>
+                                                <form onSubmit={onHandleSubmit}>
+                                                    <Table className="w-full border">
+                                                        <TableHeader>
+                                                            <TableRow>
+                                                                <TableHead rowSpan="2">#</TableHead>
+                                                                <TableHead rowSpan="2">Nama</TableHead>
+                                                                <TableHead rowSpan="2">Nomor Induk Siswa</TableHead>
+                                                                <TableHead colSpan="4" className="border">
+                                                                    <div className="flex items-center justify-between">
+                                                                        <p>Absensi</p>
+                                                                        <DropdownMenu>
+                                                                            <DropdownMenuTrigger asChild>
+                                                                                <Button variant="ghost">
+                                                                                    <IconDotsVertical className="size-4" />
+                                                                                </Button>
+                                                                            </DropdownMenuTrigger>
+                                                                            <DropdownMenuContent className="w-fit">
+                                                                                <DropdownMenuGroup>
+                                                                                    <DropdownMenuItem asChild>
+                                                                                        <AbsenStatistic
+                                                                                            students={students}
+                                                                                            classroom={
+                                                                                                props.classroom.name
+                                                                                            }
+                                                                                            meetingNumber={
+                                                                                                section.meeting_number
+                                                                                            }
+                                                                                            course={props.course.name}
+                                                                                        />
+                                                                                    </DropdownMenuItem>
+                                                                                </DropdownMenuGroup>
+                                                                            </DropdownMenuContent>
+                                                                        </DropdownMenu>
+                                                                    </div>
+                                                                </TableHead>
+
+                                                                <TableHead rowSpan="2" className="border">
+                                                                    Nilai Tugas Pertemuan {section.meeting_number}
+                                                                </TableHead>
+                                                            </TableRow>
+                                                            <TableRow rowSpan="4" className="border">
+                                                                {props.attendanceStatuses.map((item, i) => (
+                                                                    <TableHead key={i} className="border">
+                                                                        {item.value}
+                                                                    </TableHead>
+                                                                ))}
+                                                            </TableRow>
+                                                        </TableHeader>
+                                                        <TableBody>
+                                                            {studentsInSection.map((student, index) => (
+                                                                <TableRow key={index}>
+                                                                    <TableCell>{index + 1}</TableCell>
+                                                                    <TableCell>
+                                                                        <div className="flex items-center gap-2">
+                                                                            <Avatar>
+                                                                                <AvatarImage
+                                                                                    src={student.user.avatar}
+                                                                                />
+                                                                                <AvatarFallback>
+                                                                                    {student.user.name.substring(0, 1)}
+                                                                                </AvatarFallback>
+                                                                            </Avatar>
+                                                                            <span>{student.user.name}</span>
+                                                                        </div>
+                                                                    </TableCell>
+                                                                    <TableCell>{student.nisn}</TableCell>
+                                                                    {attendanceStatuses.map((attendance) => {
+                                                                        const currentStatus = data.attendances.find(
+                                                                            (att) => att.student_id === student.id,
+                                                                        )?.status;
+
+                                                                        const attendanced = (
+                                                                            student.attendances || []
+                                                                        ).find(
+                                                                            (att) => att.status === attendance.value,
+                                                                        );
+
+                                                                        return (
+                                                                            <TableCell
+                                                                                key={attendance.value}
+                                                                                className="border text-center"
+                                                                            >
+                                                                                {(student.attendances || []).length ===
+                                                                                0 ? (
+                                                                                    <input
+                                                                                        type="checkbox"
+                                                                                        checked={
+                                                                                            currentStatus ===
+                                                                                            attendance.value
+                                                                                        }
+                                                                                        onChange={() => {
+                                                                                            const updated =
+                                                                                                data.attendances.filter(
+                                                                                                    (att) =>
+                                                                                                        att.student_id !==
+                                                                                                        student.id,
+                                                                                                );
+
+                                                                                            if (
+                                                                                                currentStatus !==
+                                                                                                attendance.value
+                                                                                            ) {
+                                                                                                updated.push({
+                                                                                                    student_id:
+                                                                                                        student.id,
+                                                                                                    status: attendance.value,
+                                                                                                    section_id:
+                                                                                                        section.id,
+                                                                                                });
+                                                                                            }
+
+                                                                                            setData(
+                                                                                                'attendances',
+                                                                                                updated,
+                                                                                            );
+                                                                                        }}
+                                                                                    />
+                                                                                ) : (
+                                                                                    attendanced && (
+                                                                                        <IconCheck className="size-4 text-green-500" />
+                                                                                    )
+                                                                                )}
+                                                                            </TableCell>
+                                                                        );
+                                                                    })}
+
+                                                                    <TableCell colSpan="2">
+                                                                        <Input
+                                                                            type="number"
+                                                                            className="mx-auto w-[120px]"
+                                                                            value={
+                                                                                data.grades.find(
+                                                                                    (g) =>
+                                                                                        g.student_id === student.id &&
+                                                                                        g.category === 'daily_score', // tandai daily_score
+                                                                                )?.grade || ''
+                                                                            }
+                                                                            onChange={(e) => {
+                                                                                const updatedGrades =
+                                                                                    data.grades.filter(
+                                                                                        (g) =>
+                                                                                            !(
+                                                                                                g.student_id ===
+                                                                                                    student.id &&
+                                                                                                g.category ===
+                                                                                                    'daily_score'
+                                                                                            ),
+                                                                                    );
+                                                                                updatedGrades.push({
+                                                                                    student_id: student.id,
+                                                                                    course_id: props.course.id,
+                                                                                    classroom_id: props.classroom.id,
+                                                                                    semester: props.semester || 1,
+                                                                                    category: 'daily_score',
+                                                                                    grade:
+                                                                                        parseFloat(e.target.value) || 0,
+                                                                                });
+                                                                                setData('grades', updatedGrades);
+                                                                            }}
+                                                                        />
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            ))}
+                                                        </TableBody>
+                                                        <TableFooter>
+                                                            <TableRow>
+                                                                <TableCell colSpan="37">
+                                                                    <Button
+                                                                        variant="blue"
+                                                                        type="submit"
+                                                                        size="lg"
+                                                                        disabled={processing}
+                                                                    >
+                                                                        <IconCheck />
+                                                                        Simpan
+                                                                    </Button>
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        </TableFooter>
+                                                    </Table>
+                                                </form>
+                                            </>
+                                        )}
+                                    </TabsContent>
+                                );
+                            })}
+                        </Tabs>
                     </CardContent>
                 </Card>
             </div>

@@ -1,14 +1,16 @@
 import CalendarSchedule from '@/Components/CalendarSchedule';
 import HeaderTitle from '@/Components/HeaderTitle';
-import { Alert, AlertDescription } from '@/Components/ui/alert';
 import StudentLayout from '@/Layouts/StudentLayout';
-import { usePage } from '@inertiajs/react';
+import { groupSchedulesByDay } from '@/lib/utils';
+import { Link, usePage } from '@inertiajs/react';
 import { IconCalendar } from '@tabler/icons-react';
 
 export default function Index(props) {
     const schedules = props.scheduleTable;
     const days = props.days;
     const auth = usePage().props.auth.user;
+
+    const mobile_schedules = groupSchedulesByDay(props.mobile_schedules);
 
     return (
         <>
@@ -23,9 +25,24 @@ export default function Index(props) {
                 <div className="flex flex-col gap-y-8">
                     <CalendarSchedule days={days} schedules={schedules} student={auth.student} />
                     <div className="flex lg:hidden">
-                        <Alert variant="destructive">
-                            <AlertDescription>Jadwal hanya bisa dilihat dalam mode desktop</AlertDescription>
-                        </Alert>
+                        <div className="w-full space-y-4">
+                            {days.map((day) => (
+                                <Link href={'#'} key={day}>
+                                    <h3 className="my-2 text-lg font-semibold">{day}</h3>
+                                    <ul className="space-y-2">
+                                        {(mobile_schedules[day] || []).map((schedule, index) => (
+                                            <li key={index} className="rounded-md border p-3 shadow">
+                                                <p className="font-medium">{schedule.course}</p>
+                                                <p className="text-sm text-gray-600">
+                                                    {schedule.start_time} - {schedule.end_time}
+                                                </p>
+                                                <p className="text-muted-foreground">{schedule.teacher}</p>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -8,19 +8,19 @@ export default function Dashboard(props) {
     const auth = usePage().props.auth.user;
     return (
         <>
-            <div className="flex w-full flex-col pb-32">
-                <div className="mb-8 flex flex-col items-start justify-between gap-y-4 lg:flex-row lg:items-center">
+            <div className="flex flex-col w-full pb-32">
+                <div className="flex flex-col items-start justify-between mb-8 gap-y-4 lg:flex-row lg:items-center">
                     <HeaderTitle
                         title={props.page_setting.title}
                         subtitle={props.page_setting.subtitle}
                         icon={IconLayout2}
                     />
                 </div>
-                <div className="mb-8 flex flex-col">
+                <div className="flex flex-col mb-8">
                     <h2 className="text-xl font-medium leading-relaxed text-foreground">Hi, {auth.name}</h2>
                     <p className="text-sm text-muted-foreground"> Selamat datang di Sistem Informasi Akademik</p>
                 </div>
-                <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 mb-8 md:grid-cols-2 lg:grid-cols-3">
                     <CardStat
                         data={{
                             title: 'Tingkat',
@@ -70,16 +70,6 @@ export default function Dashboard(props) {
                         }}
                     >
                         <div className="text-2xl font-bold">{props.count.students}</div>
-                    </CardStat>
-                    <CardStat
-                        data={{
-                            title: 'Total Operator',
-                            icon: IconUsersGroup,
-                            background: 'text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-500',
-                            iconClassName: 'text-white',
-                        }}
-                    >
-                        <div className="text-2xl font-bold">{props.count.operators}</div>
                     </CardStat>
                 </div>
             </div>

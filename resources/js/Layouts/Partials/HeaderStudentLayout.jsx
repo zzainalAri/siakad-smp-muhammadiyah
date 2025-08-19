@@ -28,6 +28,7 @@ export default function HeaderStudentLayout({ url, auth }) {
                             <div className="relative flex h-16 items-center justify-between">
                                 <div className="flex items-center">
                                     <ApplicationLogo
+                                        href={route('students.dashboard')}
                                         bgLogo="from-orange-500 via-orange-600 to-orange-600 "
                                         colorLogo="text-white"
                                         colorText="text-white"
@@ -62,21 +63,12 @@ export default function HeaderStudentLayout({ url, auth }) {
                                                     active={url.startsWith('/students/schedules')}
                                                     title="Jadwal"
                                                 />
-                                                <NavigationMenu
-                                                    url={route('students.study-plans.index')}
-                                                    active={url.startsWith('/students/study-plans')}
-                                                    title="Kartu Rencana Study"
-                                                />
-                                                <NavigationMenu
-                                                    url={route('students.study-results.index')}
-                                                    active={url.startsWith('/students/study-results')}
-                                                    title="Kartu Hasil Studi"
-                                                />
+                                                {/*
                                                 <NavigationMenu
                                                     url={route('students.fees.index')}
                                                     active={url.startsWith('/students/fees')}
                                                     title="Pembayaran"
-                                                />
+                                                /> */}
                                             </div>
                                         </div>
                                         {/* profile dropdown */}
@@ -162,29 +154,8 @@ export default function HeaderStudentLayout({ url, auth }) {
                                 >
                                     Jadwal
                                 </Link>
-                                <Link
-                                    href={route('students.study-plans.index')}
-                                    className={cn(
-                                        url.startsWith('/students/study-plans')
-                                            ? 'bg-blue-500 text-white'
-                                            : 'text-white hover:bg-blue-500',
-                                        'block rounded-md px-3 py-2 text-base font-medium',
-                                    )}
-                                >
-                                    Kartu Rencana Studi
-                                </Link>
-                                <Link
-                                    href={route('students.study-results.index')}
-                                    className={cn(
-                                        url.startsWith('/students/study-results')
-                                            ? 'bg-blue-500 text-white'
-                                            : 'text-white hover:bg-blue-500',
-                                        'block rounded-md px-3 py-2 text-base font-medium',
-                                    )}
-                                >
-                                    Kartu Hasil Studi
-                                </Link>
-                                <Link
+
+                                {/* <Link
                                     href={route('students.fees.index')}
                                     className={cn(
                                         url.startsWith('/students/fees')
@@ -194,7 +165,7 @@ export default function HeaderStudentLayout({ url, auth }) {
                                     )}
                                 >
                                     Pembayaran
-                                </Link>
+                                </Link> */}
                             </div>
                             <div className="pb-3 pt-4">
                                 <div className="flex items-center px-5">

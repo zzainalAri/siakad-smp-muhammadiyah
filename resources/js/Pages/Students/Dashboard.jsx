@@ -1,9 +1,10 @@
 import CardStat from '@/Components/CardStat';
-import { formatToRupiah } from '@/lib/utils';
-import { IconChecks, IconCreditCard, IconX } from '@tabler/icons-react';
+import { usePage } from '@inertiajs/react';
+import { IconCreditCard, IconDoor, IconNotebook } from '@tabler/icons-react';
 import StudentLayout from '../../Layouts/StudentLayout';
 
 export default function Dashboard(props) {
+    const { user } = usePage().props.auth;
     return (
         <div className="flex flex-col gap-8">
             <div className="flex flex-col items-center justify-between gap-y-4 lg:flex-row">
@@ -17,23 +18,23 @@ export default function Dashboard(props) {
             <div className="mb-8 grid gap-4 lg:grid-cols-3">
                 <CardStat
                     data={{
-                        title: 'Kartu Rencana Studi Diterima',
-                        icon: IconChecks,
+                        title: 'Total Mata Pelajaran Anda',
+                        icon: IconNotebook,
                         background: 'text-white bg-gradient-to-r from-green-400 via-green-500 to-green-500',
                         iconClassName: 'text-white',
                     }}
                 >
-                    <div className="text-2xl font-bold">{props.count.study_plans_approved}</div>
+                    <div className="text-2xl font-bold">15</div>
                 </CardStat>
                 <CardStat
                     data={{
-                        title: 'Kartu Rencana Studi Ditolak',
-                        icon: IconX,
-                        background: 'text-white bg-gradient-to-r from-red-400 via-red-500 to-red-500',
+                        title: 'Kelas Anda',
+                        icon: IconDoor,
+                        background: 'text-white bg-gradient-to-r from-slate-400 via-slate-500 to-slate-500',
                         iconClassName: 'text-white',
                     }}
                 >
-                    <div className="text-2xl font-bold">{props.count.study_plans_reject}</div>
+                    <div className="text-xl font-bold">{user.student.classroom.name}</div>
                 </CardStat>
                 <CardStat
                     data={{
@@ -43,7 +44,7 @@ export default function Dashboard(props) {
                         iconClassName: 'text-white',
                     }}
                 >
-                    <div className="text-2xl font-bold">{formatToRupiah(props.count.total_payments)}</div>
+                    <div className="text-2xl font-bold">{20}</div>
                 </CardStat>
             </div>
         </div>

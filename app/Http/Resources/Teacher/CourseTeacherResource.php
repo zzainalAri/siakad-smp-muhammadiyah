@@ -18,17 +18,12 @@ class CourseTeacherResource extends JsonResource
             'id' => $this->id,
             'code' => $this->code,
             'name' => $this->name,
-            'credit' => $this->credit,
-            'semester' => $this->semester,
             'created_at' => $this->created_at,
-            'faculty' => $this->whenLoaded('faculty', [
-                'id' => $this->faculty?->id,
-                'name' => $this->faculty?->name,
+            'level' => $this->whenLoaded('level', [
+                'id' => $this->level?->id,
+                'name' => $this->level?->name,
             ]),
-            'academicYear' => $this->whenLoaded('academicYear', [
-                'id' => $this->academicYear?->id,
-                'name' => $this->academicYear?->name,
-            ]),
+
         ];
     }
 }

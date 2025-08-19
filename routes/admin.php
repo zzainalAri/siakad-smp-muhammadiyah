@@ -139,6 +139,7 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
         Route::post('student-registrations/create', 'store')->name('admin.student-registrations.store');
         Route::get('student-registrations/edit/{studentRegistration:nisn}', 'edit')->name('admin.student-registrations.edit');
         Route::put('student-registrations/edit/{studentRegistration:nisn}', 'update')->name('admin.student-registrations.update');
+        Route::put('student-registrations/approve/{studentRegistration:nisn}', 'approve')->name('admin.student-registrations.approve');
         Route::delete('student-registrations/destroy/{studentRegistration:nisn}', 'destroy')->name('admin.student-registrations.destroy');
     });
 

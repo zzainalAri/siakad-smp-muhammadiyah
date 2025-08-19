@@ -1,13 +1,16 @@
 import CalendarSchedule from '@/Components/CalendarSchedule';
 import HeaderTitle from '@/Components/HeaderTitle';
-import { Alert, AlertDescription } from '@/Components/ui/alert';
 import { Card, CardContent } from '@/Components/ui/card';
 import AppLayout from '@/Layouts/AppLayout';
+import { groupSchedulesByDay } from '@/lib/utils';
+import { Link } from '@inertiajs/react';
 import { IconCalendar } from '@tabler/icons-react';
 
 export default function Index(props) {
     const schedules = props.scheduleTable;
     const days = props.days;
+
+    const mobile_schedules = groupSchedulesByDay(props.mobile_schedules);
 
     return (
         <>
@@ -23,9 +26,26 @@ export default function Index(props) {
                     <CardContent className="p-4">
                         <CalendarSchedule days={days} schedules={schedules} />
                         <div className="flex lg:hidden">
-                            <Alert variant="destructive">
-                                <AlertDescription>Jadwal hanya bisa dilihat dalam mode desktop</AlertDescription>
-                            </Alert>
+                            <div className="w-full space-y-8">
+                                {days.map((day) => (
+                                    <Link href={'#'} key={day}>
+                                        <h3 className="my-2 text-lg font-semibold">{day}</h3>
+                                        <ul className="space-y-2">
+                                            {(mobile_schedules[day] || []).map((schedule, index) => (
+                                                <li key={index} className="rounded-md border p-3 shadow">
+                                                    <Link href={route('teachers.courses.show', [schedule.course_code])}>
+                                                        <p className="font-medium">{schedule.course}</p>
+                                                        <p className="text-sm font-semibold">{schedule.classroom}</p>
+                                                        <p className="text-sm text-muted-foreground">
+                                                            {schedule.start_time} - {schedule.end_time}
+                                                        </p>
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </Link>
+                                ))}
+                            </div>
                         </div>
                     </CardContent>
                 </Card>

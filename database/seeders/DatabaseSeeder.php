@@ -24,8 +24,11 @@ class DatabaseSeeder extends Seeder
         $this->call(AcademicYearSeeder::class);
         $this->call(ClassroomSeeder::class);
         $this->call(TeacherSeeder::class);
-        $this->call(StudentSeeder::class);
+        // $this->call(StudentSeeder::class);
         $this->call(CourseSeeder::class);
+        $this->call(
+            StudentRegistrationSeeder::class,
+        );
 
 
 
@@ -37,17 +40,19 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
         ]));
 
-        $operator = User::factory()->create([
-            'name' => 'Zoro',
-            'email' => 'Zoro@gmail.com',
-        ])->assignRole(Role::create([
-            'name' => 'Operator',
-        ]));
+        Role::create(['name' => 'Student']);
 
-        $operator->operator()->create([
-            'level_id' => 1,
-            'employee_number' => str()->padLeft(mt_rand(0, 999999), 6, '0')
-        ]);
+        // $operator = User::factory()->create([
+        //     'name' => 'Zoro',
+        //     'email' => 'Zoro@gmail.com',
+        // ])->assignRole(Role::create([
+        //     'name' => 'Operator',
+        // ]));
+
+        // $operator->operator()->create([
+        //     'level_id' => 1,
+        //     'employee_number' => str()->padLeft(mt_rand(0, 999999), 6, '0')
+        // ]);
 
 
         $level_1 = Level::where('name', 'Kelas 7')->first();

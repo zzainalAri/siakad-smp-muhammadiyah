@@ -19,6 +19,7 @@ export default function Create(props) {
 
     const { data, setData, post, errors, processing, reset } = useForm({
         name: props.student.name ?? '',
+        email: props.student.email ?? '',
         nisn: props.student.nisn ?? '',
         birth_place: props.student.birth_place ?? '',
         birth_date: props.student.birth_date ?? null,
@@ -26,10 +27,14 @@ export default function Create(props) {
         phone: props.student.phone ?? '',
         previous_school: props.student.previous_school ?? '',
         gender: props.student.gender ?? null,
+        religion: props.student.religion ?? '',
+        mother_name: props.student.mother_name ?? '',
+        mother_nik: props.student.mother_nik ?? '',
+        father_name: props.student.father_name ?? '',
+        father_nik: props.student.father_nik ?? '',
+        no_kk: props.student.no_kk ?? '',
         nik: props.student.nik ?? '',
-        status: props.student.status ?? null,
-        doc_kk: null,
-        doc_akta: null,
+        accpepted_date: null,
         _method: props.page_setting.method,
     });
 
@@ -61,7 +66,7 @@ export default function Create(props) {
                         icon={IconUsers}
                     />
                     <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
-                        <Link href={route('admin.students.index')}>
+                        <Link href={route('admin.student-registrations.index')}>
                             <IconArrowLeft className="size-4" /> Kembali
                         </Link>
                     </Button>
@@ -70,17 +75,29 @@ export default function Create(props) {
                     <CardContent className="p-6">
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
-                                <div className="col-span-full">
-                                    <Label htmlFor="name">Nama Siswa</Label>
+                                <div className="col-span-2">
+                                    <Label htmlFor="name">Nama Calon Siswa</Label>
                                     <Input
                                         type="text"
                                         name="name"
                                         id="name"
-                                        placeholder="Masukkan nama Siswa"
+                                        placeholder="Masukkan nama calon Siswa"
                                         value={data.name}
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
                                     {errors.name && <InputError message={errors.name} />}
+                                </div>
+                                <div className="col-span-2">
+                                    <Label htmlFor="email">Email Calon Siswa</Label>
+                                    <Input
+                                        type="text"
+                                        name="email"
+                                        id="email"
+                                        placeholder="Masukkan nama calon Siswa"
+                                        value={data.email}
+                                        onChange={(e) => setData(e.target.name, e.target.value)}
+                                    />
+                                    {errors.email && <InputError message={errors.email} />}
                                 </div>
                                 <div className="col-span-2">
                                     <Label htmlFor="nisn">Nisn</Label>
@@ -95,6 +112,53 @@ export default function Create(props) {
                                     {errors.nisn && <InputError message={errors.nisn} />}
                                 </div>
                                 <div className="col-span-2">
+                                    <Label htmlFor="nik">NIK Calon Siswa</Label>
+                                    <Input
+                                        type="text"
+                                        name="nik"
+                                        id="nik"
+                                        placeholder="Masukkan nik"
+                                        value={data.nik}
+                                        onChange={(e) => setData(e.target.name, e.target.value)}
+                                    />
+                                    {errors.nik && <InputError message={errors.nik} />}
+                                </div>
+                                <div className="col-span-full">
+                                    <Label htmlFor="no_kk">Nomer Kartu Keluarga</Label>
+                                    <Input
+                                        type="text"
+                                        name="no_kk"
+                                        id="no_kk"
+                                        placeholder="Masukkan no kk"
+                                        value={data.no_kk}
+                                        onChange={(e) => setData(e.target.name, e.target.value)}
+                                    />
+                                    {errors.no_kk && <InputError message={errors.no_kk} />}
+                                </div>
+                                <div className="col-span-full">
+                                    <Label htmlFor="religion">Agama</Label>
+                                    <Select
+                                        defaultValue={data.religion}
+                                        onValueChange={(value) => setData('religion', value)}
+                                        id="religion"
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue>
+                                                {props.religions.find((religion) => religion.value == data.religion)
+                                                    ?.label ?? 'Pilih Agama'}
+                                            </SelectValue>
+                                            <SelectContent>
+                                                {props.religions.map((religion, index) => (
+                                                    <SelectItem key={index} value={religion.value}>
+                                                        {religion.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </SelectTrigger>
+                                    </Select>
+                                    {errors.religion && <InputError message={errors.religion} />}
+                                </div>
+                                <div className="col-span-full">
                                     <Label htmlFor="previous_school">Nama Sekolah Dasar Sebelumnya</Label>
                                     <Input
                                         type="text"
@@ -176,70 +240,53 @@ export default function Create(props) {
                                     </Select>
                                     {errors.gender && <InputError message={errors.gender} />}
                                 </div>
-                                <div className="col-span-full">
-                                    <Label htmlFor="nik">NIK</Label>
+                                <div className="col-span-2">
+                                    <Label htmlFor="mother_name">Nama Ibu</Label>
                                     <Input
                                         type="text"
-                                        name="nik"
-                                        id="nik"
-                                        placeholder="Masukkan nik"
-                                        value={data.nik}
+                                        name="mother_name"
+                                        id="mother_name"
+                                        placeholder="Masukkan Nama Ibu"
+                                        value={data.mother_name}
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
-                                    {errors.nik && <InputError message={errors.nik} />}
+                                    {errors.mother_name && <InputError message={errors.mother_name} />}
                                 </div>
                                 <div className="col-span-2">
-                                    <Label htmlFor="doc_kk">Kartu Keluarga</Label>
+                                    <Label htmlFor="mother_nik">NIK Ibu</Label>
                                     <Input
-                                        type="file"
-                                        accept="image/*"
-                                        name="doc_kk"
-                                        id="doc_kk"
-                                        ref={fileInputKk}
-                                        onChange={(e) => setData(e.target.name, e.target.files[0])}
+                                        type="text"
+                                        name="mother_nik"
+                                        id="mother_nik"
+                                        placeholder="Masukkan nik ibu"
+                                        value={data.mother_nik}
+                                        onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
-                                    <p className="my-1 text-xs text-muted-foreground">
-                                        Pastikan foto kartu keluarga terlihat jelas. hanya mendukung jpg,jpeg, dan png
-                                    </p>
-                                    {errors.doc_kk && <InputError message={errors.doc_kk} />}
+                                    {errors.mother_nik && <InputError message={errors.mother_nik} />}
                                 </div>
                                 <div className="col-span-2">
-                                    <Label htmlFor="doc_kk">Akta Kelahiran</Label>
+                                    <Label htmlFor="father_name">Nama Ayah</Label>
                                     <Input
-                                        type="file"
-                                        accept="image/*"
-                                        name="doc_akta"
-                                        id="doc_akta"
-                                        ref={fileInputAkta}
-                                        onChange={(e) => setData(e.target.name, e.target.files[0])}
+                                        type="text"
+                                        name="father_name"
+                                        id="father_name"
+                                        placeholder="Masukkan Nama Ibu"
+                                        value={data.father_name}
+                                        onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
-                                    <p className="my-1 text-xs text-muted-foreground">
-                                        Pastikan foto akta Kelahiran terlihat jelas. hanya mendukung jpg,jpeg, dan png
-                                    </p>
-                                    {errors.doc_akta && <InputError message={errors.doc_akta} />}
+                                    {errors.father_name && <InputError message={errors.father_name} />}
                                 </div>
-                                <div className="col-span-full">
-                                    <Label htmlFor="status">Status</Label>
-                                    <Select
-                                        defaultValue={data.status}
-                                        onValueChange={(value) => setData('status', value)}
-                                        id="status"
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue>
-                                                {props.statuses.find((status) => status.value == data.status)?.label ??
-                                                    'Pilih Status'}
-                                            </SelectValue>
-                                            <SelectContent>
-                                                {props.statuses.map((status, index) => (
-                                                    <SelectItem key={index} value={status.value}>
-                                                        {status.label}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </SelectTrigger>
-                                    </Select>
-                                    {errors.status && <InputError message={errors.status} />}
+                                <div className="col-span-2">
+                                    <Label htmlFor="father_nik">NIK Ayah</Label>
+                                    <Input
+                                        type="text"
+                                        name="father_nik"
+                                        id="father_nik"
+                                        placeholder="Masukkan nik ibu"
+                                        value={data.father_nik}
+                                        onChange={(e) => setData(e.target.name, e.target.value)}
+                                    />
+                                    {errors.father_nik && <InputError message={errors.father_nik} />}
                                 </div>
                             </div>
                             <div className="mt-8 flex flex-col gap-2 lg:flex-row lg:justify-end">

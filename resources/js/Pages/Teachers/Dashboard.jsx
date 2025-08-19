@@ -23,7 +23,7 @@ export default function Dashboard(props) {
                 <div className="mb-8 grid gap-4 lg:grid-cols-3">
                     <CardStat
                         data={{
-                            title: 'Total Matakuliah',
+                            title: 'Total Mata Pelajaran yang Anda Ajar',
                             icon: IconBooks,
                             background: 'text-white bg-gradient-to-r from-red-400 via-red-500 to-red-500',
                             iconClassName: 'text-white',
@@ -33,7 +33,7 @@ export default function Dashboard(props) {
                     </CardStat>
                     <CardStat
                         data={{
-                            title: 'Total Kelas',
+                            title: 'Total Kelas yang Anda Ajar',
                             icon: IconDoor,
                             background: 'text-white bg-gradient-to-r from-blue-400 via-blue-500 to-blue-500',
                             iconClassName: 'text-white',
@@ -43,7 +43,7 @@ export default function Dashboard(props) {
                     </CardStat>
                     <CardStat
                         data={{
-                            title: 'Total Jadwal',
+                            title: 'Total Jadwal Anda',
                             icon: IconCalendar,
                             background: 'text-white bg-gradient-to-r from-slate-400 via-slate-500 to-slate-500',
                             iconClassName: 'text-white',
