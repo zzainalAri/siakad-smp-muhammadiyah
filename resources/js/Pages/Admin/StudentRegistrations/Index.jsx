@@ -373,19 +373,19 @@ export default function Index(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {student.accepted_date
-                                                    ? formatDateIndo(student.created_at)
+                                                    ? formatDateIndo(student.accepted_date)
                                                     : 'Belum Diterima'}
                                             </TableCell>
                                             <TableCell>{formatDateIndo(student.created_at)}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-x-1">
-                                                    {(student.status == 'Menunggu Konfirmasi' ||
-                                                        student.status == 'Ditolak') && (
+                                                    {student.status == 'Menunggu Konfirmasi' && (
                                                         <Approved
                                                             name={student.name}
                                                             classrooms={props.classrooms}
                                                             status={student.status}
                                                             statuses={props.statuses}
+                                                            rejected_description={student.rejected_description}
                                                             action={route('admin.student-registrations.approve', [
                                                                 student,
                                                             ])}

@@ -8,13 +8,15 @@ import { useForm } from '@inertiajs/react';
 import { IconChecklist } from '@tabler/icons-react';
 import { toast } from 'sonner';
 
-export default function Approved({ name, status, statuses, action, classrooms }) {
+export default function Approved({ name, status, statuses, action, classrooms, rejected_description }) {
     const { data, setData, errors, processing, put } = useForm({
         status: status ?? 'Menunggu Konfirmasi',
-        rejected_description: '',
+        rejected_description: rejected_description ?? '',
         classroom_id: null,
         _method: 'PUT',
     });
+
+    console.log(data);
 
     const onHandleSubmit = (e) => {
         e.preventDefault();
@@ -47,7 +49,14 @@ export default function Approved({ name, status, statuses, action, classrooms })
                 <form className="mt-6 space-y-4" onSubmit={onHandleSubmit}>
                     <div className="grid w-full items-center gap-1.5">
                         <Label htmlFor="status">Status</Label>
-                        <Select defaultValue={data.status} onValueChange={(value) => setData('status', value)}>
+                        <Select
+                            defaultValue={data.status}
+                            onValueChange={(value) => {
+                                setData('status', value);
+                                setData('classroom_id', null);
+                                setData('rejected_description', '');
+                            }}
+                        >
                             <SelectTrigger>
                                 <SelectValue>
                                     {statuses.find((status) => status.value == data.status)?.label ?? 'Pilih Status'}
@@ -90,6 +99,7 @@ export default function Approved({ name, status, statuses, action, classrooms })
                             <Label htmlFor="rejected_description">Alasan Ditolak</Label>
                             <Textarea
                                 name="rejected_description"
+                                maxLength="255"
                                 id="rejected_description"
                                 onChange={(e) => setData(e.target.name, e.target.value)}
                                 placeholder="Masukkan keterangan..."
