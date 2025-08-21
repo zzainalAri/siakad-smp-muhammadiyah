@@ -21,6 +21,11 @@ class AcademicYear extends Model
         'is_active' => 'boolean',
     ];
 
+    public function studyResults()
+    {
+        return $this->hasMany(StudyResult::class);
+    }
+
     public function scopeFilter(Builder $query, $filters)
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {

@@ -17,4 +17,9 @@ class Section extends Model
     {
         return $this->hasMany(Attendance::class);
     }
+
+    public function grades()
+    {
+        return $this->hasMany(Grade::class);
+    }
 }
