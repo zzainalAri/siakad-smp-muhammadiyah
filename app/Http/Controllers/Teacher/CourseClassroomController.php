@@ -43,6 +43,7 @@ class CourseClassroomController extends Controller
             ->with([
                 'user',
                 'attendances' => fn($query) => $query->where('section_id', $section?->id),
+                'grades' => fn($query) => $query->with(['section'])->where('course_id', $course->id)->where('section_id', $section->id)
             ])
             ->where('level_id', $classroom->level_id)
             ->where('classroom_id', $classroom->id)
@@ -140,7 +141,7 @@ class CourseClassroomController extends Controller
         try {
             DB::beginTransaction();
 
-            $schedule = Schedule::where('classroom_id', $classroom->id)->where('course_id', $course->id)->where('level_id', $course->level->id)->first();
+
 
 
             foreach ($request->attendances as $att) {
@@ -153,6 +154,22 @@ class CourseClassroomController extends Controller
                         'status' => $att['status'],
                         'updated_at' => now(),
                         'created_at' => now(),
+                    ]
+                );
+            }
+
+            foreach ($request->grades as $grade) {
+                Grade::updateOrInsert(
+                    [
+                        'student_id' => $grade['student_id'],
+                        'section_id' => $grade['section_id'],
+                        'course_id' => $grade['course_id'],
+                        'category'  => $grade['category'],
+                    ],
+                    [
+                        'grade' => $grade['grade'],
+                        'created_at' => now(),
+                        'updated_at' => now(),
                     ]
                 );
             }
