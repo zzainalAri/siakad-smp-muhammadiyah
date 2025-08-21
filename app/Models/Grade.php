@@ -18,8 +18,8 @@ class Grade extends Model
         return $this->belongsTo(Student::class);
     }
 
-    public function classroom()
+    public function section()
     {
-        return $this->belongsTo(Classroom::class);
+        return $this->belongsTo(Section::class);
     }
 }

@@ -27,55 +27,53 @@ class CourseClassroomController extends Controller
     use CalculateFinalScore;
 
     public function index(Course $course, Classroom $classroom)
-
     {
+        $schedule = Schedule::query()
+            ->where('classroom_id', $classroom->id)
+            ->where('course_id', $course->id)
+            ->where('level_id', $course->level_id)
+            ->firstOrFail();
 
-
-        $schedule = Schedule::where('classroom_id', $classroom->id)->where('course_id', $course->id)->where('level_id', $course->level->id)->first();
-
-        $section = Section::where('schedule_id', $schedule->id)
-            ->where('meeting_number',  request()->get('meetingNumber', 1))
+        $section = Section::query()
+            ->where('schedule_id', $schedule->id)
+            ->where('meeting_number', request()->get('meetingNumber', 1))
             ->first();
 
-
-        $students = Student::with(['user', 'attendances' => fn($query) => $query->where('section_id', $section->id)])
+        $students = Student::query()
+            ->with([
+                'user',
+                'attendances' => fn($query) => $query->where('section_id', $section?->id),
+                'grades' => fn($query) => $query->with(['section'])->where('course_id', $course->id)->where('section_id', $section->id)
+            ])
             ->where('level_id', $classroom->level_id)
             ->where('classroom_id', $classroom->id)
             ->filter(request()->only(['search']))
-            ->whereHas('user', function ($query) {
-                $query->whereHas('roles', fn($query) => $query->where('name', 'Student'));
-            })
+            ->whereHas('user.roles', fn($query) => $query->where('name', 'Student'))
             ->get();
 
-
-
-
-
-
-        $sections = Section::where('schedule_id', $schedule->id)->get();
-
-
-
-
+        $sections = Section::query()
+            ->where('schedule_id', $schedule->id)
+            ->get();
 
         return inertia('Teachers/Classrooms/Index', [
             'page_setting' => [
-                'title' => "Kelas {$classroom->name} - Mata Pelajaran {$course->name}",
+                'title'    => "Kelas {$classroom->name} - Mata Pelajaran {$course->name}",
                 'subtitle' => 'Menampilkan data Siswa',
-                'method' => 'PUT',
-                'action' => route('teachers.classrooms.sync', [$course, $classroom]),
-
+                'method'   => 'PUT',
+                'action'   => route('teachers.classrooms.sync', [$course, $classroom]),
             ],
-            'students' => CourseStudentClassroomResource::collection($students),
-            'sections' => $sections,
-            'course' => $course,
-            'classroom' => $classroom,
+            'students'          => CourseStudentClassroomResource::collection($students),
+            'sections'          => $sections,
+            'course'            => $course,
+            'classroom'         => $classroom,
             'attendanceStatuses' => AttendenceStatus::options(),
-            'state' => [
+            'state'             => [
                 'search' => request()->search ?? '',
-            ]
+            ],
         ]);
     }
+
+
 
     public function calculateGPA($studentId)
     {
@@ -143,9 +141,8 @@ class CourseClassroomController extends Controller
         try {
             DB::beginTransaction();
 
-            $schedule = Schedule::where('classroom_id', $classroom->id)->where('course_id', $course->id)->where('level_id', $course->level->id)->first();
 
-            $section = Section::where('schedule_id', $schedule->id)->where('meeting_number', $request->meeting_number)->first();
+
 
             foreach ($request->attendances as $att) {
                 Attendance::updateOrInsert(
@@ -157,6 +154,22 @@ class CourseClassroomController extends Controller
                         'status' => $att['status'],
                         'updated_at' => now(),
                         'created_at' => now(),
+                    ]
+                );
+            }
+
+            foreach ($request->grades as $grade) {
+                Grade::updateOrInsert(
+                    [
+                        'student_id' => $grade['student_id'],
+                        'section_id' => $grade['section_id'],
+                        'course_id' => $grade['course_id'],
+                        'category'  => $grade['category'],
+                    ],
+                    [
+                        'grade' => $grade['grade'],
+                        'created_at' => now(),
+                        'updated_at' => now(),
                     ]
                 );
             }

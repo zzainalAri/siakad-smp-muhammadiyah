@@ -35,10 +35,9 @@ export default function Index(props) {
         _method: props.page_setting.method,
     });
 
-    console.log(props.students);
-
     const onHandleSubmit = (e) => {
         e.preventDefault();
+
         post(props.page_setting.action, {
             preserveScroll: true,
             preserveState: true,
@@ -49,6 +48,12 @@ export default function Index(props) {
             },
         });
     };
+
+    const getGradeStudent = (student_id, grades, category) => {
+        return grades.find((grade) => grade.student_id === student_id && grade.category === category);
+    };
+
+    console.log(data);
 
     UseFilter({
         route: route('teachers.classrooms.index', [props.course, props.classroom]),
@@ -177,7 +182,7 @@ export default function Index(props) {
                                                                     </div>
                                                                 </TableHead>
 
-                                                                <TableHead rowSpan="2" className="border">
+                                                                <TableHead rowSpan="2" className="border text-center">
                                                                     Nilai Tugas Pertemuan {section.meeting_number}
                                                                 </TableHead>
                                                             </TableRow>
@@ -267,40 +272,54 @@ export default function Index(props) {
                                                                         );
                                                                     })}
 
-                                                                    <TableCell colSpan="2">
-                                                                        <Input
-                                                                            type="number"
-                                                                            className="mx-auto w-[120px]"
-                                                                            value={
-                                                                                data.grades.find(
-                                                                                    (g) =>
-                                                                                        g.student_id === student.id &&
-                                                                                        g.category === 'daily_score', // tandai daily_score
-                                                                                )?.grade || ''
-                                                                            }
-                                                                            onChange={(e) => {
-                                                                                const updatedGrades =
-                                                                                    data.grades.filter(
+                                                                    <TableCell colSpan="2" className="text-center">
+                                                                        {getGradeStudent(
+                                                                            student.id,
+                                                                            student.grades,
+                                                                            'task',
+                                                                        ) ? (
+                                                                            getGradeStudent(
+                                                                                student.id,
+                                                                                student.grades,
+                                                                                'task',
+                                                                            ).grade
+                                                                        ) : (
+                                                                            <Input
+                                                                                type="number"
+                                                                                className="mx-auto w-[120px]"
+                                                                                value={
+                                                                                    data.grades.find(
                                                                                         (g) =>
-                                                                                            !(
-                                                                                                g.student_id ===
-                                                                                                    student.id &&
-                                                                                                g.category ===
-                                                                                                    'daily_score'
-                                                                                            ),
-                                                                                    );
-                                                                                updatedGrades.push({
-                                                                                    student_id: student.id,
-                                                                                    course_id: props.course.id,
-                                                                                    classroom_id: props.classroom.id,
-                                                                                    semester: props.semester || 1,
-                                                                                    category: 'daily_score',
-                                                                                    grade:
-                                                                                        parseFloat(e.target.value) || 0,
-                                                                                });
-                                                                                setData('grades', updatedGrades);
-                                                                            }}
-                                                                        />
+                                                                                            g.student_id ===
+                                                                                                student.id &&
+                                                                                            g.category === 'task',
+                                                                                    )?.grade || ''
+                                                                                }
+                                                                                onChange={(e) => {
+                                                                                    const updatedGrades =
+                                                                                        data.grades.filter(
+                                                                                            (g) =>
+                                                                                                !(
+                                                                                                    g.student_id ===
+                                                                                                        student.id &&
+                                                                                                    g.category ===
+                                                                                                        'task'
+                                                                                                ),
+                                                                                        );
+                                                                                    updatedGrades.push({
+                                                                                        student_id: student.id,
+                                                                                        course_id: props.course.id,
+                                                                                        section_id: section.id,
+                                                                                        category: 'task',
+                                                                                        grade:
+                                                                                            parseFloat(
+                                                                                                e.target.value,
+                                                                                            ) || 0,
+                                                                                    });
+                                                                                    setData('grades', updatedGrades);
+                                                                                }}
+                                                                            />
+                                                                        )}
                                                                     </TableCell>
                                                                 </TableRow>
                                                             ))}

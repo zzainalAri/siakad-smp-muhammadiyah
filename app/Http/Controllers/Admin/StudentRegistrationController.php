@@ -181,16 +181,33 @@ class StudentRegistrationController extends Controller
 
     public function approve(Request $request, StudentRegistration $studentRegistration)
     {
-        $classroom = Classroom::where('id', $request->classroom_id)->with('level')->first();
 
-        DB::beginTransaction();
         try {
+            if ($request->status == StudentRegistrationStatus::APPROVED->value && !$request->classroom_id) {
+                flashMessage('Kelas wajib dipilih', 'error');
+                return back();
+            }
+
+            if ($request->status != StudentRegistrationStatus::APPROVED->value) {
+                $studentRegistration->update([
+                    'status' => $request->status,
+                    'rejected_description' => $request->rejected_description
+
+                ]);
+                flashMessage(MessageType::UPDATED->message('Status PPDB'));
+                return back();
+            }
+
+            DB::beginTransaction();
 
             $studentRegistration->update([
                 'status' => StudentRegistrationStatus::APPROVED->value,
-                'rejected_description' => $request->rejected_description
+                'accepted_date' => now(),
 
             ]);
+
+            $classroom = Classroom::where('id', $request->classroom_id)->with('level')->first();
+
 
             $user = User::create([
                 'name' => $studentRegistration->name,
@@ -215,7 +232,7 @@ class StudentRegistrationController extends Controller
 
 
             flashMessage(MessageType::UPDATED->message('Status PPDB'));
-            return to_route('admin.student-registrations.index');
+            return back();
         } catch (Throwable $e) {
             DB::rollBack();
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');

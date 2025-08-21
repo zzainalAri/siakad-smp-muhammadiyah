@@ -33,6 +33,7 @@ class StudentRegistrationResource extends JsonResource
             'mother_nik' => $this->mother_nik,
             'father_nik' => $this->father_nik,
             'previous_school' => $this->previous_school,
+            'rejected_description' => $this->rejected_description,
             'status' => $this->status,
             'created_at' => $this->created_at,
             'accepted_date' => $this->accepted_date,

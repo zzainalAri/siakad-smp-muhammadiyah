@@ -18,7 +18,13 @@ class CourseGradeResource extends JsonResource
             'id' => $this->id,
             'student_id' => $this->student_id,
             'grade' => $this->grade,
-            'section' => $this->section,
+            'section_id' => $this->section_id,
+            'section' => $this->whenLoaded('section', [
+                'id' => $this->section?->id,
+                'meeting_number' => $this->section?->meeting_number,
+                'meeting_date' => $this->section?->meeting_date,
+                'schedule_id' => $this->section?->schedule_id,
+            ]),
             'category' => $this->category,
             'created_at' => $this->created_at,
         ];
