@@ -6,6 +6,7 @@ use App\Enums\Gender;
 use App\Enums\MessageType;
 use App\Enums\Religion;
 use App\Enums\StudentRegistrationStatus;
+use App\Enums\StudentStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StudentRegistrationRequest;
 use App\Http\Resources\Admin\StudentRegistrationResource;
@@ -220,7 +221,7 @@ class StudentRegistrationController extends Controller
                 'level_id' => $classroom->level->id,
                 'nisn' => $studentRegistration->nisn,
                 'gender' => $studentRegistration->gender,
-                'status' => $studentRegistration->status,
+                'status' => StudentStatus::ACTIVE->value,
                 'batch' => now()->year,
                 'address' => $studentRegistration->address,
                 'student_registration_id' => $studentRegistration->id,

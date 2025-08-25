@@ -7,7 +7,7 @@ const PaginationLink = ({ className, isActive, size = 'icon', href, ...props }) 
     if (!href) {
         return (
             <span className={cn('cursor-not-allowed', className)} {...props}>
-                Disabled
+                ...
             </span>
         );
     }

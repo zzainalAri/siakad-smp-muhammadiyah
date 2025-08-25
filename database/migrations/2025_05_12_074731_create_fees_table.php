@@ -15,10 +15,14 @@ return new class extends Migration
         Schema::create('fees', function (Blueprint $table) {
             $table->id();
             $table->string('fee_code');
-            $table->unsignedInteger('semester');
-            $table->string('status')->default(FeeStatus::PENDING->value);
+            $table->string('status')->default(FeeStatus::UNPAID->value);
+            $table->string('semester');
+            $table->unsignedInteger('amount');
+            $table->date('billing_date')->nullable();
+            $table->date('due_date');
             $table->foreignId('academic_year_id')->constrained()->cascadeOnDelete();
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('fee_group_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

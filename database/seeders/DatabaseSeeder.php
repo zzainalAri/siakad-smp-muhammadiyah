@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AcademicYearSeeder::class);
         $this->call(ClassroomSeeder::class);
         $this->call(TeacherSeeder::class);
-        // $this->call(StudentSeeder::class);
+        $this->call(StudentSeeder::class);
         $this->call(CourseSeeder::class);
         $this->call(
             StudentRegistrationSeeder::class,
@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
         ]));
 
-        Role::create(['name' => 'Student']);
+        // Role::create(['name' => 'Student']);
 
         // $operator = User::factory()->create([
         //     'name' => 'Zoro',

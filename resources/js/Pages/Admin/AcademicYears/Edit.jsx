@@ -15,8 +15,10 @@ import { toast } from 'sonner';
 export default function Edit(props) {
     const { data, setData, post, errors, processing, reset } = useForm({
         name: props.academicYear.name ?? '',
-        start_date: props.academicYear.start_date ?? '',
-        end_date: props.academicYear.end_date ?? '',
+        start_date: props.academicYear.start_date
+            ? new Date(props.academicYear.start_date).toISOString().split('T')[0]
+            : '',
+        end_date: props.academicYear.end_date ? new Date(props.academicYear.end_date).toISOString().split('T')[0] : '',
         semester: props.academicYear.semester ?? null,
         is_active: props.academicYear.is_active ?? false,
         _method: props.page_setting.method,
