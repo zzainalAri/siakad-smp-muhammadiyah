@@ -15,10 +15,11 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->string('transaction_code');
-            $table->date('payment_date');
+            $table->date('payment_date')->nullable();
             $table->unsignedInteger('amount_paid');
             $table->string('status')->default(PaymentStatus::PENDING->value);
             $table->foreignId('fee_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('student_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

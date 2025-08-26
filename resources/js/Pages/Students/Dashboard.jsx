@@ -44,7 +44,7 @@ export default function Dashboard(props) {
                         iconClassName: 'text-white',
                     }}
                 >
-                    <div className="text-2xl font-bold">{20}</div>
+                    <div className="text-2xl font-bold">{props.count.total_payments}</div>
                 </CardStat>
             </div>
         </div>

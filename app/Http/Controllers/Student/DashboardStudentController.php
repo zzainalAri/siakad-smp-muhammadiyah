@@ -21,7 +21,7 @@ class DashboardStudentController extends Controller
                 'title' => 'Dashboard',
             ],
             'count' => [
-                'total_payments' => Fee::query()->where('student_id', auth()->user()->student->id)->where('status', FeeStatus::SUCCESS->value)
+                'total_payments' => Fee::query()->where('student_id', auth()->user()->student->id)->where('status', FeeStatus::PAID->value)
                     ->with('feeGroup')->get()->sum(fn($fee) => $fee->feeGroup->amount),
             ]
         ]);

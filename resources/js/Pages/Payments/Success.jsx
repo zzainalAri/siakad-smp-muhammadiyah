@@ -11,7 +11,7 @@ export default function Success() {
                 <div className="mx-auto max-w-sm">
                     <Card>
                         <CardHeader className="flex flex-row items-center gap-x-2">
-                            <IconCircleCheck class="text-green-500" />
+                            <IconCircleCheck className="text-green-500" />
                             <div>
                                 <CardTitle>Berhasil</CardTitle>
                                 <CardDescription>Pembayaran Telah Sukses Diproses</CardDescription>
@@ -19,12 +19,12 @@ export default function Success() {
                         </CardHeader>
                         <CardContent className="flex flex-col gap-y-6">
                             <p className="text-start text-foreground">
-                                Terimakasih telah menyelesaikan pembayaran denda. Kami dengan senang hati mengkonfirmasi
-                                bahwa transaksi anda berhasil kami proses.
+                                🎉 Pembayaran SPP berhasil! Terima kasih, data transaksi Anda sudah tercatat di sistem
+                                kami.
                             </p>
 
                             <Button asChild variant="blue">
-                                <Link href={route('dashboard')}>Kembali</Link>
+                                <Link href={route('students.fees.index')}>Kembali</Link>
                             </Button>
                         </CardContent>
                     </Card>

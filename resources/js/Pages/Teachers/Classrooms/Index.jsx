@@ -53,8 +53,6 @@ export default function Index(props) {
         return grades.find((grade) => grade.student_id === student_id && grade.category === category);
     };
 
-    console.log(data);
-
     UseFilter({
         route: route('teachers.classrooms.index', [props.course, props.classroom]),
         values: params,

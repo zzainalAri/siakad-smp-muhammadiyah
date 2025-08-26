@@ -155,7 +155,7 @@ export default function Index(props) {
                                                 <div className="flex items-center gap-x-1">
                                                     <Fees
                                                         fees={student.fees}
-                                                        name={student.name}
+                                                        name={student.user?.name}
                                                         total_fees={student.total_fees}
                                                         paid_fees_sum={student.paid_fees_sum}
                                                         unpaid_fees_sum={student.unpaid_fees_sum}

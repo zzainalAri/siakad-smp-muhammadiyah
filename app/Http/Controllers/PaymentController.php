@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Enums\FeeStatus;
+use App\Enums\PaymentStatus;
 use App\Models\Fee;
+use App\Models\Payment;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Midtrans\Config;
 use Midtrans\Snap;
 
@@ -20,7 +23,7 @@ class PaymentController extends Controller
 
         $params = [
             'transaction_details' => [
-                'order_id' => $request->fee_code,
+                'order_id' => $request->order_id,
                 'gross_amount' => $request->gross_amount
             ],
             'customer_details' => [
@@ -33,16 +36,13 @@ class PaymentController extends Controller
 
 
         try {
-            Fee::updateOrCreate([
-                'student_id' => auth()->user()->student?->id,
-                'academic_year_id' => activeAcademicYear()->id,
-                'semester' => auth()->user()->student->semester
+            Payment::updateOrCreate([
+                'student_id' => Auth::user()->student?->id,
+                'fee_id' => $request->fee_id,
             ], [
-                'fee_code' => $request->fee_code,
-                'student_id' => auth()->user()->student?->id,
-                'semester' => auth()->user()->student?->semester,
-                'fee_group_id' => auth()->user()->student?->fee_group_id,
-                'academic_year_id' => activeAcademicYear()->id,
+                'transaction_code' => $request->order_id,
+                'student_id' => Auth::user()->student?->id,
+                'amount_paid' => $request->gross_amount,
             ]);
 
             $snapToken = Snap::getSnapToken($params);
@@ -60,7 +60,12 @@ class PaymentController extends Controller
     public function callback(Request $request)
     {
         $serverKey = config('services.midtrans.server_key');
-        $signatureKey = signatureMidtrans($request->order_id, $request->status_code, $request->gross_amount, $serverKey);
+        $signatureKey = signatureMidtrans(
+            $request->order_id,
+            $request->status_code,
+            $request->gross_amount,
+            $serverKey
+        );
 
         if ($request->signature_key !== $signatureKey) {
             return response()->json([
@@ -68,12 +73,12 @@ class PaymentController extends Controller
             ], 401);
         }
 
-        $fee = Fee::query()
-            ->where('fee_code', $request->order_id)
+        $payment = Payment::query()
+            ->where('transaction_code', $request->order_id)
             ->first();
 
 
-        if (!$fee) {
+        if (!$payment) {
             return response()->json([
                 'message' => 'Pembayaran tidak ditemukan'
             ], 404);
@@ -81,40 +86,57 @@ class PaymentController extends Controller
 
         switch ($request->transaction_status) {
             case 'settlement':
-                $fee->status = FeeStatus::SUCCESS->value;
-                $fee->save();
+                $payment->status = PaymentStatus::SUCCESS->value;
+                $payment->fee->update(['status' => FeeStatus::PAID->value]);
+                $payment->payment_date = now();
+                $payment->save();
+
+
 
                 return response()->json([
                     'message' => 'Berhasil melakukan pembayaran'
                 ]);
                 break;
             case 'capture':
-                $fee->status = FeeStatus::SUCCESS->value;
-                $fee->save();
+                $payment->status = PaymentStatus::SUCCESS->value;
+                $payment->fee->update(['status' => FeeStatus::PAID->value]);
+                $payment->payment_date = now();
+                $payment->save();
+
 
                 return response()->json([
                     'message' => 'Berhasil melakukan pembayaran'
                 ]);
                 break;
             case 'pending':
-                $fee->status = FeeStatus::PENDING->value;
-                $fee->save();
+                $payment->status = PaymentStatus::PENDING->value;
+                $payment->fee->update(['status' => FeeStatus::UNPAID->value]);
+                $payment->save();
+
+
 
                 return response()->json([
                     'message' => 'Pembayaran Tertunda'
                 ]);
                 break;
             case 'expire':
-                $fee->status = FeeStatus::FAILED->value;
-                $fee->save();
+                $payment->status = PaymentStatus::FAILED->value;
+                $payment->fee->update(['status' => FeeStatus::UNPAID->value]);
+                $payment->save();
+
+
+
 
                 return response()->json([
                     'message' => 'Pembayaran Kadaluarsa'
                 ]);
                 break;
             case 'cancel':
-                $fee->status = FeeStatus::FAILED->value;
-                $fee->save();
+                $payment->status = PaymentStatus::FAILED->value;
+                $payment->fee->update(['status' => FeeStatus::UNPAID->value]);
+                $payment->save();
+
+
 
                 return response()->json([
                     'message' => 'Berhasil Pembayaran Dibatalkan'
