@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://f266d083d9b1.ngrok-free.app'),
 
     /*
     |--------------------------------------------------------------------------

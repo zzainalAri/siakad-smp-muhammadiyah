@@ -1,7 +1,9 @@
 import EmptyState from '@/Components/EmptyState';
+import Fees from '@/Components/Fees';
 import HeaderTitle from '@/Components/HeaderTitle';
 import PaginationTable from '@/Components/PaginationTable';
 import ShowFilter from '@/Components/ShowFilter';
+import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
@@ -9,12 +11,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
-import { formatDateIndo } from '@/lib/utils';
-import { IconArrowsDownUp, IconMoneybag, IconRefresh } from '@tabler/icons-react';
+import { formatToRupiah } from '@/lib/utils';
+import { IconArrowsDownUp, IconRefresh, IconUsers } from '@tabler/icons-react';
 import { useState } from 'react';
 
 export default function Index(props) {
-    const { data: fees, meta, links } = props.fees;
+    const { data: students, meta, links } = props.students;
     const [params, setParams] = useState(props.state);
 
     const onSortable = (field) => {
@@ -24,10 +26,11 @@ export default function Index(props) {
             direction: params.direction === 'asc' ? 'desc' : 'asc',
         });
     };
+
     UseFilter({
         route: route('admin.fees.index'),
         values: params,
-        only: ['fees'],
+        only: ['students'],
     });
 
     return (
@@ -37,8 +40,13 @@ export default function Index(props) {
                     <HeaderTitle
                         title={props.page_setting.title}
                         subtitle={props.page_setting.subtitle}
-                        icon={IconMoneybag}
+                        icon={IconUsers}
                     />
+                    {/* <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
+                        <Link href={route('admin.fees.create')}>
+                            <IconPlus className="size-4" /> Tambah
+                        </Link>
+                    </Button> */}
                 </div>
                 <Card>
                     <CardHeader className="mb-4 p-0">
@@ -73,11 +81,11 @@ export default function Index(props) {
                     </CardHeader>
 
                     <CardContent className="[&-td]: p-0 [&-td]:whitespace-nowrap [&-th]:px-6">
-                        {fees.length === 0 ? (
+                        {students.length === 0 ? (
                             <EmptyState
-                                icon={IconMoneybag}
-                                title="Tidak ada Uang Kuliah Tunggal"
-                                subtitle="Mulailah dengan membuat Uang Kuliah Tunggal"
+                                icon={IconUsers}
+                                title="Tidak ada Siswa"
+                                subtitle="Mulailah dengan membuat Siswa baru"
                             />
                         ) : (
                             <Table className="w-full">
@@ -95,8 +103,6 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>Tingkat</TableHead>
-                                        <TableHead>Kelas</TableHead>
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
@@ -109,44 +115,53 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>Nama Induk Siswa</TableHead>
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('status')}
+                                                onClick={() => onSortable('classroom_id')}
                                             >
-                                                Status
+                                                Kelas
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('created_at')}
-                                            >
-                                                Dibuat Pada
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
+                                        <TableHead>Total Sudah Dibayar</TableHead>
+                                        <TableHead>Total Belum Dibayar</TableHead>
+                                        <TableHead>Total Tagihan Keseluruhan</TableHead>
+                                        <TableHead>Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {fees.map((fee, index) => (
+                                    {students.map((student, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                            <TableCell>{fee.student.name}</TableCell>
-                                            <TableCell>{fee.student.nisn}</TableCell>
-                                            <TableCell>{fee.student.level}</TableCell>
-                                            <TableCell>{fee.student.classroom}</TableCell>
-                                            <TableCell>{fee.semester}</TableCell>
-                                            <TableCell>{fee.status}</TableCell>
-                                            <TableCell>{formatDateIndo(fee.created_at)}</TableCell>
+                                            <TableCell className="flex items-center gap-2">
+                                                <Avatar>
+                                                    <AvatarImage src={student.user?.avatar} />
+                                                    <AvatarFallback>
+                                                        {student.user?.name.substring(0, 1)}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <span>{student.user?.name}</span>
+                                            </TableCell>
+                                            <TableCell>{student.classroom?.name}</TableCell>
+                                            <TableCell>{formatToRupiah(student.paid_fees_sum)}</TableCell>
+                                            <TableCell>{formatToRupiah(student.unpaid_fees_sum)}</TableCell>
+                                            <TableCell>{formatToRupiah(student.total_fees)}</TableCell>
+
+                                            <TableCell>
+                                                <div className="flex items-center gap-x-1">
+                                                    <Fees
+                                                        fees={student.fees}
+                                                        name={student.user?.name}
+                                                        total_fees={student.total_fees}
+                                                        paid_fees_sum={student.paid_fees_sum}
+                                                        unpaid_fees_sum={student.unpaid_fees_sum}
+                                                    />
+                                                </div>
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -156,7 +171,7 @@ export default function Index(props) {
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
                             Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
-                            {meta.total} uang Biaya Pendidikan
+                            {meta.total} SPP Siswa
                         </p>
                         <div className="overflow-x-auto">
                             {meta.has_pages && <PaginationTable meta={meta} links={links} />}

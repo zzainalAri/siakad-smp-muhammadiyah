@@ -1,8 +1,4 @@
-export default function EmptyState({
-    title = 'Tidak ada data',
-    subtitle = 'Mulailah dengan membuat data baru',
-    icon: Icon,
-}) {
+export default function EmptyState({ title = 'Tidak ada data', subtitle = '', icon: Icon }) {
     return (
         <div className="flex flex-col items-center border border-dashed border-secondary p-4">
             <Icon className="size-12 text-blue-600" />

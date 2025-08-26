@@ -68,6 +68,10 @@
         @apply bg-background text-foreground;
     }
 }
+#snap-midtrans {
+    position: fixed !important;
+    z-index: 9999 !important;
+}
 
 .scroll-bar {
     overflow: auto;

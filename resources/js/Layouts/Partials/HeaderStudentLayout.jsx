@@ -63,12 +63,11 @@ export default function HeaderStudentLayout({ url, auth }) {
                                                     active={url.startsWith('/students/schedules')}
                                                     title="Jadwal"
                                                 />
-                                                {/*
                                                 <NavigationMenu
                                                     url={route('students.fees.index')}
                                                     active={url.startsWith('/students/fees')}
                                                     title="Pembayaran"
-                                                /> */}
+                                                />
                                             </div>
                                         </div>
                                         {/* profile dropdown */}

@@ -14,6 +14,17 @@ class Fee extends Model
         return $this->belongsTo(Student::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+
+    public function feeGroup()
+    {
+        return $this->belongsTo(FeeGroup::class);
+    }
+
     public function academicYear()
     {
         return $this->belongsTo(AcademicYear::class);
@@ -22,7 +33,11 @@ class Fee extends Model
     public function scopeFilter(Builder $query, $filters)
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
-            $query->where('status', 'REGEXP', $search)
+            $query->whereAny([
+                'status',
+                'fee_code',
+                'amount',
+            ], 'REGEXP', $search)
                 ->orWhereHas('academicYear', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
                 ->orWhereHas('student.user', fn($query) => $query->whereAny(['name', 'email'], 'REGEXP', $search))
             ;

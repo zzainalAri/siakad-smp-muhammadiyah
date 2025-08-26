@@ -39,7 +39,7 @@ Route::middleware('auth')->group(function () {
 Route::controller(PaymentController::class)->group(function () {
     Route::post('payments', 'create')->name('payments.create');
     Route::post('payments/callback', 'callback')->name('payments.callback');
-    Route::get('payments/success', 'succecc')->name('payments.succecc');
+    Route::get('payments/success', 'success')->name('payments.success');
 });
 
 require __DIR__ . '/auth.php';

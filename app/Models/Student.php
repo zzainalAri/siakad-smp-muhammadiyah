@@ -43,6 +43,10 @@ class Student extends Model
     {
         return $this->hasMany(Grade::class);
     }
+    public function fees()
+    {
+        return $this->hasMany(Fee::class);
+    }
 
     public function scopeFilter(Builder $query, $filters)
     {

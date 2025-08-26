@@ -153,6 +153,15 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
         Route::delete('schedules/destroy/{schedule}', 'destroy')->name('admin.schedules.destroy');
     });
 
-    // Fee
-    Route::get('fees', FeeController::class)->name('admin.fees.index');
+
+    // fee
+    Route::controller(FeeController::class)->group(function () {
+
+        Route::get('fees', 'index')->name('admin.fees.index');
+        Route::get('fees/create', 'create')->name('admin.fees.create');
+        Route::post('fees/create', 'store')->name('admin.fees.store');
+        Route::get('fees/edit/{fee}', 'edit')->name('admin.fees.edit');
+        Route::put('fees/edit/{fee}', 'update')->name('admin.fees.update');
+        Route::delete('fees/destroy/{fee}', 'destroy')->name('admin.fees.destroy');
+    });
 });

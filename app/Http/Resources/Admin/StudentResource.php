@@ -37,6 +37,10 @@ class StudentResource extends JsonResource
                 'id' => $this->classroom?->id,
                 'name' => $this->classroom?->name,
             ]),
+            'fees' => $this->whenLoaded('fees', fn() => FeeResource::collection($this->fees)),
+            'total_fees' => $this->total_fees ?? 0,
+            'paid_fees_sum' => $this->paid_fees_sum ?? 0,
+            'unpaid_fees_sum' => $this->unpaid_fees_sum ?? 0,
         ];
     }
 }

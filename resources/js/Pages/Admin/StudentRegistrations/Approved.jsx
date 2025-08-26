@@ -16,8 +16,6 @@ export default function Approved({ name, status, statuses, action, classrooms, r
         _method: 'PUT',
     });
 
-    console.log(data);
-
     const onHandleSubmit = (e) => {
         e.preventDefault();
         put(action, {

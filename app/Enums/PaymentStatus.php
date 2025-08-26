@@ -2,11 +2,11 @@
 
 namespace App\Enums;
 
-enum FeeStatus: string
+enum PaymentStatus: string
 {
-    case PAID = 'Sudah Bayar';
-    case UNPAID = 'Belum Bayar';
-    case OVERDUE = 'Jatuh Tempo';
+    case PENDING = 'Tertunda';
+    case SUCCESS = 'Sukses';
+    case FAILED = 'Gagal';
 
     public static function options()
     {

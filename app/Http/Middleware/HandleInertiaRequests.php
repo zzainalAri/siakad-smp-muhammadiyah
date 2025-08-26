@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Enums\FeeStatus;
+use App\Enums\PaymentStatus;
 use App\Http\Resources\UserSingleResource;
 use App\Models\AcademicYear;
 use App\Models\Fee;
@@ -50,8 +51,7 @@ class HandleInertiaRequests extends Middleware
             'checkFee' => fn() => $request->user() && $request->user()->student && activeAcademicYear()
                 ? Fee::query()->where('student_id', $authUser->student->id)
                 ->where('academic_year_id', activeAcademicYear()->id)
-                ->where('semester', $authUser->student->semester)
-                ->where('status', FeeStatus::SUCCESS->value)->first()
+                ->where('status', FeeStatus::PAID->value)->first()
                 : null,
             'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),

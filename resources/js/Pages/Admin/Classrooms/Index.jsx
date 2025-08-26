@@ -167,7 +167,7 @@ export default function Index(props) {
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
                                             <TableCell>{classroom.level.name}</TableCell>
-                                            <TableCell>{classroom.academicYear.name}</TableCell>
+                                            <TableCell>{classroom.academicYear?.name}</TableCell>
                                             <TableCell>{`${classroom.name}`}</TableCell>
 
                                             <TableCell>{formatDateIndo(classroom.created_at)}</TableCell>
