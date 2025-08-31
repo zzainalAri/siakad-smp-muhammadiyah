@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user() ? new UserSingleResource($request->user()) : null,
+                'permissions' => $request->user() ? $request->user()->getPermissionArray() : null,
             ],
             'flash_message' => fn() => [
                 'type' => $request->session()->get('type'),

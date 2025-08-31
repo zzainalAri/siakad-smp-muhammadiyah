@@ -2,6 +2,7 @@ import AlertAction from '@/Components/AlertAction';
 import EmptyState from '@/Components/EmptyState';
 import HeaderTitle from '@/Components/HeaderTitle';
 import PaginationTable from '@/Components/PaginationTable';
+import Permission from '@/Components/Permission';
 import ShowFilter from '@/Components/ShowFilter';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/Components/ui/card';
@@ -10,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
-import { deleteAction, formatDateIndo } from '@/lib/utils';
+import hasAnyPermissions, { deleteAction, formatDateIndo } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
 import { IconArrowsDownUp, IconCircleKey, IconPencil, IconPlus, IconRefresh, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -41,11 +42,13 @@ export default function Index(props) {
                         subtitle={props.page_setting.subtitle}
                         icon={IconCircleKey}
                     />
-                    <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
-                        <Link href={route('admin.roles.create')}>
-                            <IconPlus className="size-4" /> Tambah
-                        </Link>
-                    </Button>
+                    {hasAnyPermissions(props.auth.permissions, ['roles.create']) && (
+                        <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
+                            <Link href={route('admin.roles.create')}>
+                                <IconPlus className="size-4" /> Tambah
+                            </Link>
+                        </Button>
+                    )}
                 </div>
                 <Card>
                     <CardHeader className="mb-4 p-0">
@@ -150,23 +153,28 @@ export default function Index(props) {
                                             <TableCell>{formatDateIndo(role.created_at)}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-x-1">
-                                                    <Button variant="blue" size="sm" asChild>
-                                                        <Link href={route('admin.roles.edit', [role])}>
-                                                            <IconPencil size="4" />
-                                                            Edit
-                                                        </Link>
-                                                    </Button>
-                                                    <AlertAction
-                                                        trigger={
-                                                            <Button variant="red" size="sm">
-                                                                <IconTrash className="size-4" />
-                                                                Delete
-                                                            </Button>
-                                                        }
-                                                        action={() =>
-                                                            deleteAction(route('admin.roles.destroy', [role]))
-                                                        }
-                                                    />
+                                                    <Permission permissions={role.permissions} role={role.name} />
+                                                    {hasAnyPermissions(props.auth.permissions, ['roles.update']) && (
+                                                        <Button variant="blue" size="sm" asChild>
+                                                            <Link href={route('admin.roles.edit', [role])}>
+                                                                <IconPencil size="4" />
+                                                                Edit
+                                                            </Link>
+                                                        </Button>
+                                                    )}
+                                                    {hasAnyPermissions(props.auth.permissions, ['roles.delete']) && (
+                                                        <AlertAction
+                                                            trigger={
+                                                                <Button variant="red" size="sm">
+                                                                    <IconTrash className="size-4" />
+                                                                    Delete
+                                                                </Button>
+                                                            }
+                                                            action={() =>
+                                                                deleteAction(route('admin.roles.destroy', [role]))
+                                                            }
+                                                        />
+                                                    )}
                                                 </div>
                                             </TableCell>
                                         </TableRow>

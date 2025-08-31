@@ -12,7 +12,7 @@ class RoleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasRole('Admin');
+        return true;
     }
 
     /**
@@ -28,6 +28,10 @@ class RoleRequest extends FormRequest
                 'min:3',
                 'max:255',
                 Rule::unique('roles')->ignore($this->role),
+            ],
+            'permissions' => [
+                'nullable',
+                'exists:permissions,id'
             ]
         ];
     }
@@ -35,7 +39,8 @@ class RoleRequest extends FormRequest
     public function attributes()
     {
         return [
-            'name' => 'Nama Role'
+            'name' => 'Nama Role',
+            'permissions' => 'Izin',
         ];
     }
 }

@@ -11,13 +11,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
-import { deleteAction, formatDateIndo } from '@/lib/utils';
+import hasAnyPermissions, { deleteAction, formatDateIndo } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
-import { IconArrowsDownUp, IconPencil, IconPlus, IconRefresh, IconTrash, IconUsersGroup } from '@tabler/icons-react';
+import { IconArrowsDownUp, IconPencil, IconPlus, IconRefresh, IconTrash, IconUsersPlus } from '@tabler/icons-react';
 import { useState } from 'react';
 
 export default function Index(props) {
-    const { data: teachers, meta, links } = props.teachers;
+    const { data: users, meta, links } = props.users;
     const [params, setParams] = useState(props.state);
 
     const onSortable = (field) => {
@@ -28,9 +28,9 @@ export default function Index(props) {
         });
     };
     UseFilter({
-        route: route('operators.teachers.index'),
+        route: route('admin.users.index'),
         values: params,
-        only: ['teachers'],
+        only: ['users'],
     });
 
     return (
@@ -40,13 +40,15 @@ export default function Index(props) {
                     <HeaderTitle
                         title={props.page_setting.title}
                         subtitle={props.page_setting.subtitle}
-                        icon={IconUsersGroup}
+                        icon={IconUsersPlus}
                     />
-                    <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
-                        <Link href={route('operators.teachers.create')}>
-                            <IconPlus className="size-4" /> Tambah
-                        </Link>
-                    </Button>
+                    {hasAnyPermissions(props.auth.permissions, ['users.create']) && (
+                        <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
+                            <Link href={route('admin.users.create')}>
+                                <IconPlus className="size-4" /> Tambah
+                            </Link>
+                        </Button>
+                    )}
                 </div>
                 <Card>
                     <CardHeader className="mb-4 p-0">
@@ -81,11 +83,11 @@ export default function Index(props) {
                     </CardHeader>
 
                     <CardContent className="[&-td]: p-0 [&-td]:whitespace-nowrap [&-th]:px-6">
-                        {teachers.length === 0 ? (
+                        {users.length === 0 ? (
                             <EmptyState
-                                icon={IconUsersGroup}
-                                title="Tidak ada Guru"
-                                subtitle="Mulailah dengan membuat Guru baru"
+                                icon={IconUsersPlus}
+                                title="Tidak ada pengguna"
+                                subtitle="Mulailah dengan membuat pengguna baru"
                             />
                         ) : (
                             <Table className="w-full">
@@ -115,6 +117,7 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
+
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
@@ -127,30 +130,7 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('nip')}
-                                            >
-                                                Nomor Induk Pegawai
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('academic_title')}
-                                            >
-                                                Jabatan Akademik
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
+                                        <TableHead>Peran</TableHead>
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
@@ -167,41 +147,47 @@ export default function Index(props) {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {teachers.map((teacher, index) => (
+                                    {users.map((user, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
                                             <TableCell className="flex items-center gap-2">
                                                 <Avatar>
-                                                    <AvatarImage src={teacher.user?.avatar} />
-                                                    <AvatarFallback>
-                                                        {teacher.user?.name.substring(0, 1)}
-                                                    </AvatarFallback>
+                                                    <AvatarImage src={user?.avatar} />
+                                                    <AvatarFallback>{user?.name.substring(0, 1)}</AvatarFallback>
                                                 </Avatar>
-                                                <span>{teacher.user?.name}</span>
+                                                <span>{user?.name}</span>
                                             </TableCell>
-                                            <TableCell>{teacher.user?.email}</TableCell>
-                                            <TableCell>{teacher.nip}</TableCell>
-                                            <TableCell>{teacher.academic_title}</TableCell>
-                                            <TableCell>{formatDateIndo(teacher.created_at)}</TableCell>
+                                            <TableCell>{user.email}</TableCell>
+
+                                            <TableCell>
+                                                {user.roles.map((role, index) => (
+                                                    <TableCell key={index}>{role.name}</TableCell>
+                                                ))}
+                                            </TableCell>
+                                            <TableCell>{formatDateIndo(user.created_at)}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-x-1">
-                                                    <Button variant="blue" size="sm" asChild>
-                                                        <Link href={route('operators.teachers.edit', [teacher])}>
-                                                            <IconPencil size="4" />
-                                                            Edit
-                                                        </Link>
-                                                    </Button>
-                                                    <AlertAction
-                                                        trigger={
-                                                            <Button variant="red" size="sm">
-                                                                <IconTrash className="size-4" />
-                                                                Delete
-                                                            </Button>
-                                                        }
-                                                        action={() =>
-                                                            deleteAction(route('operators.teachers.destroy', [teacher]))
-                                                        }
-                                                    />
+                                                    {hasAnyPermissions(props.auth.permissions, ['users.update']) && (
+                                                        <Button variant="blue" size="sm" asChild>
+                                                            <Link href={route('admin.users.edit', [user])}>
+                                                                <IconPencil size="4" />
+                                                                Edit
+                                                            </Link>
+                                                        </Button>
+                                                    )}
+                                                    {hasAnyPermissions(props.auth.permissions, ['users.delete']) && (
+                                                        <AlertAction
+                                                            trigger={
+                                                                <Button variant="red" size="sm">
+                                                                    <IconTrash className="size-4" />
+                                                                    Delete
+                                                                </Button>
+                                                            }
+                                                            action={() =>
+                                                                deleteAction(route('admin.users.destroy', [user]))
+                                                            }
+                                                        />
+                                                    )}
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -213,7 +199,7 @@ export default function Index(props) {
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
                             Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
-                            {meta.total} Guru
+                            {meta.total} pengguna
                         </p>
                         <div className="overflow-x-auto">
                             {meta.has_pages && <PaginationTable meta={meta} links={links} />}

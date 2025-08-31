@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
-import { formatToRupiah } from '@/lib/utils';
+import hasAnyPermissions, { formatToRupiah } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
 import { IconArrowsDownUp, IconDroplets, IconPencil, IconRefresh } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -121,7 +121,9 @@ export default function Index(props) {
                                             </Button>
                                         </TableHead>
 
-                                        <TableHead>Aksi</TableHead>
+                                        {hasAnyPermissions(props.auth.permissions, ['fee-groups.update']) && (
+                                            <TableHead>Aksi</TableHead>
+                                        )}
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -130,16 +132,18 @@ export default function Index(props) {
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
                                             <TableCell>{feeGroup.level.name}</TableCell>
                                             <TableCell>{formatToRupiah(feeGroup.amount)}</TableCell>
-                                            <TableCell>
-                                                <div className="flex items-center gap-x-1">
-                                                    <Button variant="blue" size="sm" asChild>
-                                                        <Link href={route('admin.fee-groups.edit', [feeGroup])}>
-                                                            <IconPencil size="4" />
-                                                            Edit
-                                                        </Link>
-                                                    </Button>
-                                                </div>
-                                            </TableCell>
+                                            {hasAnyPermissions(props.auth.permissions, ['fee-groups.update']) && (
+                                                <TableCell>
+                                                    <div className="flex items-center gap-x-1">
+                                                        <Button variant="blue" size="sm" asChild>
+                                                            <Link href={route('admin.fee-groups.edit', [feeGroup])}>
+                                                                <IconPencil size="4" />
+                                                                Edit
+                                                            </Link>
+                                                        </Button>
+                                                    </div>
+                                                </TableCell>
+                                            )}
                                         </TableRow>
                                     ))}
                                 </TableBody>

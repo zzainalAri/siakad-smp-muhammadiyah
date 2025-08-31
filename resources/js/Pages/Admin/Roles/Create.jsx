@@ -1,5 +1,6 @@
 import HeaderTitle from '@/Components/HeaderTitle';
 import InputError from '@/Components/InputError';
+import { MultiSelect } from '@/Components/MultiSelect';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
@@ -13,11 +14,15 @@ import { toast } from 'sonner';
 export default function Create(props) {
     const { data, setData, post, errors, processing, reset } = useForm({
         name: '',
+        permissions: [],
         _method: props.page_setting.method,
     });
 
     const onHandleReset = () => {
         reset();
+    };
+    const handlePermissionChange = (selected) => {
+        setData('permissions', selected);
     };
 
     const onHandleSubmit = (e) => {
@@ -62,6 +67,17 @@ export default function Create(props) {
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
                                     {errors.name && <InputError message={errors.name} />}
+                                </div>
+                                <div className="col-span-full">
+                                    <Label htmlFor="roles">Peran</Label>
+                                    <MultiSelect
+                                        options={props.permissions}
+                                        onValueChange={handlePermissionChange}
+                                        defaultValue={data.permissions}
+                                        placeholder="Pilih Hak Akses"
+                                        variant="inverted"
+                                    />
+                                    {errors.permissions && <InputError message={errors.permissions} />}
                                 </div>
                             </div>
                             <div className="mt-8 flex flex-col gap-2 lg:flex-row lg:justify-end">
