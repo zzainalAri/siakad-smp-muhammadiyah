@@ -40,44 +40,14 @@ class FeeGroupController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        return inertia('Admin/FeeGroups/Create', [
-            'page_setting' => [
-                'title' => 'Tambah pengaturan spp',
-                'subtitle' => 'Buat pengaturan spp baru disini. Klik simpan setelah selesai',
-                'method' => 'POST',
-                'action' => route('admin.fee-groups.store')
-            ],
-            'levels' => Level::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
-            ]),
-        ]);
-    }
 
-    public function store(FeeGroupRequest $request)
-    {
-        try {
-            FeeGroup::create([
-                'level_id' =>  $request->level_id,
-                'amount' => $request->amount,
-            ]);
-
-            flashMessage(MessageType::CREATED->message('Pengaturan SPP'));
-            return to_route('admin.fee-groups.index');
-        } catch (Throwable $e) {
-            flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
-            return to_route('admin.fee-groups.index');
-        }
-    }
 
     public function edit(FeeGroup $feeGroup)
     {
         return inertia('Admin/FeeGroups/Edit', [
             'page_setting' => [
                 'title' => 'Edit Pengaturan SPP',
-                'subtitle' => 'Edit Pengaturan SPP disini. Klik simpan setelah selesai',
+                'subtitle' => 'Edit Pengaturan SPP disini. Pengaturan SPP yang sudah diedit akan diterapkan pada tahun ajaran baru',
                 'method' => 'PUT',
                 'action' => route('admin.fee-groups.update', $feeGroup)
             ],

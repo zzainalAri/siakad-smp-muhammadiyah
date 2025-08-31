@@ -28,7 +28,7 @@ class FeeGroupRequest extends FormRequest
                 'integer',
                 Rule::unique('fee_groups')->ignore($this->feeGroup),
             ],
-            'amount' => 'required|numeric'
+            'amount' => 'required|numeric|min:200000'
         ];
     }
 

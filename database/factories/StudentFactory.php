@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use App\Enums\Gender;
 use App\Enums\StudentStatus;
+use Spatie\Permission\Models\Permission;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Student>
@@ -29,7 +30,15 @@ class StudentFactory extends Factory
         $role = Role::firstOrCreate(['name' => 'Student']);
         $user->assignRole($role);
 
-        $classroom = Classroom::inRandomOrder()->first();
+        $studentPermissions = Permission::whereIn('name', [
+            'students.fees.index',
+            'students.schedules.index',
+        ])->get();
+
+
+        $role->syncPermissions($studentPermissions);
+
+        $classroom = \App\Models\Classroom::inRandomOrder()->first();
 
         if (!$classroom) {
             throw new \Exception('No classrooms found. Please seed classrooms first.');
@@ -41,8 +50,8 @@ class StudentFactory extends Factory
             'user_id' => $user->id,
             'nisn' => $this->faker->unique()->numerify('##########'),
             'address' => $this->faker->address,
-            'gender' => $this->faker->randomElement([Gender::MALE->value, Gender::FEMALE->value]),
-            'status' => StudentStatus::ACTIVE->value,
+            'gender' => $this->faker->randomElement([\App\Enums\Gender::MALE->value, \App\Enums\Gender::FEMALE->value]),
+            'status' => \App\Enums\StudentStatus::ACTIVE->value,
             'batch' => $this->faker->randomElement($batch),
             'classroom_id' => $classroom->id,
             'level_id' => $classroom->level_id,

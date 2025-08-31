@@ -9,6 +9,16 @@ export function cn(...inputs) {
     return twMerge(clsx(inputs));
 }
 
+export default function hasAnyPermissions(allPermissions, permissions) {
+    let hasPermission = false;
+
+    permissions.forEach(function (item) {
+        if (allPermissions[item]) hasPermission = true;
+    });
+
+    return hasPermission;
+}
+
 export function flashMessage(params) {
     return params.props.flash_message;
 }

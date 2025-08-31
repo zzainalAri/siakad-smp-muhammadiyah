@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
-import { deleteAction, formatDateIndo } from '@/lib/utils';
+import hasAnyPermissions, { deleteAction, formatDateIndo } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
 import { IconArrowsDownUp, IconPencil, IconPlus, IconRefresh, IconTrash, IconUsersGroup } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -42,11 +42,13 @@ export default function Index(props) {
                         subtitle={props.page_setting.subtitle}
                         icon={IconUsersGroup}
                     />
-                    <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
-                        <Link href={route('admin.teachers.create')}>
-                            <IconPlus className="size-4" /> Tambah
-                        </Link>
-                    </Button>
+                    {hasAnyPermissions(props.auth.permissions, ['teachers.create']) && (
+                        <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
+                            <Link href={route('admin.teachers.create')}>
+                                <IconPlus className="size-4" /> Tambah
+                            </Link>
+                        </Button>
+                    )}
                 </div>
                 <Card>
                     <CardHeader className="mb-4 p-0">
@@ -175,7 +177,10 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>Aksi</TableHead>
+                                        {hasAnyPermissions(props.auth.permissions, [
+                                            'teachers.delete',
+                                            'teachers.update',
+                                        ]) && <TableHead>Aksi</TableHead>}
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -196,27 +201,42 @@ export default function Index(props) {
                                             <TableCell>{teacher.nip}</TableCell>
                                             <TableCell>{teacher.academic_title}</TableCell>
                                             <TableCell>{formatDateIndo(teacher.created_at)}</TableCell>
-                                            <TableCell>
-                                                <div className="flex items-center gap-x-1">
-                                                    <Button variant="blue" size="sm" asChild>
-                                                        <Link href={route('admin.teachers.edit', [teacher])}>
-                                                            <IconPencil size="4" />
-                                                            Edit
-                                                        </Link>
-                                                    </Button>
-                                                    <AlertAction
-                                                        trigger={
-                                                            <Button variant="red" size="sm">
-                                                                <IconTrash className="size-4" />
-                                                                Delete
+                                            {hasAnyPermissions(props.auth.permissions, [
+                                                'teachers.update',
+                                                'teachers.delete',
+                                            ]) && (
+                                                <TableCell>
+                                                    <div className="flex items-center gap-x-1">
+                                                        {hasAnyPermissions(props.auth.permissions, [
+                                                            'teachers.update',
+                                                        ]) && (
+                                                            <Button variant="blue" size="sm" asChild>
+                                                                <Link href={route('admin.teachers.edit', [teacher])}>
+                                                                    <IconPencil size="4" />
+                                                                    Edit
+                                                                </Link>
                                                             </Button>
-                                                        }
-                                                        action={() =>
-                                                            deleteAction(route('admin.teachers.destroy', [teacher]))
-                                                        }
-                                                    />
-                                                </div>
-                                            </TableCell>
+                                                        )}
+                                                        {hasAnyPermissions(props.auth.permissions, [
+                                                            'teachers.delete',
+                                                        ]) && (
+                                                            <AlertAction
+                                                                trigger={
+                                                                    <Button variant="red" size="sm">
+                                                                        <IconTrash className="size-4" />
+                                                                        Delete
+                                                                    </Button>
+                                                                }
+                                                                action={() =>
+                                                                    deleteAction(
+                                                                        route('admin.teachers.destroy', [teacher]),
+                                                                    )
+                                                                }
+                                                            />
+                                                        )}
+                                                    </div>
+                                                </TableCell>
+                                            )}
                                         </TableRow>
                                     ))}
                                 </TableBody>

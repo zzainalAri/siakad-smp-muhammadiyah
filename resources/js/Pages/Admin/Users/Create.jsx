@@ -4,25 +4,26 @@ import { Button } from '@/Components/ui/button';
 import { Card, CardContent } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import AppLayout from '@/Layouts/AppLayout';
 import { flashMessage } from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
-import { IconArrowLeft, IconCheck, IconUsersGroup } from '@tabler/icons-react';
+import { IconArrowLeft, IconCheck, IconUsers } from '@tabler/icons-react';
 import { useRef } from 'react';
 import { toast } from 'sonner';
 
 export default function Create(props) {
-    const fileInputAvatar = useRef(null);
-
     const { data, setData, post, errors, processing, reset } = useForm({
-        name: props.teacher.user.name ?? '',
-        email: props.teacher.user.email ?? '',
-        password: '',
+        name: '',
+        email: '',
         avatar: null,
-        nip: props.teacher.nip ?? '',
-        academic_title: props.teacher.academic_title ?? '',
+        role: '',
+        password: '',
+        password_confirmation: '',
         _method: props.page_setting.method,
     });
+
+    const fileInputAvatar = useRef(null);
 
     const onHandleReset = () => {
         reset();
@@ -48,10 +49,10 @@ export default function Create(props) {
                     <HeaderTitle
                         title={props.page_setting.title}
                         subtitle={props.page_setting.subtitle}
-                        icon={IconUsersGroup}
+                        icon={IconUsers}
                     />
                     <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
-                        <Link href={route('admin.teachers.index')}>
+                        <Link href={route('admin.users.index')}>
                             <IconArrowLeft className="size-4" /> Kembali
                         </Link>
                     </Button>
@@ -61,76 +62,88 @@ export default function Create(props) {
                         <form onSubmit={onHandleSubmit}>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
                                 <div className="col-span-full">
-                                    <Label htmlFor="name">Nama Guru</Label>
+                                    <Label htmlFor="name">Nama</Label>
                                     <Input
                                         type="text"
                                         name="name"
                                         id="name"
-                                        placeholder="Masukkan nama Guru"
+                                        placeholder="Masukkan nama pengguna..."
                                         value={data.name}
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
                                     {errors.name && <InputError message={errors.name} />}
                                 </div>
-                                <div className="col-span-2">
+                                <div className="col-span-full">
                                     <Label htmlFor="email">Email</Label>
                                     <Input
-                                        type="email"
+                                        type="text"
                                         name="email"
                                         id="email"
-                                        placeholder="Masukkan alamat email"
+                                        autoComplete="new-email"
+                                        placeholder="cth: user@example.com"
                                         value={data.email}
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
                                     {errors.email && <InputError message={errors.email} />}
                                 </div>
-                                <div className="col-span-2">
-                                    <Label htmlFor="password">Password</Label>
-                                    <Input
-                                        type="password"
-                                        name="password"
-                                        id="password"
-                                        placeholder="*********"
-                                        value={data.password}
-                                        onChange={(e) => setData(e.target.name, e.target.value)}
-                                    />
-                                    {errors.password && <InputError message={errors.password} />}
-                                </div>
-                                <div className="col-span-2">
-                                    <Label htmlFor="nip">Nomor Induk Pegawai</Label>
-                                    <Input
-                                        type="text"
-                                        name="nip"
-                                        id="nip"
-                                        placeholder="Masukkan nomor induk Pegawai"
-                                        value={data.nip}
-                                        onChange={(e) => setData(e.target.name, e.target.value)}
-                                    />
-                                    {errors.nip && <InputError message={errors.nip} />}
-                                </div>
-                                <div className="col-span-2">
-                                    <Label htmlFor="academic_title">Jabatan Akademik</Label>
-                                    <Input
-                                        type="text"
-                                        name="academic_title"
-                                        id="academic_title"
-                                        placeholder="Masukkan Jabatan Akademik"
-                                        value={data.academic_title}
-                                        onChange={(e) => setData(e.target.name, e.target.value)}
-                                    />
-                                    {errors.academic_title && <InputError message={errors.academic_title} />}
-                                </div>
-                                <div className="col-span-2">
+                                <div className="col-span-full">
                                     <Label htmlFor="avatar">Avatar</Label>
+
                                     <Input
-                                        type="file"
-                                        accept="image/*"
+                                        onChange={(e) => setData(e.target.name, e.target.files[0])}
                                         name="avatar"
                                         id="avatar"
+                                        type="file"
                                         ref={fileInputAvatar}
-                                        onChange={(e) => setData(e.target.name, e.target.files[0])}
+                                        accept="image/*"
                                     />
                                     {errors.avatar && <InputError message={errors.avatar} />}
+                                </div>
+                                <div className="col-span-full">
+                                    <Label htmlFor="role">Peran</Label>
+                                    <Select
+                                        defaultValue={data.role}
+                                        onValueChange={(value) => setData('role', value)}
+                                        id="role"
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih Peran" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {props.roles.map((role, index) => (
+                                                <SelectItem key={index} value={role.value}>
+                                                    {role.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {errors.role && <InputError message={errors.role} />}
+
+                                    <div className="col-span-full">
+                                        <Label htmlFor="password">Password</Label>
+                                        <Input
+                                            type="password"
+                                            name="password"
+                                            autoComplete="new-password"
+                                            id="password"
+                                            value={data.password}
+                                            onChange={(e) => setData(e.target.name, e.target.value)}
+                                        />
+                                        {errors.password && <InputError message={errors.password} />}
+                                    </div>
+                                    <div className="col-span-full">
+                                        <Label htmlFor="password_confirmation">Password</Label>
+                                        <Input
+                                            type="password"
+                                            name="password_confirmation"
+                                            id="password_confirmation"
+                                            value={data.password_confirmation}
+                                            onChange={(e) => setData(e.target.name, e.target.value)}
+                                        />
+                                        {errors.password_confirmation && (
+                                            <InputError message={errors.password_confirmation} />
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                             <div className="mt-8 flex flex-col gap-2 lg:flex-row lg:justify-end">
@@ -139,7 +152,7 @@ export default function Create(props) {
                                 </Button>
                                 <Button type="submit" variant="blue" size="xl" disabled={processing}>
                                     <IconCheck />
-                                    Save
+                                    Simpan
                                 </Button>
                             </div>
                         </form>

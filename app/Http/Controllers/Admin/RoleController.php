@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RoleRequest;
 use App\Http\Resources\Admin\RoleResource;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Throwable;
 
@@ -16,6 +17,7 @@ class RoleController extends Controller
     {
         $roles = Role::query()
             ->select(['id', 'name', 'guard_name', 'created_at'])
+            ->with('permissions')
             ->when(request()->search ?? null, function ($query, $search) {
                 $query->whereAny([
                     'name',
@@ -24,6 +26,7 @@ class RoleController extends Controller
             })
             ->when(request()->field ?? null &&  request()->direction ?? null, fn($query) => $query->orderBy(request()->field, request()->direction))
             ->paginate(request()->load ?? 10);
+
 
         return inertia('Admin/Roles/Index', [
             'page_setting' => [
@@ -45,22 +48,32 @@ class RoleController extends Controller
 
     public function create()
     {
+        $permissions = Permission::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'value' => $item->id,
+            'label' => $item->name,
+        ]);
+
+
         return inertia('Admin/Roles/Create', [
             'page_setting' => [
                 'title' => 'Tambah Peran',
                 'subtitle' => 'Buat Peran baru disini. Klik simpan setelah selesai',
                 'method' => 'POST',
                 'action' => route('admin.roles.store')
-            ]
+            ],
+            'permissions' => $permissions,
         ]);
     }
 
     public function store(RoleRequest $request)
     {
         try {
-            Role::create([
+            $role = Role::create([
                 'name' =>  $request->name,
             ]);
+
+            $role->syncPermissions($request->permissions);
+
 
             flashMessage(MessageType::CREATED->message('Role'));
             return to_route('admin.roles.index');
@@ -72,6 +85,11 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
+        $permissions = Permission::query()->select(['id', 'name'])->orderBy('name')->get()->map(fn($item) => [
+            'value' => $item->id,
+            'label' => $item->name,
+        ]);
+
         return inertia('Admin/Roles/Edit', [
             'page_setting' => [
                 'title' => 'Edit Peran',
@@ -79,7 +97,8 @@ class RoleController extends Controller
                 'method' => 'PUT',
                 'action' => route('admin.roles.update', $role)
             ],
-            'role' => $role,
+            'permissions' => $permissions,
+            'role' => $role->load('permissions'),
         ]);
     }
 
@@ -89,6 +108,7 @@ class RoleController extends Controller
             $role->update([
                 'name' =>  $request->name,
             ]);
+            $role->syncPermissions($request->permissions);
 
             flashMessage(MessageType::UPDATED->message('Role'));
             return to_route('admin.roles.index');
@@ -101,6 +121,10 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         try {
+            if ($role->users()->count() > 0) {
+                flashMessage('Tidak bisa menghapus peran ini. terdapat ' . $role->users()->count() . ' pengguna yang menggunakan peran ini. Jika peran ini dihapus, maka pengguna yang menggunakan peran ini akan otomatis terhapus', 'error');
+                return back();
+            }
 
             $role->delete();
             flashMessage(MessageType::DELETED->message('Peran'));

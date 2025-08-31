@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Resources\Admin;
+namespace App\Http\Resources;
 
-use App\Http\Resources\PermissionResource;
+use App\Http\Resources\Admin\RoleResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
-class RoleResource extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,9 +19,10 @@ class RoleResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'guard_name' => $this->guard_name,
+            'email' => $this->email,
+            'avatar' => $this->avatar ? Storage::url($this->avatar) : null,
+            'roles' => RoleResource::collection($this->roles),
             'created_at' => $this->created_at,
-            'permissions' => PermissionResource::collection($this->permissions),
         ];
     }
 }
