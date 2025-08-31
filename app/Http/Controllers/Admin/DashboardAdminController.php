@@ -29,7 +29,7 @@ class DashboardAdminController extends Controller
                 'students' => Student::count(),
                 'teachers' => Teacher::count(),
             ], Auth::user()->hasRole('Teacher') ? [
-                'teacher_courses' => Course::where('teacher_id', Auth::user()->teacher->id)->count(),
+                'teacher_courses' => Course::query()->where('teacher_id', Auth::user()->teacher->id)->count(),
                 'teacher_classrooms' => Classroom::whereHas(
                     'schedules.course',
                     fn($query) =>
