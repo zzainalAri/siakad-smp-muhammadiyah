@@ -16,8 +16,12 @@ class FeeGroupResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'group' => $this->group,
+            'level_id' => $this->level_id,
             'amount' => $this->amount,
+            'level' => $this->whenLoaded('level', [
+                'id' => $this->level?->id,
+                'name' => $this->level?->name,
+            ]),
             'created_at' => $this->created_at,
         ];
     }

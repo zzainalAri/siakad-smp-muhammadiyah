@@ -11,7 +11,7 @@ class StudyPlanStudentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasRole('Student');
+        return true;
     }
 
     /**

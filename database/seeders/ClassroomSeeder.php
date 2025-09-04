@@ -14,14 +14,16 @@ class ClassroomSeeder extends Seeder
      */
     public function run(): void
     {
-        $activeAcademicYear = AcademicYear::where('is_active', true)->first();
+        // $activeAcademicYear = AcademicYear::where('is_active', true)->first();
 
-        if (!$activeAcademicYear) {
-            $this->command->error('Tidak ada Tahun Ajaran (Academic Year) yang aktif. Silakan buat satu terlebih dahulu.');
-            return;
-        }
+        // if (!$activeAcademicYear) {
+        //     $this->command->error('Tidak ada Tahun Ajaran (Academic Year) yang aktif. Silakan buat satu terlebih dahulu.');
+        //     return;
+        // }
 
-        Classroom::create(['level_id' => 1, 'name' => 'Kelas 7A', 'academic_year_id' => $activeAcademicYear->id]);
-        Classroom::create(['level_id' => 1, 'name' => 'Kelas 7B', 'academic_year_id' => $activeAcademicYear->id]);
+        // Classroom::create(['level_id' => 1, 'name' => 'Kelas 7A', 'academic_year_id' => $activeAcademicYear->id]);
+        // Classroom::create(['level_id' => 1, 'name' => 'Kelas 7B', 'academic_year_id' => $activeAcademicYear->id]);
+
+        Classroom::factory()->count(15)->create();
     }
 }

@@ -9,6 +9,7 @@ import AppLayout from '@/Layouts/AppLayout';
 import { flashMessage } from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
 import { IconArrowLeft, IconCalendar, IconCheck } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Edit(props) {
@@ -18,10 +19,12 @@ export default function Edit(props) {
         classroom_id: props.schedule.classroom_id ?? null,
         start_time: props.schedule.start_time ?? '',
         end_time: props.schedule.end_time ?? '',
-        day_of_week: props.schedule.day_of_week ?? null,
+        day_of_week: props.schedule.day_of_week ?? '',
         _method: props.page_setting.method,
     });
 
+    const [filteredCourse, setFilteredCourse] = useState([]);
+    const [filteredClassroom, setFilteredClassroom] = useState([]);
     const onHandleReset = () => {
         reset();
     };
@@ -37,6 +40,13 @@ export default function Edit(props) {
             },
         });
     };
+
+    useEffect(() => {
+        const filteredCourse = props.courses.filter((course) => course.level_id == data.level_id);
+        const filteredClassroom = props.classrooms.filter((classroom) => classroom.level_id == data.level_id);
+        setFilteredCourse(filteredCourse);
+        setFilteredClassroom(filteredClassroom);
+    }, [data.level_id]);
 
     return (
         <>
@@ -86,14 +96,15 @@ export default function Edit(props) {
                                         defaultValue={data.course_id}
                                         onValueChange={(value) => setData('course_id', value)}
                                         id="course_id"
+                                        disabled={!data.level_id}
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
-                                                {props.courses.find((course) => course.value == data.course_id)
-                                                    ?.label ?? 'Pilih Mata Kuliah'}
+                                                {filteredCourse.find((course) => course.value == data.course_id)
+                                                    ?.label ?? 'Pilih Tingkat Dahulu'}
                                             </SelectValue>
                                             <SelectContent>
-                                                {props.courses.map((course, index) => (
+                                                {filteredCourse.map((course, index) => (
                                                     <SelectItem key={index} value={course.value}>
                                                         {course.label}
                                                     </SelectItem>
@@ -109,15 +120,16 @@ export default function Edit(props) {
                                         defaultValue={data.classroom_id}
                                         onValueChange={(value) => setData('classroom_id', value)}
                                         id="classroom_id"
+                                        disabled={!data.level_id}
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
-                                                {props.classrooms.find(
+                                                {filteredClassroom.find(
                                                     (classroom) => classroom.value == data.classroom_id,
-                                                )?.label ?? 'Pilih Kelas'}
+                                                )?.label ?? 'Pilih Tingkat Dahulu'}
                                             </SelectValue>
                                             <SelectContent>
-                                                {props.classrooms.map((classroom, index) => (
+                                                {filteredClassroom.map((classroom, index) => (
                                                     <SelectItem key={index} value={classroom.value}>
                                                         {classroom.label}
                                                     </SelectItem>

@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
+    use HasFactory;
     protected $guarded = [];
 
     public function user()
@@ -32,20 +34,30 @@ class Student extends Model
         return $this->hasMany(Attendance::class);
     }
 
+    public function studyResults()
+    {
+        return $this->hasMany(StudyResult::class);
+    }
+
     public function grades()
     {
         return $this->hasMany(Grade::class);
+    }
+    public function fees()
+    {
+        return $this->hasMany(Fee::class);
     }
 
     public function scopeFilter(Builder $query, $filters)
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->whereAny([
-                'nip',
+                'nisn',
                 'batch',
             ], 'REGEXP', $search)
                 ->orWhereHas('user', fn($query) => $query->whereAny(['name', 'email'], 'REGEXP', $search))
                 ->orWhereHas('level', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
+                ->orWhereHas('classroom', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
 
             ;
         });

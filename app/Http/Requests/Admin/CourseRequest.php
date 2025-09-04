@@ -11,7 +11,7 @@ class CourseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasRole('Admin');
+        return true;
     }
 
     /**
@@ -25,7 +25,6 @@ class CourseRequest extends FormRequest
             'level_id' => 'required|exists:levels,id',
             'teacher_id' => 'required|exists:teachers,id',
             'name' => 'required|string|min:3|max:255',
-            'semester' => 'required|integer',
         ];
     }
 
@@ -33,9 +32,8 @@ class CourseRequest extends FormRequest
     {
         return [
             'level_id' => 'Tingkat',
-            'teacher_id' => 'Dosen',
+            'teacher_id' => 'Guru',
             'name' => 'Nama',
-            'semester' => 'Semester'
         ];
     }
 }

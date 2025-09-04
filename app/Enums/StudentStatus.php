@@ -6,7 +6,8 @@ enum StudentStatus: string
 {
     case ACTIVE = 'Aktif';
     case INACTIVE = 'Tidak Aktif';
-    case TRANSFER = 'Pindahan dari sekolah lain';
+    case TRANSFER = 'Pindah';
+    case GRUADUATED = 'Lulus';
 
     public static function options()
     {

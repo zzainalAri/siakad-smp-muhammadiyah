@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
-            $table->boolean('status');
-            $table->unsignedInteger('section')->default(1);
-            $table->unsignedInteger('semester')->default(1);
-            $table->double('daily_score', 5, 2);
-            $table->double('midtern_score', 5, 2);
-            $table->double('final_score', 5, 2);
-            $table->double('final_grade', 5, 2);
+            $table->integer('grade');
+            $table->string('category');
+            $table->foreignId('student_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('section_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

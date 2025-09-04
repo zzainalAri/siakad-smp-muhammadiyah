@@ -7,23 +7,23 @@ use App\Http\Resources\Teacher\CourseScheduleResource;
 use App\Http\Resources\Teacher\CourseTeacherResource;
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CourseTeacherController extends Controller
 {
     public function index()
     {
         $courses = Course::query()
-            ->where('teacher_id', auth()->user()->teacher->id)
-            ->where('academic_year_id', activeAcademicYear()->id)
+            ->where('teacher_id', Auth::user()->teacher->id)
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
-            ->with(['faculty','schedules'])
+            ->with(['level', 'schedules'])
             ->paginate(request()->load ?? 9);
 
         return inertia('Teachers/Courses/Index', [
             'page_setting' => [
-                'title' => 'Mata Kuliah',
-                'subtitle' => 'Menampilkan semua data matakuliah yang anda ampu'
+                'title' => 'Mata Pelajaran',
+                'subtitle' => 'Menampilkan semua data mata pelajaran yang anda ajar'
             ],
             'courses' => CourseTeacherResource::collection($courses)->additional([
                 'meta' => [
@@ -44,10 +44,10 @@ class CourseTeacherController extends Controller
     {
         return inertia('Teachers/Courses/Show', [
             'page_setting' => [
-                'title' => "Detail Mata Kuliah {$course->name}",
-                'subtitle' => 'Menampilkan Detail Mata Kuliah yang anda ampu'
+                'title' => "Detail Mata Pelajaran {$course->name}",
+                'subtitle' => 'Menampilkan Detail Mata Pelajaran yang anda ampu'
             ],
-            'course' => new CourseScheduleResource($course->load(['schedules','academicYear', 'faculty']))
+            'course' => new CourseScheduleResource($course->load(['schedules', 'level',]))
         ]);
     }
 }

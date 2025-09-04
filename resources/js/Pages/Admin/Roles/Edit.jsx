@@ -1,5 +1,6 @@
 import HeaderTitle from '@/Components/HeaderTitle';
 import InputError from '@/Components/InputError';
+import { MultiSelect } from '@/Components/MultiSelect';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
@@ -8,16 +9,25 @@ import AppLayout from '@/Layouts/AppLayout';
 import { flashMessage } from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
 import { IconArrowLeft, IconCheck, IconCircleKey } from '@tabler/icons-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
-export default function Create(props) {
+export default function Edit(props) {
+    const [selectedPermissions, setSelectedPermissions] = useState(
+        Array.from(new Set(props.role.permissions.map((permission) => permission.id))),
+    );
     const { data, setData, post, errors, processing, reset } = useForm({
         name: props.role.name ?? '',
+        permissions: selectedPermissions,
         _method: props.page_setting.method,
     });
 
     const onHandleReset = () => {
         reset();
+    };
+    const handlePermissionChange = (selected) => {
+        setSelectedPermissions(selected);
+        setData('permissions', selected);
     };
 
     const onHandleSubmit = (e) => {
@@ -63,6 +73,17 @@ export default function Create(props) {
                                     />
                                     {errors.name && <InputError message={errors.name} />}
                                 </div>
+                                <div className="col-span-full">
+                                    <Label htmlFor="roles">Peran</Label>
+                                    <MultiSelect
+                                        options={props.permissions}
+                                        onValueChange={handlePermissionChange}
+                                        defaultValue={selectedPermissions}
+                                        placeholder="Pilih Izin"
+                                        variant="inverted"
+                                    />
+                                    {errors.permissions && <InputError message={errors.permissions} />}
+                                </div>
                             </div>
                             <div className="mt-8 flex flex-col gap-2 lg:flex-row lg:justify-end">
                                 <Button type="button" variant="ghost" size="xl" onClick={onHandleReset}>
@@ -81,4 +102,4 @@ export default function Create(props) {
     );
 }
 
-Create.layout = (page) => <AppLayout children={page} title={page.props.page_setting.title} />;
+Edit.layout = (page) => <AppLayout children={page} title={page.props.page_setting.title} />;

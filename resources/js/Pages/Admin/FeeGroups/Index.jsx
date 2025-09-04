@@ -1,4 +1,3 @@
-import AlertAction from '@/Components/AlertAction';
 import EmptyState from '@/Components/EmptyState';
 import HeaderTitle from '@/Components/HeaderTitle';
 import PaginationTable from '@/Components/PaginationTable';
@@ -10,9 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
-import { deleteAction, formatDateIndo, formatToRupiah } from '@/lib/utils';
+import hasAnyPermissions, { formatToRupiah } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
-import { IconArrowsDownUp, IconDroplets, IconPencil, IconPlus, IconRefresh, IconTrash } from '@tabler/icons-react';
+import { IconArrowsDownUp, IconDroplets, IconPencil, IconRefresh } from '@tabler/icons-react';
 import { useState } from 'react';
 
 export default function Index(props) {
@@ -41,11 +40,6 @@ export default function Index(props) {
                         subtitle={props.page_setting.subtitle}
                         icon={IconDroplets}
                     />
-                    <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
-                        <Link href={route('admin.fee-groups.create')}>
-                            <IconPlus className="size-4" /> Tambah
-                        </Link>
-                    </Button>
                 </div>
                 <Card>
                     <CardHeader className="mb-4 p-0">
@@ -83,8 +77,8 @@ export default function Index(props) {
                         {feeGroups.length === 0 ? (
                             <EmptyState
                                 icon={IconDroplets}
-                                title="Tidak ada golongan ukt"
-                                subtitle="Mulailah dengan membuat golongan ukt baru"
+                                title="Tidak ada golongan spp"
+                                subtitle="Mulailah dengan membuat golongan spp baru"
                             />
                         ) : (
                             <Table className="w-full">
@@ -106,9 +100,9 @@ export default function Index(props) {
                                             <Button
                                                 variant="ghost"
                                                 className="group inline-flex"
-                                                onClick={() => onSortable('group')}
+                                                onClick={() => onSortable('level_id')}
                                             >
-                                                Golongan
+                                                Tingkat
                                                 <span className="ml-2 flex-none rounded text-muted-foreground">
                                                     <IconArrowsDownUp className="size-4" />
                                                 </span>
@@ -126,49 +120,30 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                className="group inline-flex"
-                                                onClick={() => onSortable('created_at')}
-                                            >
-                                                Dibuat Pada
-                                                <span className="ml-2 flex-none rounded text-muted-foreground">
-                                                    <IconArrowsDownUp className="size-4" />
-                                                </span>
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>Aksi</TableHead>
+
+                                        {hasAnyPermissions(props.auth.permissions, ['fee-groups.update']) && (
+                                            <TableHead>Aksi</TableHead>
+                                        )}
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {feeGroups.map((feeGroup, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                            <TableCell>{feeGroup.group}</TableCell>
+                                            <TableCell>{feeGroup.level.name}</TableCell>
                                             <TableCell>{formatToRupiah(feeGroup.amount)}</TableCell>
-                                            <TableCell>{formatDateIndo(feeGroup.created_at)}</TableCell>
-                                            <TableCell>
-                                                <div className="flex items-center gap-x-1">
-                                                    <Button variant="blue" size="sm" asChild>
-                                                        <Link href={route('admin.fee-groups.edit', [feeGroup])}>
-                                                            <IconPencil size="4" />
-                                                            Edit
-                                                        </Link>
-                                                    </Button>
-                                                    <AlertAction
-                                                        trigger={
-                                                            <Button variant="red" size="sm">
-                                                                <IconTrash className="size-4" />
-                                                                Delete
-                                                            </Button>
-                                                        }
-                                                        action={() =>
-                                                            deleteAction(route('admin.fee-groups.destroy', [feeGroup]))
-                                                        }
-                                                    />
-                                                </div>
-                                            </TableCell>
+                                            {hasAnyPermissions(props.auth.permissions, ['fee-groups.update']) && (
+                                                <TableCell>
+                                                    <div className="flex items-center gap-x-1">
+                                                        <Button variant="blue" size="sm" asChild>
+                                                            <Link href={route('admin.fee-groups.edit', [feeGroup])}>
+                                                                <IconPencil size="4" />
+                                                                Edit
+                                                            </Link>
+                                                        </Button>
+                                                    </div>
+                                                </TableCell>
+                                            )}
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -177,8 +152,8 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
-                            {meta.total} golongan ukt
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
+                            {meta.total} golongan spp
                         </p>
                         <div className="overflow-x-auto">
                             {meta.has_pages && <PaginationTable meta={meta} links={links} />}

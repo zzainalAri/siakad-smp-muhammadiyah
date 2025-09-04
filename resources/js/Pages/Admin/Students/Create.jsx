@@ -145,7 +145,7 @@ export default function Create(props) {
                                             <SelectValue>
                                                 {props.classrooms.find(
                                                     (classroom) => classroom.value == data.classroom_id,
-                                                )?.label ?? 'Pilih kelas'}
+                                                )?.label ?? 'Pilih Tingkat Dahulu'}
                                             </SelectValue>
                                             <SelectContent>
                                                 {filteredClassrooms.map((classroom, index) => (

@@ -9,6 +9,7 @@ import AppLayout from '@/Layouts/AppLayout';
 import { flashMessage } from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
 import { IconArrowLeft, IconBooks, IconCheck } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Edit(props) {
@@ -24,6 +25,8 @@ export default function Edit(props) {
         reset();
     };
 
+    const [filteredTeacher, setFilteredTeacher] = useState([]);
+
     const onHandleSubmit = (e) => {
         e.preventDefault();
         post(props.page_setting.action, {
@@ -35,6 +38,11 @@ export default function Edit(props) {
             },
         });
     };
+
+    useEffect(() => {
+        const filtered = props.teachers.filter((teacher) => teacher.level_id == data.level_id);
+        setFilteredTeacher(filtered);
+    }, [data.level_id]);
 
     return (
         <>
@@ -68,7 +76,7 @@ export default function Edit(props) {
                                     {errors.name && <InputError message={errors.name} />}
                                 </div>
                                 <div className="col-span-full">
-                                    <Label htmlFor="level_id">Nama Fakultas</Label>
+                                    <Label htmlFor="level_id">Nama Tingkat</Label>
                                     <Select
                                         defaultValue={data.level_id}
                                         onValueChange={(value) => setData('level_id', value)}
@@ -91,19 +99,20 @@ export default function Edit(props) {
                                     {errors.level_id && <InputError message={errors.level_id} />}
                                 </div>
                                 <div className="col-span-full">
-                                    <Label htmlFor="teacher_id">Dosen</Label>
+                                    <Label htmlFor="teacher_id">Guru</Label>
                                     <Select
                                         defaultValue={data.teacher_id}
                                         onValueChange={(value) => setData('teacher_id', value)}
                                         id="teacher_id"
+                                        disabled={!data.level_id}
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
-                                                {props.teachers.find((teacher) => teacher.value == data.teacher_id)
-                                                    ?.label ?? 'Pilih dosen'}
+                                                {filteredTeacher.find((teacher) => teacher.value == data.teacher_id)
+                                                    ?.label ?? 'Pilih tingkat dahulu'}
                                             </SelectValue>
                                             <SelectContent>
-                                                {props.teachers.map((teacher, index) => (
+                                                {filteredTeacher.map((teacher, index) => (
                                                     <SelectItem key={index} value={teacher.value}>
                                                         {teacher.label}
                                                     </SelectItem>
@@ -112,18 +121,6 @@ export default function Edit(props) {
                                         </SelectTrigger>
                                     </Select>
                                     {errors.teacher_id && <InputError message={errors.teacher_id} />}
-                                </div>
-                                <div className="col-span-full">
-                                    <Label htmlFor="semester">Semester</Label>
-                                    <Input
-                                        type="number"
-                                        name="semester"
-                                        id="semester"
-                                        placeholder="Masukkan sks"
-                                        value={data.semester}
-                                        onChange={(e) => setData(e.target.name, e.target.value)}
-                                    />
-                                    {errors.semester && <InputError message={errors.semester} />}
                                 </div>
                             </div>
                             <div className="mt-8 flex flex-col gap-2 lg:flex-row lg:justify-end">

@@ -9,8 +9,31 @@ export function cn(...inputs) {
     return twMerge(clsx(inputs));
 }
 
+export default function hasAnyPermissions(allPermissions, permissions) {
+    let hasPermission = false;
+
+    permissions.forEach(function (item) {
+        if (allPermissions[item]) hasPermission = true;
+    });
+
+    return hasPermission;
+}
+
 export function flashMessage(params) {
     return params.props.flash_message;
+}
+
+export function groupSchedulesByDay(schedules) {
+    const grouped = {};
+
+    schedules.forEach((item) => {
+        if (!grouped[item.day]) {
+            grouped[item.day] = [];
+        }
+        grouped[item.day].push(item);
+    });
+
+    return grouped;
 }
 
 export const deleteAction = (url, { closeModal, ...options } = {}) => {

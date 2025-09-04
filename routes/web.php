@@ -17,16 +17,10 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
 
-    if (auth()->user()->hasRole('Admin')) {
-        return redirect()->intended(route('admin.dashboard', absolute: false));
-    } else if (auth()->user()->hasRole('Student')) {
+    if (auth()->user()->hasRole('Student')) {
         return redirect()->intended(route('students.dashboard', absolute: false));
-    } else if (auth()->user()->hasRole('Teacher')) {
-        return redirect()->intended(route('teachers.dashboard', absolute: false));
-    } else if (auth()->user()->hasRole('Operator')) {
-        return redirect()->intended(route('operators.dashboard', absolute: false));
     } else {
-        abort(404);
+        return redirect()->intended(route('admin.dashboard', absolute: false));
     }
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -39,11 +33,10 @@ Route::middleware('auth')->group(function () {
 Route::controller(PaymentController::class)->group(function () {
     Route::post('payments', 'create')->name('payments.create');
     Route::post('payments/callback', 'callback')->name('payments.callback');
-    Route::get('payments/success', 'succecc')->name('payments.succecc');
+    Route::get('payments/success', 'success')->name('payments.success');
 });
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/teacher.php';
-require __DIR__ . '/operator.php';
 require __DIR__ . '/student.php';

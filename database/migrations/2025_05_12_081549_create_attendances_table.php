@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
-            $table->boolean('status');
-            $table->unsignedInteger('section')->default(1);
-            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
+            $table->string('status');
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('classroom_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('section_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

@@ -19,11 +19,11 @@ class ValidateMiddleware
 
         $departement = Departement::query()
             ->where('id', $request->departement_id)
-            ->where('faculty_id', $request->faculty_id)
+            ->where('level_id', $request->level_id)
             ->exists();
 
         if (!$departement) {
-            flashMessage('Program studi yang anda pilih tidak terdaftar pada fakultas yang anda pilih', 'error');
+            flashMessage('Program studi yang anda pilih tidak terdaftar pada Tingkat yang anda pilih', 'error');
             return back();
         }
         return $next($request);

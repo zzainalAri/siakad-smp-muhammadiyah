@@ -37,6 +37,11 @@ class Schedule extends Model
         return $this->belongsTo(AcademicYear::class);
     }
 
+    public function sections()
+    {
+        return $this->hasMany(Section::class);
+    }
+
 
 
     public function scopeFilter(Builder $query, $filters)

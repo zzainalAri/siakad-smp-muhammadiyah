@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
-import { deleteAction, formatDateIndo } from '@/lib/utils';
+import hasAnyPermissions, { deleteAction, formatDateIndo } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
 import { IconArrowsDownUp, IconCalendar, IconPencil, IconPlus, IconRefresh, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -41,11 +41,13 @@ export default function Index(props) {
                         subtitle={props.page_setting.subtitle}
                         icon={IconCalendar}
                     />
-                    <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
-                        <Link href={route('admin.academic-years.create')}>
-                            <IconPlus className="size-4" /> Tambah
-                        </Link>
-                    </Button>
+                    {hasAnyPermissions(props.auth.permissions, ['academic-years.create']) && (
+                        <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
+                            <Link href={route('admin.academic-years.create')}>
+                                <IconPlus className="size-4" /> Tambah
+                            </Link>
+                        </Button>
+                    )}
                 </div>
                 <Card>
                     <CardHeader className="mb-4 p-0">
@@ -175,7 +177,10 @@ export default function Index(props) {
                                                 </span>
                                             </Button>
                                         </TableHead>
-                                        <TableHead>Aksi</TableHead>
+                                        {hasAnyPermissions(props.auth.permissions, [
+                                            'academic-years.update',
+                                            'academic-years.delete',
+                                        ]) && <TableHead>Aksi</TableHead>}
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -188,30 +193,48 @@ export default function Index(props) {
                                             <TableCell>{academicYear.semester}</TableCell>
                                             <TableCell>{academicYear.is_active}</TableCell>
                                             <TableCell>{formatDateIndo(academicYear.created_at)}</TableCell>
-
-                                            <TableCell>
-                                                <div className="flex items-center gap-x-1">
-                                                    <Button variant="blue" size="sm" asChild>
-                                                        <Link href={route('admin.academic-years.edit', [academicYear])}>
-                                                            <IconPencil size="4" />
-                                                            Edit
-                                                        </Link>
-                                                    </Button>
-                                                    <AlertAction
-                                                        trigger={
-                                                            <Button variant="red" size="sm">
-                                                                <IconTrash className="size-4" />
-                                                                Delete
+                                            {hasAnyPermissions(props.auth.permissions, [
+                                                'academic-years.update',
+                                                'academic-years.delete',
+                                            ]) && (
+                                                <TableCell>
+                                                    <div className="flex items-center gap-x-1">
+                                                        {hasAnyPermissions(props.auth.permissions, [
+                                                            'academic-years.update',
+                                                        ]) && (
+                                                            <Button variant="blue" size="sm" asChild>
+                                                                <Link
+                                                                    href={route('admin.academic-years.edit', [
+                                                                        academicYear,
+                                                                    ])}
+                                                                >
+                                                                    <IconPencil size="4" />
+                                                                    Edit
+                                                                </Link>
                                                             </Button>
-                                                        }
-                                                        action={() =>
-                                                            deleteAction(
-                                                                route('admin.academic-years.destroy', [academicYear]),
-                                                            )
-                                                        }
-                                                    />
-                                                </div>
-                                            </TableCell>
+                                                        )}
+                                                        {hasAnyPermissions(props.auth.permissions, [
+                                                            'academic-years.delete',
+                                                        ]) && (
+                                                            <AlertAction
+                                                                trigger={
+                                                                    <Button variant="red" size="sm">
+                                                                        <IconTrash className="size-4" />
+                                                                        Delete
+                                                                    </Button>
+                                                                }
+                                                                action={() =>
+                                                                    deleteAction(
+                                                                        route('admin.academic-years.destroy', [
+                                                                            academicYear,
+                                                                        ]),
+                                                                    )
+                                                                }
+                                                            />
+                                                        )}
+                                                    </div>
+                                                </TableCell>
+                                            )}
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -220,7 +243,7 @@ export default function Index(props) {
                     </CardContent>
                     <CardFooter className="flex w-full flex-col items-center justify-between gap-y-2 border-t py-3 lg:flex-row">
                         <p className="text-sm text-muted-foreground">
-                            Menampilkan <span className="font-medium text-blue-600">{meta.from ?? 0}</span> dari{' '}
+                            Menampilkan <span className="font-medium text-blue-600">{meta.to ?? 0}</span> dari{' '}
                             {meta.total} tahun ajaran
                         </p>
                         <div className="overflow-x-auto">

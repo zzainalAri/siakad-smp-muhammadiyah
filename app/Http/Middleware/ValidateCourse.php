@@ -19,11 +19,11 @@ class ValidateCourse
 
         $course = Course::query()
             ->where('id', $request->course_id)
-            ->where('faculty_id', $request->faculty_id)
+            ->where('level_id', $request->level_id)
             ->exists();
 
         if (!$course) {
-            flashMessage('Mata kuliah tersebut tidak ada di program studi atau fakultas yang anda pilih', 'error');
+            flashMessage('Mata Pelajaran tersebut tidak ada di program studi atau Tingkat yang anda pilih', 'error');
 
             return back();
         }

@@ -5,11 +5,12 @@ namespace App\Models;
 use App\Enums\AcademicYearSemester;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AcademicYear extends Model
 {
-    use Sluggable;
+    use Sluggable, HasFactory;
 
     protected $guarded = [];
 
@@ -19,6 +20,11 @@ class AcademicYear extends Model
         'end_date' => 'date',
         'is_active' => 'boolean',
     ];
+
+    public function studyResults()
+    {
+        return $this->hasMany(StudyResult::class);
+    }
 
     public function scopeFilter(Builder $query, $filters)
     {
@@ -50,5 +56,4 @@ class AcademicYear extends Model
     {
         return $this->hasMany(Classroom::class);
     }
-
 }

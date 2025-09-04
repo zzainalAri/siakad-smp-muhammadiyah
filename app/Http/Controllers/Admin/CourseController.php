@@ -19,13 +19,13 @@ class CourseController extends Controller implements HasMiddleware
 
     public static function middleware()
     {
-        return []; 
+        return [];
     }
 
     public function index()
     {
         $courses = Course::query()
-            ->select(['courses.id', 'courses.level_id', 'courses.teacher_id', 'courses.code', 'courses.semester', 'courses.name', 'courses.created_at'])
+            ->select(['courses.id', 'courses.level_id', 'courses.teacher_id', 'courses.code',  'courses.name', 'courses.created_at'])
             ->filter(request()->only(['search']))
             ->sorting(request()->only(['field', 'direction']))
             ->with(['level', 'teacher',])
@@ -65,13 +65,14 @@ class CourseController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'teachers' => Teacher::query()->select(['id', 'user_id'])
+            'teachers' => Teacher::query()->select(['id', 'user_id', 'level_id'])
                 ->whereHas('user', function ($query) {
                     $query->whereHas('roles', fn($query) => $query->where('name', 'Teacher'))->orderBy('name');
                 })
                 ->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->user?->name,
+                    'level_id' => $item->level_id,
                 ]),
         ]);
     }
@@ -84,7 +85,6 @@ class CourseController extends Controller implements HasMiddleware
                 'teacher_id' => $request->teacher_id,
                 'code' => str()->random(10),
                 'name' => $request->name,
-                'semester' => $request->semester
             ]);
 
 
@@ -110,13 +110,14 @@ class CourseController extends Controller implements HasMiddleware
                 'value' => $item->id,
                 'label' => $item->name,
             ]),
-            'teachers' => Teacher::query()->select(['id', 'user_id'])
+            'teachers' => Teacher::query()->select(['id', 'user_id', 'level_id'])
                 ->whereHas('user', function ($query) {
                     $query->whereHas('roles', fn($query) => $query->where('name', 'Teacher'))->orderBy('name');
                 })
                 ->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->user?->name,
+                    'level_id' => $item->level_id,
                 ]),
         ]);
     }
@@ -129,7 +130,6 @@ class CourseController extends Controller implements HasMiddleware
                 'teacher_id' => $request->teacher_id,
                 'code' => str()->random(10),
                 'name' => $request->name,
-                'semester' => $request->semester
             ]);
 
 

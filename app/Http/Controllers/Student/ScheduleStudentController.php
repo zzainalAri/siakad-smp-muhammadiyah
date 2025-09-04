@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Student;
 
 use App\Enums\ScheduleDay;
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use App\Models\StudyPlan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ScheduleStudentController extends Controller
 {
@@ -14,22 +16,16 @@ class ScheduleStudentController extends Controller
      */
     public function __invoke()
     {
-        $studyPlan = StudyPlan::query()
-            ->where('student_id', auth()->user()->student->id)
-            ->where('academic_year_id', activeAcademicYear()->id)
-            ->approved()
-            ->with(['schedules'])->first();
+        $student = Student::query()
+            ->where('user_id', Auth::user()->id)
+            ->first();
 
-        if (!$studyPlan) {
-            flashMessage('Anda belum mengajukan krs/krs belum di setujui', 'warning');
-            return to_route('students.study-plans.index');
-        }
 
         $days = ScheduleDay::cases();
         $scheduleTable = [];
+        $mobile_schedules = [];
 
-
-        foreach ($studyPlan->schedules as $schedule) {
+        foreach ($student->classroom->schedules as $schedule) {
             $startTime = substr($schedule->start_time, 0, 5);
             $endTime = substr($schedule->end_time, 0, 5);
 
@@ -40,7 +36,20 @@ class ScheduleStudentController extends Controller
             $scheduleTable[$startTime][$day] = [
                 'course' => $schedule->course->name,
                 'code' => $schedule->course->code,
-                'end_time' => $endTime
+                'end_time' => $endTime,
+                'teacher' => $schedule->course->teacher->user->name,
+                'course_id' => $schedule->course->id,
+
+            ];
+
+            $mobile_schedules[] = [
+                'day' => $day,
+                'start_time' => $startTime,
+                'end_time' => $endTime,
+                'course' => $schedule->course->name,
+                'course_id' => $schedule->course->id,
+                'code' => $schedule->course->code,
+                'teacher' => $schedule->course->teacher->user->name
             ];
         }
 
@@ -55,6 +64,7 @@ class ScheduleStudentController extends Controller
             ],
             'scheduleTable' => $scheduleTable,
             'days' => $days,
+            'mobile_schedules' => $mobile_schedules
         ]);
     }
 }
