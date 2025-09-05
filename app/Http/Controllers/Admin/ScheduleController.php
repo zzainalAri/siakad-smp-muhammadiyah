@@ -114,7 +114,7 @@ class ScheduleController extends Controller
                 'Selasa'  => Carbon::TUESDAY,
                 'Rabu'    => Carbon::WEDNESDAY,
                 'Kamis'   => Carbon::THURSDAY,
-                'Jumat'   => Carbon::FRIDAY,
+                'Jum\'at'   => Carbon::FRIDAY,
                 'Sabtu'   => Carbon::SATURDAY,
                 'Minggu'  => Carbon::SUNDAY,
             ];
