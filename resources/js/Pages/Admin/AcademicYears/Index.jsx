@@ -41,7 +41,7 @@ export default function Index(props) {
                         subtitle={props.page_setting.subtitle}
                         icon={IconCalendar}
                     />
-                    {hasAnyPermissions(props.auth.permissions, ['academic-years.index']) && (
+                    {hasAnyPermissions(props.auth.permissions, ['academic-years.create']) && (
                         <Button asChild variant="blue" size="xl" className="w-full lg:w-auto">
                             <Link href={route('admin.academic-years.create')}>
                                 <IconPlus className="size-4" /> Tambah
