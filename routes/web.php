@@ -6,7 +6,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-
 Route::get('/', function () {
     if (auth()->check()) {
         return to_route('dashboard');
@@ -15,7 +14,8 @@ Route::get('/', function () {
     }
 });
 
-Route::get('/dashboard', function () {
+
+Route::get('/dashboards', function () {
 
     if (auth()->user()->hasRole('Student')) {
         return redirect()->intended(route('students.dashboard', absolute: false));
@@ -23,6 +23,9 @@ Route::get('/dashboard', function () {
         return redirect()->intended(route('admin.dashboard', absolute: false));
     }
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
