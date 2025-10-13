@@ -13,10 +13,17 @@ Route::prefix('students')->middleware(['auth', 'role:Student'])->group(function 
     Route::get('dashboard', DashboardStudentController::class)
         ->name('students.dashboard');
 
-    // student's schedule
-    Route::get('schedules', ScheduleStudentController::class)
-        ->name('students.schedules.index')
-        ->middleware('permission:students.schedules.index');
+
+    Route::middleware(['checkFeeStudent'])->group(function () {
+
+        Route::get('dashboard', DashboardStudentController::class)
+            ->name('students.dashboard');
+
+        Route::get('schedules', ScheduleStudentController::class)
+            ->name('students.schedules.index')
+            ->middleware('permission:students.schedules.index');
+    });
+
 
     // student's fee
     Route::get('fees', FeeStudentController::class)

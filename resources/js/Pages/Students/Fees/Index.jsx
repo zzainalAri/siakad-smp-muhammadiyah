@@ -17,7 +17,7 @@ import { feeCodeGenerator, FEESTATUSVARIANT, formatDateIndo, formatToRupiah } fr
 import { router, usePage } from '@inertiajs/react';
 import { IconArrowsDownUp, IconMoneybag, IconRefresh } from '@tabler/icons-react';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Index(props) {
@@ -26,6 +26,8 @@ export default function Index(props) {
     const [loading, setLoading] = useState(false);
     const { students } = props;
     const [params, setParams] = useState(props.state);
+
+    const { flash_message } = usePage().props;
 
     const auth = usePage().props.auth.user;
 
@@ -82,6 +84,12 @@ export default function Index(props) {
         values: params,
         only: ['payments'],
     });
+
+    useEffect(() => {
+        if (flash_message?.message) {
+            toast[flash_message.type](flash_message.message);
+        }
+    }, [flash_message]);
     return (
         <>
             <div className="flex w-full flex-col pb-32">

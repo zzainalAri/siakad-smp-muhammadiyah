@@ -38,7 +38,7 @@ export default function Dashboard(props) {
                 </CardStat>
                 <CardStat
                     data={{
-                        title: 'Total Pembayaran',
+                        title: 'Total SPP yang Sudah Dibayarkan',
                         icon: IconCreditCard,
                         background: 'text-white bg-gradient-to-r from-blue-400 via-blue-500 to-blue-500',
                         iconClassName: 'text-white',

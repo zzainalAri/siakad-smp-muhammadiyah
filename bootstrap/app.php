@@ -27,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ->alias(aliases: [
                 'role' => RoleMiddleware::class,
                 'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+                'checkFeeStudent' => CheckFeeStudent::class,
 
             ]);
 
