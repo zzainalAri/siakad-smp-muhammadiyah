@@ -14,7 +14,7 @@ export default function CalendarSchedule({ days, schedules, student = null }) {
     };
 
     const calculateColumnStart = (day) => {
-        const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+        const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at", 'Sabtu', 'Minggu'];
         return days.indexOf(day) + 1;
     };
 

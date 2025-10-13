@@ -16,8 +16,9 @@ export default function Fees({
     unpaid_fees_sum,
     name,
     handlePayment = null,
+    handleBilling = null,
 }) {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0];
 
     const statusVariant = {
         'Sudah Bayar': 'success',
@@ -56,7 +57,7 @@ export default function Fees({
                             <TableHead className="border">Tanggal Ditetapkan Pembayaran</TableHead>
                             <TableHead className="border">Jatuh Tempo</TableHead>
                             <TableHead className="border">Status</TableHead>
-                            {handlePayment && <TableHead className="border">Aksi</TableHead>}
+                            {(handlePayment || handleBilling) && <TableHead className="border">Aksi</TableHead>}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -74,7 +75,7 @@ export default function Fees({
                                 </TableCell>
                                 {handlePayment && (
                                     <TableCell className="border">
-                                        {fee.billing_date > today || fee.status == 'Sudah Bayar' ? null : (
+                                        {fee.status === 'Belum Bayar' && fee.billing_date <= today ? (
                                             <Button
                                                 size="sm"
                                                 disabled={loading}
@@ -84,7 +85,21 @@ export default function Fees({
                                             >
                                                 Bayar
                                             </Button>
-                                        )}
+                                        ) : null}
+                                    </TableCell>
+                                )}
+
+                                {handleBilling && fee.status != 'Sudah Bayar' && (
+                                    <TableCell className="border">
+                                        <Button
+                                            size="sm"
+                                            disabled={loading}
+                                            className={loading ? 'opacity-55 hover:cursor-not-allowed' : ''}
+                                            onClick={() => handleBilling(fee.id)}
+                                            variant="slate"
+                                        >
+                                            Tetapkan Pembayaran Sekarang
+                                        </Button>
                                     </TableCell>
                                 )}
                             </TableRow>

@@ -48,19 +48,51 @@ class Student extends Model
         return $this->hasMany(Fee::class);
     }
 
+    // public function scopeFilter(Builder $query, $filters)
+    // {
+    //     $query->when($filters['search'] ?? null, function ($query, $search) {
+    //         $query->whereAny([
+    //             'nisn',
+    //             'batch',
+    //         ], 'REGEXP', $search)
+    //             ->orWhereHas('user', fn($query) => $query->whereAny(['name', 'email'], 'REGEXP', $search))
+    //             ->orWhereHas('level', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
+    //             ->orWhereHas('classroom', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
+
+    //         ;
+    //     });
+    // }
+
     public function scopeFilter(Builder $query, $filters)
     {
-        $query->when($filters['search'] ?? null, function ($query, $search) {
-            $query->whereAny([
-                'nisn',
-                'batch',
-            ], 'REGEXP', $search)
-                ->orWhereHas('user', fn($query) => $query->whereAny(['name', 'email'], 'REGEXP', $search))
-                ->orWhereHas('level', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
-                ->orWhereHas('classroom', fn($query) => $query->whereAny(['name'], 'REGEXP', $search))
+        $query
+            ->when($filters['search'] ?? null, function ($query, $search) {
+                $query->whereAny(['nisn', 'batch'], 'REGEXP', $search)
+                    ->orWhereHas('user', fn($q) => $q->whereAny(['name', 'email'], 'REGEXP', $search))
+                    ->orWhereHas('level', fn($q) => $q->whereAny(['name'], 'REGEXP', $search))
+                    ->orWhereHas('classroom', fn($q) => $q->whereAny(['name'], 'REGEXP', $search));
+            })
 
-            ;
-        });
+            ->when($filters['ispaid'] ?? null, function ($query, $ispaid) {
+                $currentMonth = now()->month;
+                $currentYear = now()->year;
+
+                if ($ispaid === 'Sudah Bayar') {
+                    $query->whereHas('fees', function ($q) use ($currentMonth, $currentYear) {
+                        $q->whereMonth('billing_date', $currentMonth)
+                            ->whereYear('billing_date', $currentYear)
+                            ->where('status', 'Sudah Bayar');
+                    });
+                }
+
+                if ($ispaid === 'Belum Bayar') {
+                    $query->whereHas('fees', function ($q) use ($currentMonth, $currentYear) {
+                        $q->whereMonth('billing_date', $currentMonth)
+                            ->whereYear('billing_date', $currentYear)
+                            ->where('status', 'Belum Bayar');
+                    });
+                }
+            });
     }
 
     public function scopeSorting(Builder $query, $sorts)

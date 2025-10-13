@@ -11,8 +11,7 @@ Route::prefix('students')->middleware(['auth', 'role:Student'])->group(function 
 
     // dashboard
     Route::get('dashboard', DashboardStudentController::class)
-        ->name('students.dashboard')
-        ->middleware('permission:students.dashboard');
+        ->name('students.dashboard');
 
     // student's schedule
     Route::get('schedules', ScheduleStudentController::class)

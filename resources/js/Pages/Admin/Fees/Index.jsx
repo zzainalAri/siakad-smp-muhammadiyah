@@ -1,3 +1,4 @@
+import ChartCustom from '@/Components/ChartCustom';
 import EmptyState from '@/Components/EmptyState';
 import Fees from '@/Components/Fees';
 import HeaderTitle from '@/Components/HeaderTitle';
@@ -11,20 +12,49 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import UseFilter from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
-import { formatToRupiah } from '@/lib/utils';
+import { flashMessage, formatToRupiah } from '@/lib/utils';
+import { router } from '@inertiajs/react';
 import { IconArrowsDownUp, IconRefresh, IconUsers } from '@tabler/icons-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function Index(props) {
     const { data: students, meta, links } = props.students;
     const [params, setParams] = useState(props.state);
+    const [loading, setLoading] = useState(false);
 
     const onSortable = (field) => {
         setParams({
             ...params,
             field: field,
+            ispaid: ispaid,
             direction: params.direction === 'asc' ? 'desc' : 'asc',
         });
+    };
+
+    console.log(props);
+
+    const handleBilling = (fee_id) => {
+        setLoading(true);
+
+        try {
+            router.put(
+                route('admin.fees.update', [fee_id]),
+                {},
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    onSuccess: (success) => {
+                        const flash = flashMessage(success);
+                        if (flash) toast[flash.type](flash.message);
+                    },
+                },
+            );
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     UseFilter({
@@ -35,7 +65,7 @@ export default function Index(props) {
 
     return (
         <>
-            <div className="flex w-full flex-col pb-32">
+            <div className="flex w-full flex-col gap-y-4 pb-32">
                 <div className="mb-8 flex flex-col items-start justify-between gap-y-4 lg:flex-row lg:items-center">
                     <HeaderTitle
                         title={props.page_setting.title}
@@ -48,6 +78,7 @@ export default function Index(props) {
                         </Link>
                     </Button> */}
                 </div>
+                <ChartCustom chartData={props.chartData} />
                 <Card>
                     <CardHeader className="mb-4 p-0">
                         {/* Filters */}
@@ -69,6 +100,16 @@ export default function Index(props) {
                                             {number}
                                         </SelectItem>
                                     ))}
+                                </SelectContent>
+                            </Select>
+                            <Select value={params?.ispaid} onValueChange={(e) => setParams({ ...params, ispaid: e })}>
+                                <SelectTrigger className="w-full sm:w-24">
+                                    <SelectValue placeholder="Semua" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value={'all'}>Semua</SelectItem>
+                                    <SelectItem value={'Sudah Bayar'}>Sudah Bayar Bulan Ini</SelectItem>
+                                    <SelectItem value={'Belum Bayar'}>Belum Bayar Bulan Ini</SelectItem>
                                 </SelectContent>
                             </Select>
                             <Button variant="red" onClick={() => setParams(props.state)} size="xl">
@@ -159,6 +200,8 @@ export default function Index(props) {
                                                         total_fees={student.total_fees}
                                                         paid_fees_sum={student.paid_fees_sum}
                                                         unpaid_fees_sum={student.unpaid_fees_sum}
+                                                        loading={loading}
+                                                        handleBilling={handleBilling}
                                                     />
                                                 </div>
                                             </TableCell>

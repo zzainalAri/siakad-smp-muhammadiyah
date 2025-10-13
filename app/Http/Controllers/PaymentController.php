@@ -73,9 +73,7 @@ class PaymentController extends Controller
             ], 401);
         }
 
-        $payment = Payment::query()
-            ->where('transaction_code', $request->order_id)
-            ->first();
+        $payment = Payment::query()->where('transaction_code', $request->order_id)->first();
 
 
         if (!$payment) {

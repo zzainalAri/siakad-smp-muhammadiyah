@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
         // ])) {
         //     URL::forceScheme('https');
         // }
-        // URL::forceScheme('https');
+        URL::forceScheme('https');
 
         // if (!App::environment(['local', 'testing'])) {
         //     URL::forceScheme('https');
